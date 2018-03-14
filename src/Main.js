@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, NavLink, HashRouter } from "react-router-dom";
+import { Route, NavLink, BrowserRouter } from "react-router-dom";
 import Home from "./Official/Home";
 import Calendar from "./Official/Calendar";
 import Contact from "./Official/Contact";
@@ -8,7 +8,7 @@ import ApplyForMembership from "./Official/ApplyForMembership";
 class Main extends Component {
 	render() {
 		return (
-			<HashRouter>
+			<BrowserRouter>
 				<div>
 					<h1>Välkommen till KFUM Voxette!</h1>
 					<ul className="menu">
@@ -24,7 +24,7 @@ class Main extends Component {
 						<Route path="/ansokan" component={ApplyForMembership}/>
 					</div>
 				</div>
-			</HashRouter>
+			</BrowserRouter>
 		);
 	}
 }
