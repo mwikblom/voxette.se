@@ -1,16 +1,16 @@
 import firebase from 'firebase';
-import settings from './settings.json';
+import config from './config.json';
 
 
-var config = {
-	apiKey: settings.firebase.apiKey,
-    authDomain: settings.firebase.authDomain,
-    databaseURL: settings.firebase.databaseURL,
-    projectId: settings.firebase.projectId,
-    storageBucket: settings.firebase.storageBucket,
-    messagingSenderId: settings.firebase.messagingSenderId,
+var firebaseConfig = {
+	apiKey: config.firebase.apiKey,
+    authDomain: config.firebase.authDomain,
+    databaseURL: config.firebase.databaseURL,
+    projectId: config.firebase.projectId,
+    storageBucket: config.firebase.storageBucket,
+    messagingSenderId: config.firebase.messagingSenderId,
 };
-var firebaseApp = firebase.initializeApp(config);
-firebaseApp.customSettings = settings.customSettings;
+var firebaseApp = firebase.initializeApp(firebaseConfig);
+firebaseApp.customSettings = config.customSettings;
 
 export default firebaseApp;
