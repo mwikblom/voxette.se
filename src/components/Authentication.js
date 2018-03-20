@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import FirebaseApp from '../FirebaseApp';
-console.log(FirebaseApp);
+import User from '../Models/User';
 
-class Authentication extends Component {
+export default class Authentication extends Component {
 	constructor (props) {
 		super(props);
 
 		this.state = {
-			loggedIn: false
+			loggedIn: false,
+			user: undefined
 		};
+
 		this.onSuccess = this.onSuccess.bind(this);
 		this.onFailure = this.onFailure.bind(this);
 		this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
@@ -17,9 +19,14 @@ class Authentication extends Component {
 	render() {
 		if (this.state.loggedIn){
 			return (
-				<GoogleLogout
-					buttonText="Logga ut"
-					onLogoutSuccess={this.onLogoutSuccess} />
+				<div>
+					<p>
+						Inloggad som: {this.state.user.FirstName} {this.state.user.LastName}
+					</p>
+					<GoogleLogout
+						buttonText="Logga ut"
+						onLogoutSuccess={this.onLogoutSuccess} />
+				</div>
 			);
 		}
 		return (
@@ -32,25 +39,32 @@ class Authentication extends Component {
 	}
 
 	onSuccess = (response) => {
+		// TODO: Check that the user exists in db as member
+		// TODO: Save session logged in state
 		console.log('Success', response);
 		this.setState({
-			loggedIn: true
+			loggedIn: true,
+			user: new User(response.profileObj.givenName,
+							response.profileObj.familyName,
+							response.profileObj.email,
+							response.profileObj.googleId)
 		});
 	}
 
 	onFailure = (response) => {
+		// TODO: Show error message  
 		console.log('Failure', response);
 		this.setState({
-			loggedIn: true
+			loggedIn: false,
+			user: undefined
 		});
 	}
 
 	onLogoutSuccess = (response) => {
 		console.log('Logged out', response);
 		this.setState({
-			loggedIn: false
+			loggedIn: false,
+			user: undefined
 		});
 	}
 }
-
-export default Authentication;
