@@ -4,15 +4,18 @@
   "private": true,
   "dependencies": {
     "@tinymce/tinymce-react": "^2.2.0",
+    "firebase": "^4.11.0",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-google-login": "^3.0.10",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "firebase deploy",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

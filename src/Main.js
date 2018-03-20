@@ -4,6 +4,7 @@ import Home from './Official/Home';
 import Calendar from './Official/Calendar';
 import Contact from './Official/Contact';
 import ApplyForMembership from './Official/ApplyForMembership';
+import Authentication from './components/Authentication';
 //import { Editor } from '@tinymce/tinymce-react';
 
 class Main extends Component {
@@ -17,6 +18,7 @@ class Main extends Component {
                         <li><NavLink to="/kalender">Kalender</NavLink></li>
                         <li><NavLink to="/kontakt">Kontakt</NavLink></li>
                         <li><NavLink to="/ansokan">Ansökan</NavLink></li>
+                        <li><Authentication /></li>
                     </ul>
                     <div className="content">
                         <Route exact path="/" component={Home}/>
