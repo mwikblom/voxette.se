@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import EditableContent from '../components/EditableContent';
+import EditableContent from '../../components/EditableContent';
 
-class Calendar extends Component {
+export default class Calendar extends Component {
+	constructor(props) {
+		super(props);
+		console.log(props);
+	}
     render() {
         return (
             <div>
@@ -12,5 +16,3 @@ class Calendar extends Component {
         );
     }
 }
-
-export default Calendar;
