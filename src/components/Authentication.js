@@ -6,22 +6,22 @@ import FirebaseApp from '../FirebaseApp';
 export default class Authentication extends Component {
 	constructor (props) {
         super(props);
-
+        
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
-
-		this.onSuccess = this.onSuccess.bind(this);
-		this.onFailure = this.onFailure.bind(this);
-		this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
-	}
-	render() {
-		if (this.props.loggedIn){
-			return (
-				<div>
-					<p>
-						Inloggad som: {this.props.user.FirstName} {this.props.user.LastName}
-					</p>
-					<button onClick={this.handleLogout}>Logga ut</button>
+        
+        this.onSuccess = this.onSuccess.bind(this);
+        this.onFailure = this.onFailure.bind(this);
+        this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
+    }
+    render() {
+        if (this.props.loggedIn){
+            return (
+                <div>
+                <p>
+                Inloggad som: {this.props.user.FirstName} {this.props.user.LastName}
+                </p>
+                <button onClick={this.handleLogout}>Logga ut</button>
 				</div>
 			);
 		}
@@ -29,10 +29,10 @@ export default class Authentication extends Component {
 			<button onClick={this.handleLogin}>Logga in</button>
 		);
 	}
-
+    
     handleLogin() {
         var self = this;
-
+        
         FirebaseApp.auth().useDeviceLanguage();
         var provider = new firebase.auth.GoogleAuthProvider();
         //provider.addScope('https://www.googleapis.com/auth/groups');
@@ -55,22 +55,22 @@ export default class Authentication extends Component {
             // ...
         });
     }
-
+    
     handleLogout() {
         var self = this;
-
+        
         
     }
-
+    
 	onSuccess(response) {
 		this.props.onLoginSuccess(response);
 	}
-
-	onFailure(response) {
-		this.props.onLoginFailure(response);
-	}
-
-	onLogoutSuccess(response) {
-		this.props.onLogoutSuccess(response);
-	}
+    
+    onFailure(response) {
+        this.props.onLoginFailure(response);
+    }
+    
+    onLogoutSuccess(response) {
+        this.props.onLogoutSuccess(response);
+    }
 }
