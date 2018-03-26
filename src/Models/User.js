@@ -1,9 +1,10 @@
 export default class User {
-	constructor(firstName, lastName, email, googleId){
+	constructor(firstName, lastName, email, googleId, picture = ''){
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.googleId = googleId;
+        this.googleId = googleId;
+        this.picture = picture;
 	}
 	get FirstName() { 
 		return this.firstName;
@@ -16,5 +17,8 @@ export default class User {
 	}
 	get GoogleId() {
 		return this.googleId;
+	}
+	get Picture() {
+		return this.picture;
 	}
 }

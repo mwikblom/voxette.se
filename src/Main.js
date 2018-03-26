@@ -101,13 +101,15 @@ class Main extends Component {
 	handleLoginSuccess(response) {
 		// TODO: Check that the user exists in db as member
 		// TODO: Save session logged in state
-		console.log('Success: ', response);
+        console.log('Success: ', response);
+        var profile = response.additionalUserInfo.profile;
 		this.setState({
 			loggedIn: true,
-			user: new User(response.profileObj.givenName,
-							response.profileObj.familyName,
-							response.profileObj.email,
-							response.profileObj.googleId)
+			user: new User(profile.given_name,
+							profile.family_name,
+							profile.email,
+                            profile.id,
+                            profile.picture)
 		});
 		// Redirect user?
 	}
