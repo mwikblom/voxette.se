@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import PropTypes from 'prop-types';
+import firebase from 'firebase';
 
 class EditableContent extends Component {
 
@@ -9,22 +10,48 @@ class EditableContent extends Component {
 		
         this.state = {
             dataKey: props.dataKey,
-            edit: false
+            edit: false,
+            content: ''
         };
+
+        this.content = 'No content';
+
+        this.saveContent = this.saveContent.bind(this);
     }
     
+    componentWillMount() {
+        try {
+            firebase.database().ref('pages/' + this.props.dataKey)
+                .once('value')
+                .then((snapshot) => {
+                    this.setState(() => {
+                        return {
+                            content: snapshot.val() ? snapshot.val().content : 'No content'
+                        };
+                    });
+                });
+        } catch (e) {
+            console.log('ERROR ' + e);
+        }
+    }
 
     render() {
         return this.state.edit ? 
-            <form > <Editor
-                initialValue="<p>This is the initial content of the editor</p>"
+            <form> <Editor
+                initialValue={this.state.content}
                 init={{
                     plugins: 'link image code save',
                     toolbar: 'save | undo redo | bold italic | alignleft aligncenter alignright | code',
                     save_onsavecallback: () => this.saveContent()
-                }}				
+                }}	
+                onChange={(e) => this.handleEditorChange(e)}			
             	/>
-            </form> : <button type="button" onClick={() => this.switchMode()}>Click to edit page!</button>
+            </form> : 
+            <div>                 
+                <button type="button" onClick={() => this.switchMode()}>Click to edit page!</button>
+                <div dangerouslySetInnerHTML={{__html: this.state.content}}></div>
+            </div>
+
         ;
     }
 
@@ -35,10 +62,31 @@ class EditableContent extends Component {
             };
         });
     }
-	
+    
+    handleEditorChange(e) {
+        this.content = e.target.getContent();
+        /*this.setState(() => {
+            return {
+                content: e.target.getContent()
+            };
+        });*/
+    }
+
     saveContent() {
         //e.preventDefault();
-        console.log('TODO save to DB:');
+
+        firebase.database().ref('pages/' + this.props.dataKey).set({
+            content : this.content
+        });
+
+        this.setState(() => {
+            return {
+                content: this.content
+            };
+        });
+
+        console.log('Done');
+
         this.switchMode();
     }
 

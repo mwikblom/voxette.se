@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import EditableContent from '../../components/EditableContent';
 
-export default class Calendar extends Component {
+class Calendar extends Component {
     constructor(props) {
         super(props);
         console.log(props);
@@ -9,10 +10,17 @@ export default class Calendar extends Component {
     render() {
         return (
             <div>
-                <EditableContent dataKey="contact"/>
+                {this.props.loggedIn ? <EditableContent dataKey="contact"/> : null }
                 <h2>Kalender</h2>
                 <p>Här kan du höra oss</p>
             </div>
         );
     }
 }
+
+
+Calendar.propTypes = {
+    loggedIn: PropTypes.bool.isRequired
+};
+
+export default Calendar;
