@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import EditableContent from '../../components/EditableContent';
 
 export default class Calendar extends Component {
-	constructor(props) {
-		super(props);
-		console.log(props);
-	}
+    constructor(props) {
+        super(props);
+        console.log(props);
+    }
     render() {
         return (
             <div>
