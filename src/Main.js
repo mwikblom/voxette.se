@@ -102,14 +102,13 @@ class Main extends Component {
 		// TODO: Check that the user exists in db as member
 		// TODO: Save session logged in state
         console.log('Success: ', response);
-        var profile = response.additionalUserInfo.profile;
 		this.setState({
 			loggedIn: true,
-			user: new User(profile.given_name,
-							profile.family_name,
-							profile.email,
-                            profile.id,
-                            profile.picture)
+			user: new User(response.displayName,
+							'',
+							response.email,
+                            response.uid,
+                            response.photoURL)
 		});
 		// Redirect user?
 	}
