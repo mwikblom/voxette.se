@@ -38,8 +38,7 @@ export default class Authentication extends Component {
         var user = FirebaseApp.auth().currentUser;
         
         if (!this.loggedIn) {
-            if (user != null) {
-                console.log(user);
+            if (user != null) { // User already logged in
                 this.props.onLoginSuccess(user);
                 return false;
             }
@@ -47,31 +46,27 @@ export default class Authentication extends Component {
             var provider = new firebase.auth.GoogleAuthProvider();
             //provider.addScope('https://www.googleapis.com/auth/groups');
             
-            if (FirebaseApp.auth().currentUser != null){
-
-            }
+            document.getElementById('info-message').innerHTML = '';
             FirebaseApp.auth().signInWithPopup(provider).then(function(result) {
-                var token = result.credential.accessToken;
-                // The signed-in user info.
+                //var token = result.credential.accessToken;
                 var user = result.user;
-                console.log('Login-result', result);
+                
                 self.props.onLoginSuccess(user);
-                // ...
             }).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // The email of the user's account used.
-                var email = error.email;
-                // The firebase.auth.AuthCredential type that was used.
-                var credential = error.credential;
-                // ...
+                document.getElementById('info-message').innerHTML = '<p class="error">Något gick fel vid inloggning.</p>';
+                console.error(error);
             });
         }
     }
 
     handleLogout() {
-        // TODO: log out
-        this.props.onLogoutSuccess();
+        var self = this;
+        document.getElementById('info-message').innerHTML = '';
+        firebase.auth().signOut().then(function() {
+            self.props.onLogoutSuccess();
+        }).catch(function(error) {
+            document.getElementById('info-message').innerHTML = '<p class="error">Något gick fel vid utloggning.</p>';
+            console.error(error);
+        });
     }
 }

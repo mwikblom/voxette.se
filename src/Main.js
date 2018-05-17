@@ -78,6 +78,7 @@ class Main extends Component {
                     {internalMenu}
 
                     <div className="content">
+                        <div id="info-message"></div>
                         <Switch>
                             <Route exact path="/" render={this.homePage} />
                             <Route path="/kalender" render={this.calendarPage} />
