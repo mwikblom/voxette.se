@@ -5,18 +5,19 @@ export default class CalendarItem extends Component {
         super(props);
     }
     render() {
+        if (this.props.calendarEvent === undefined) return null;
         var event = this.props.calendarEvent;
-        var eventDate = event.startDate + ' kl: ' + event.startTime + ' - ';
-        if (event.startDate == event.endDate){
-            eventDate += event.endTime;
+        var eventDate = event.StartDate + ' kl: ' + event.StartTime + ' - ';
+        if (event.StartDate == event.EndDate){
+            eventDate += event.EndTime;
         } else {
-            eventDate += event.endDate + ' kl: ' + event.endTime;
+            eventDate += event.EndDate + ' kl: ' + event.EndTime;
         }
-        return 
+        return (
             <div className="calendar-item">
-                <h3>{event.title}</h3>
-                {eventDate}
+                <h3>{event.Title}</h3>
+                När: {eventDate}
             </div>
-        ;
+        );
     }
 }

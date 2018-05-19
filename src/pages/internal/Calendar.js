@@ -12,14 +12,21 @@ export default class InternalCalendar extends Component {
             <div>
                 <h2>Kalender</h2>
                 <p>Interna kalendern med närvaro.</p>
-                {this.calendarEvents().forEach(element => {
-                   <CalendarItem calendarEvent={element} />
+                {this.calendarEvents().map((element) => {
+                    return (<CalendarItem calendarEvent={element} />);
                 })}
             </div>
         );
     }
-    calendarEvents() {
+    calendarEvents() { // TODO: change mocked events
         return [
+            new CalendarEvent(
+                'Kördag/Genrep inför Voxette 20 år',
+                '2018-06-01',
+                '10:00',
+                '2018-06-01',
+                '15:00'
+            ), 
             new CalendarEvent(
                 'Konsert - Voxette 20 år',
                 '2018-06-02',
