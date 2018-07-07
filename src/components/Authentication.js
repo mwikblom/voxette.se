@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import FirebaseApp from '../FirebaseApp';
 
 export default class Authentication extends Component {
-	constructor (props) {
+    constructor (props) {
         super(props);
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
@@ -25,13 +25,13 @@ export default class Authentication extends Component {
                         Inloggad som: {this.props.user.FirstName} {this.props.user.LastName}
                     </p>
                     <button onClick={this.handleLogout}>Logga ut</button>
-				</div>
-			);
-		}
-		return (
-			<button onClick={this.handleLogin}>Logga in</button>
-		);
-	}
+                </div>
+            );
+        }
+        return (
+            <button onClick={this.handleLogin}>Logga in</button>
+        );
+    }
     
     handleLogin() {
         var self = this;
@@ -68,5 +68,5 @@ export default class Authentication extends Component {
             document.getElementById('info-message').innerHTML = '<p class="error">Något gick fel vid utloggning.</p>';
             console.error(error);
         });
-    }
+    }    
 }

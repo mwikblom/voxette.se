@@ -10,14 +10,13 @@ class Calendar extends Component {
     render() {
         return (
             <div>
-                {this.props.loggedIn ? <EditableContent dataKey="contact"/> : null }
+                <EditableContent dataKey="contact" loggedIn={this.props.loggedIn} />
                 <h2>Kalender</h2>
                 <p>Här kan du höra oss</p>
             </div>
         );
     }
 }
-
 
 Calendar.propTypes = {
     loggedIn: PropTypes.bool.isRequired

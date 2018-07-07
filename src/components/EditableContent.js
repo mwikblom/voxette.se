@@ -11,7 +11,8 @@ class EditableContent extends Component {
         this.state = {
             dataKey: props.dataKey,
             edit: false,
-            content: ''
+            content: 'Loading...',
+            loggedIn: props.loggedIn
         };
 
         this.content = 'No content';
@@ -36,23 +37,23 @@ class EditableContent extends Component {
     }
 
     render() {
-        return this.state.edit ? 
-            <form> <Editor
-                initialValue={this.state.content}
-                init={{
-                    plugins: 'link image code save',
-                    toolbar: 'save | undo redo | bold italic | alignleft aligncenter alignright | code',
-                    save_onsavecallback: () => this.saveContent()
-                }}	
-                onChange={(e) => this.handleEditorChange(e)}			
-            	/>
-            </form> : 
-            <div>                 
-                <button type="button" onClick={() => this.switchMode()}>Click to edit page!</button>
-                <div dangerouslySetInnerHTML={{__html: this.state.content}}></div>
-            </div>
-
-        ;
+        return this.state.loggedIn ? (
+            this.state.edit ? 
+                <form> <Editor
+                    initialValue={this.state.content}
+                    init={{
+                        plugins: 'link image code save',
+                        toolbar: 'save | undo redo | bold italic | alignleft aligncenter alignright | code',
+                        save_onsavecallback: () => this.saveContent()
+                    }}	
+                    onChange={(e) => this.handleEditorChange(e)}			
+                />
+                </form> : 
+                <div>                 
+                    <button type="button" onClick={() => this.switchMode()}>Click to edit page!</button>
+                    <div dangerouslySetInnerHTML={{__html: this.state.content}}></div>
+                </div>)
+            : <div dangerouslySetInnerHTML={{__html: this.state.content}}></div>;
     }
 
     switchMode() {
@@ -65,16 +66,9 @@ class EditableContent extends Component {
     
     handleEditorChange(e) {
         this.content = e.target.getContent();
-        /*this.setState(() => {
-            return {
-                content: e.target.getContent()
-            };
-        });*/
     }
 
     saveContent() {
-        //e.preventDefault();
-
         firebase.database().ref('pages/' + this.props.dataKey).set({
             content : this.content
         });
@@ -93,7 +87,8 @@ class EditableContent extends Component {
 }
 
 EditableContent.propTypes = {
-    dataKey: PropTypes.string.isRequired
+    dataKey: PropTypes.string.isRequired,
+    loggedIn: PropTypes.bool.isRequired
 };
 
 export default EditableContent;

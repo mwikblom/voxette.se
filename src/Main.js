@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch, NavLink, BrowserRouter } from 'react-router-dom';
 import PageController from './pages/PageController';
 import NotFound from './pages/NotFound';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 // Components
 import Authentication from './components/Authentication';
@@ -37,74 +38,77 @@ class Main extends Component {
             : undefined;
 
         return (
-            <BrowserRouter>
-                <div>
-                    <h1>Välkommen till KFUM Voxette!</h1>
-                    <ul className="menu">
-                        <li><NavLink exact to="/">Hem</NavLink></li>
-                        <li><NavLink to="/kalender">Kalender</NavLink></li>
-                        <li><NavLink to="/kontakt">Kontakt</NavLink></li>
-                        <li><NavLink to="/ansokan">Ansökan</NavLink></li>
-                        <li>
-                            <Authentication onLoginSuccess={this.handleLoginSuccess}
-                                onLoginFailure={this.handleLoginFailure}
-                                onLogoutSuccess={this.handleLogoutSuccess}
-                                loggedIn={this.state.loggedIn}
-                                user={this.state.user} />
-                        </li>
-                    </ul>
-                    {internalMenu}
+            <React.Fragment>
+                <CssBaseline />
+                <BrowserRouter>
+                    <div>
+                        <h1>Välkommen till KFUM Voxette!</h1>
+                        <ul className="menu">
+                            <li><NavLink exact to="/">Hem</NavLink></li>
+                            <li><NavLink to="/kalender">Kalender</NavLink></li>
+                            <li><NavLink to="/kontakt">Kontakt</NavLink></li>
+                            <li><NavLink to="/ansokan">Ansökan</NavLink></li>
+                            <li>
+                                <Authentication onLoginSuccess={this.handleLoginSuccess}
+                                    onLoginFailure={this.handleLoginFailure}
+                                    onLogoutSuccess={this.handleLogoutSuccess}
+                                    loggedIn={this.state.loggedIn}
+                                    user={this.state.user} />
+                            </li>
+                        </ul>
+                        {internalMenu}
 
-                    <div className="content">
-                        <div id="info-message"></div>
-                        <Switch>
-                            <Route exact path="/" render={this.pageController.HomePage} />
-                            <Route path="/kalender" render={this.pageController.CalendarPage} />
-                            <Route path="/kontakt" render={this.pageController.ContactPage} />
-                            <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
+                        <div className="content">
+                            <div id="info-message"></div>
+                            <Switch>
+                                <Route exact path="/" render={this.pageController.HomePage} />
+                                <Route path="/kalender" render={this.pageController.CalendarPage} />
+                                <Route path="/kontakt" render={this.pageController.ContactPage} />
+                                <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
 							
-                            <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
-                            <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
-                            <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
-                            <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
+                                <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
+                                <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
+                                <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
+                                <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
 							
-                            <Route component={NotFound} />
-                        </Switch>
-                    </div>
-                </div>				
-            </BrowserRouter>
+                                <Route component={NotFound} />
+                            </Switch>
+                        </div>
+                    </div>				
+                </BrowserRouter>
+            </React.Fragment>            
         );
     }
 	
     // Functions
     handleLoginSuccess(response) {
         // TODO: Check that the user exists in db as member
-		this.setState({
-			loggedIn: true,
-			user: new User(response.displayName,
-							'', // Can't get name separated from this google auth?
-							response.email,
-                            response.uid,
-                            response.photoURL)
-		});
+        this.setState({
+            loggedIn: true,
+            user: new User(response.displayName,
+                '', // Can't get name separated from this google auth?
+                response.email,
+                response.uid,
+                response.photoURL)
+        });
     }
     
-	handleLoginFailure(response) {
-		// TODO: Show error message
-		console.log('Failure: ', response);
-		this.setState({
-			loggedIn: false,
-			user: undefined
-		});
+    handleLoginFailure(response) {
+        // TODO: Show error message
+        console.log('Failure: ', response);
+        this.setState({
+            loggedIn: false,
+            user: undefined
+        });
     }
     
-	handleLogoutSuccess() {
-		this.setState({
-			loggedIn: false,
-			user: undefined
-		});
-		// TODO: Redirect user?
-	}
+    handleLogoutSuccess() {
+        this.setState({
+            loggedIn: false,
+            user: undefined
+        });
+        // TODO: Redirect user?
+    }
 
 }
 
