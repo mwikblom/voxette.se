@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import FirebaseApp from '../../FirebaseApp';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -36,14 +37,25 @@ const data = [
 class Members extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            members: {}
+        };
     }
 
-    fetchMembers() {
-        
+    componentWillMount() {
+        FirebaseApp.voxette.fetchAllMembers((members) => {
+            if (members) {
+                this.setState({
+                    members: members
+                });
+            }
+        });
     }
 
     render() {
         const { classes } = this.props;
+        const { members } = this.state;
 
         return (            
             <div>
@@ -57,26 +69,27 @@ class Members extends Component {
                                 <TableCell>Namn</TableCell>
                                 <TableCell>Stämma</TableCell>
                                 <TableCell numeric>Telefon</TableCell>
+                                <TableCell numeric>Epost</TableCell>
                                 <TableCell numeric>Adress</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.map(n => {
+                            {Object.values(members).map(mmeber => {
                                 return (
-                                    <TableRow key={n.id}>
+                                    <TableRow key={mmeber.userData.memberId}>
                                         <TableCell component="th" scope="row">
-                                            {n.name}
+                                            {mmeber.userData.firstName} {mmeber.userData.laastName}
                                         </TableCell>
-                                        <TableCell numeric>{n.part}</TableCell>
-                                        <TableCell numeric>{n.phone}</TableCell>
-                                        <TableCell numeric>{n.address}</TableCell>
+                                        <TableCell numeric>{mmeber.userData.part}</TableCell>
+                                        <TableCell numeric>{mmeber.userData.phone}</TableCell>
+                                        <TableCell numeric>{mmeber.userData.email}</TableCell>
+                                        <TableCell numeric>{mmeber.userData.address}</TableCell>
                                     </TableRow>
                                 );
                             })}
                         </TableBody>
                     </Table>
                 </Paper>            
-
             </div>
         );
     }

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
     container: {
@@ -19,6 +21,25 @@ const styles = theme => ({
     },
 });
 
+const parts = [
+    {
+      value: 'Sopran 1',
+      label: 'Sopran 1',
+    },
+    {
+      value: 'Sopran 2',
+      label: 'Sopran 2',
+    },
+    {
+      value: 'Alt 1',
+      label: 'Alt 1',
+    },
+    {
+      value: 'Alt2',
+      label: 'Alt2',
+    },
+];
+
 class Member extends Component {
     
     constructor(props) {
@@ -30,13 +51,25 @@ class Member extends Component {
             lastName : null,
             email: null,
             phone: null,
-            address: null
+            address: null,
+            part: null,
+            hasChanges: false
         };
+    }
+
+    componentWillMount() {
+        const { memberId } = this.state;
+
+        FirebaseApp.voxette.fetchUserData(memberId, (userData) => {
+            if (userData) {
+                this.setState(userData);
+            }
+        });
     }
 
     render() {
         const { classes } = this.props;
-        const { memberId, firstName, lastName, email, phone, address} = this.state;
+        const { memberId, firstName, lastName, email, phone, address, part, hasChanges } = this.state;
 
         return (            
             <div>
@@ -86,6 +119,26 @@ class Member extends Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    id="part"
+                                    select
+                                    label="Select"
+                                    className={classes.textField}
+                                    value={part}
+                                    onChange={this.handleChange('part')}
+                                    SelectProps={{
+                                        MenuProps: {
+                                            className: classes.menu,
+                                        },
+                                    }}
+                                    margin="normal"
+                                >
+                                    {parts.map(option => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                                <TextField
                                     id="address"
                                     label="Adress"
                                     className={classes.textField}
@@ -113,8 +166,20 @@ class Member extends Component {
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
+            hasChanges: true
         });
-    };    
+
+        console.log('state: ' + JSON.stringify(this.state));
+    };   
+    
+    saveChanges = () => {
+
+        FirebaseApp.voxette.saveUserData(this.state.memberId, this.state, () => {
+            this.setState({
+                hasChanges: false
+            });
+        });
+    }
 }
 
 Member.propTypes = {

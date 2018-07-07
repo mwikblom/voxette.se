@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch, NavLink, BrowserRouter } from 'react-router-dom';
 import PageController from './pages/PageController';
+import FirebaseApp from './FirebaseApp';
 import NotFound from './pages/NotFound';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,7 +9,6 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Menu from '@material-ui/core/Menu';
@@ -142,15 +142,27 @@ class Main extends Component {
 	
     // Functions
     handleLoginSuccess(response) {
-        // TODO: Check that the user exists in db as member
-        this.setState({
-            loggedIn: true,
-            user: new User(response.displayName,
-                '', // Can't get name separated from this google auth?
-                response.email,
-                response.uid,
-                response.photoURL)
-        });
+
+        FirebaseApp.voxette.fetchUserData(response.uid, (userData) => {
+
+            if (userData) {
+
+                this.setState({
+                    loggedIn: true,
+                    user: new User(response.uid, userData)
+                });
+        
+            } else {
+                // TODO: redirect to member when no data exists. Prepopulate with data in User
+                this.setState({
+                    loggedIn: true,
+                    user: new User(response.uid,
+                        response.displayName,
+                        response.email,
+                        response.photoURL)
+                });
+            }
+        });        
     }
     
     handleLoginFailure(response) {
