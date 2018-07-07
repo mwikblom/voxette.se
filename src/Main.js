@@ -2,20 +2,44 @@ import React, { Component } from 'react';
 import { Route, Switch, NavLink, BrowserRouter } from 'react-router-dom';
 import PageController from './pages/PageController';
 import NotFound from './pages/NotFound';
+import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 // Components
 import Authentication from './components/Authentication';
 import User from './models/User';
 //import { Editor } from '@tinymce/tinymce-react';
 
+const styles = {
+    root: {
+        flexGrow: 1,
+    },
+    flex: {
+        flex: 1,
+    },
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20,
+    },
+};
+
 class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loggedIn: false,
-            user: undefined
-        };
+            user: undefined,
+            anchorEl: null
+        };        
 
         // Functions
         this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
@@ -28,53 +52,88 @@ class Main extends Component {
         // Init internal routing
         const internalMenu = this.state.loggedIn
             ? (
-                <ul className="internal-menu">
-                    <li><NavLink exact to="/inloggad/">Information</NavLink></li>
-                    <li><NavLink to="/inloggad/medlemmar">Medlemmar</NavLink></li>
-                    <li><NavLink to="/inloggad/kalender">Kalender</NavLink></li>
-                    <li><NavLink to="/inloggad/dokument">Dokument</NavLink></li>
-                </ul>
+                <React.Fragment>
+                    <MenuItem onClick={this.handleClose}><NavLink exact to="/inloggad/">Information</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/medlemmar">Medlemmar</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/kalender">Kalender</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/dokument">Dokument</NavLink></MenuItem>
+                </React.Fragment>
             )
             : undefined;
+        
+        const { classes } = this.props;
+        const { anchorEl } = this.state;
 
         return (
             <React.Fragment>
                 <CssBaseline />
                 <BrowserRouter>
-                    <div>
-                        <h1>Välkommen till KFUM Voxette!</h1>
-                        <ul className="menu">
-                            <li><NavLink exact to="/">Hem</NavLink></li>
-                            <li><NavLink to="/kalender">Kalender</NavLink></li>
-                            <li><NavLink to="/kontakt">Kontakt</NavLink></li>
-                            <li><NavLink to="/ansokan">Ansökan</NavLink></li>
-                            <li>
+                    <div className={classes.root}>
+                        <AppBar position="static">
+                            <Toolbar>
+                                <IconButton className={classes.menuButton} color="inherit" aria-label="Menu"
+                                    aria-owns={anchorEl ? 'simple-menu' : null}
+                                    aria-haspopup="true"
+                                    onClick={this.handleClick}
+                                    color="inherit"
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+
+                                <Menu
+                                    id="simple-menu"
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl)}
+                                    onClose={this.handleClose}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                >
+                                    <MenuItem onClick={this.handleClose}><NavLink exact to="/">Hem</NavLink></MenuItem>
+                                    <MenuItem onClick={this.handleClose}><NavLink to="/kalender">Kalender</NavLink></MenuItem>
+                                    <MenuItem onClick={this.handleClose}><NavLink to="/kontakt">Kontakt</NavLink></MenuItem>
+                                    <MenuItem onClick={this.handleClose}><NavLink to="/ansokan">Ansökan</NavLink></MenuItem>
+                                    {internalMenu}
+                                </Menu>           
+
+                                <Typography variant="title" color="inherit" className={classes.flex}>
+                                    KFUM Voxette
+                                </Typography>
+
                                 <Authentication onLoginSuccess={this.handleLoginSuccess}
                                     onLoginFailure={this.handleLoginFailure}
                                     onLogoutSuccess={this.handleLogoutSuccess}
                                     loggedIn={this.state.loggedIn}
                                     user={this.state.user} />
-                            </li>
-                        </ul>
-                        {internalMenu}
+                            </Toolbar>
+                        </AppBar>
 
-                        <div className="content">
-                            <div id="info-message"></div>
-                            <Switch>
-                                <Route exact path="/" render={this.pageController.HomePage} />
-                                <Route path="/kalender" render={this.pageController.CalendarPage} />
-                                <Route path="/kontakt" render={this.pageController.ContactPage} />
-                                <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
+                        <div>
+                            <h1>Välkommen till KFUM Voxette!</h1>
+
+                            <div className="content">
+                                <div id="info-message"></div>
+                                <Switch>
+                                    <Route exact path="/" render={this.pageController.HomePage} />
+                                    <Route path="/kalender" render={this.pageController.CalendarPage} />
+                                    <Route path="/kontakt" render={this.pageController.ContactPage} />
+                                    <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
 							
-                                <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
-                                <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
-                                <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
-                                <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
+                                    <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
+                                    <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
+                                    <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
+                                    <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
 							
-                                <Route component={NotFound} />
-                            </Switch>
-                        </div>
-                    </div>				
+                                    <Route component={NotFound} />
+                                </Switch>
+                            </div>
+                        </div>		
+                    </div>            
                 </BrowserRouter>
             </React.Fragment>            
         );
@@ -110,6 +169,17 @@ class Main extends Component {
         // TODO: Redirect user?
     }
 
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+    
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };    
 }
 
-export default Main;
+Main.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Main);
