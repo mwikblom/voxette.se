@@ -126,6 +126,7 @@ class Main extends Component {
 							
                                     <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
                                     <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
+                                    <Route path="/inloggad/medlem/:memberId" render={this.pageController.MemberPage} />
                                     <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
                                     <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
 							

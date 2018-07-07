@@ -12,6 +12,7 @@ import Information from './internal/Information';
 import InternalCalendar from './internal/Calendar';
 import Documents from './internal/Documents';
 import Members from './internal/Members';
+import Member from './internal/Member';
 
 export default class PageController {
     constructor(loggedIn, user) {
@@ -23,6 +24,7 @@ export default class PageController {
         this.InternalCalendarPage = this.InternalCalendarPage.bind(this);
         this.DocumentsPage = this.DocumentsPage.bind(this);
         this.MembersPage = this.MembersPage.bind(this);
+        this.MemberPage = this.MemberPage.bind(this);
         // External Pages
         this.HomePage = this.HomePage.bind(this);
         this.CalendarPage = this.CalendarPage.bind(this);
@@ -52,6 +54,11 @@ export default class PageController {
     MembersPage() {
         return this.loggedIn 
             ? (<Members loggedIn={this.loggedIn} user={this.user} />)
+            : (<RequiresLogin />);
+    }
+    MemberPage(options) {
+        return this.loggedIn 
+            ? (<Member user={this.user} memberId={options.match.params.memberId} />)
             : (<RequiresLogin />);
     }
 
