@@ -10,6 +10,11 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
+    paper: {
+        width: '100%',
+        marginTop: theme.spacing.unit * 3,
+        overflowX: 'auto',
+    },    
     container: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -23,20 +28,20 @@ const styles = theme => ({
 
 const parts = [
     {
-      value: 'Sopran 1',
-      label: 'Sopran 1',
+        value: 'Sopran 1',
+        label: 'Sopran 1',
     },
     {
-      value: 'Sopran 2',
-      label: 'Sopran 2',
+        value: 'Sopran 2',
+        label: 'Sopran 2',
     },
     {
-      value: 'Alt 1',
-      label: 'Alt 1',
+        value: 'Alt 1',
+        label: 'Alt 1',
     },
     {
-      value: 'Alt2',
-      label: 'Alt2',
+        value: 'Alt2',
+        label: 'Alt2',
     },
 ];
 
@@ -47,12 +52,12 @@ class Member extends Component {
 
         this.state = {
             memberId: props.memberId,
-            firstName : null,
-            lastName : null,
-            email: null,
-            phone: null,
-            address: null,
-            part: null,
+            firstName : '',
+            lastName : '',
+            email: '',
+            phone: '',
+            address: '',
+            part: '',
             hasChanges: false
         };
     }
@@ -63,13 +68,16 @@ class Member extends Component {
         FirebaseApp.voxette.fetchUserData(memberId, (userData) => {
             if (userData) {
                 this.setState(userData);
+                this.setState({
+                    hasChanges: false
+                });
             }
         });
     }
 
     render() {
         const { classes } = this.props;
-        const { memberId, firstName, lastName, email, phone, address, part, hasChanges } = this.state;
+        const { memberId, firstName, lastName, email, phone, address, part, hasChanges} = this.state;
 
         return (            
             <div>
@@ -83,7 +91,7 @@ class Member extends Component {
                                     label="Förnamn"
                                     className={classes.textField}
                                     value={firstName}
-                                    onChange={this.handleChange('firstName')}
+                                    onChange={(event) => this.handleChange(event, 'firstName')}
                                     margin="normal"
                                 />
                                 <TextField
@@ -91,9 +99,8 @@ class Member extends Component {
                                     label="Efternamn"
                                     className={classes.textField}
                                     value={lastName}
-                                    onChange={this.handleChange('lastName')}
+                                    onChange={(event) => this.handleChange(event, 'lastName')}
                                     margin="normal"
-                                    fullWidth
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -102,7 +109,7 @@ class Member extends Component {
                                     label="Epost"
                                     className={classes.textField}
                                     value={email}
-                                    onChange={this.handleChange('email')}
+                                    onChange={(event) => this.handleChange(event, 'email')}
                                     margin="normal"
                                     keyboardType="email-address"
                                 />
@@ -111,10 +118,9 @@ class Member extends Component {
                                     label="Mobil"
                                     className={classes.textField}
                                     value={phone}
-                                    onChange={this.handleChange('phone')}
+                                    onChange={(event) => this.handleChange(event, 'phone')}
                                     margin="normal"
                                     keyboardType="phone-pad"
-                                    fullWidth
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -124,7 +130,7 @@ class Member extends Component {
                                     label="Select"
                                     className={classes.textField}
                                     value={part}
-                                    onChange={this.handleChange('part')}
+                                    onChange={(event) => this.handleChange(event, 'part')}
                                     SelectProps={{
                                         MenuProps: {
                                             className: classes.menu,
@@ -143,15 +149,14 @@ class Member extends Component {
                                     label="Adress"
                                     className={classes.textField}
                                     value={address}
-                                    onChange={this.handleChange('address')}
+                                    onChange={(event) => this.handleChange(event, 'address')}
                                     margin="normal"
                                     multiline
                                     rows="3"
-                                    fullWidth
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <Button variant="contained" onClick={this.saveChanges} color="primary">
+                                <Button variant="contained" onClick={() => this.saveChanges()} color="primary" disabled={!hasChanges}>
                                     <SaveIcon />
                                     Spara ändringar
                                 </Button>
@@ -163,17 +168,14 @@ class Member extends Component {
         );
     }
 
-    handleChange = name => event => {
+    handleChange(event, name) {
         this.setState({
             [name]: event.target.value,
             hasChanges: true
         });
-
-        console.log('state: ' + JSON.stringify(this.state));
-    };   
+    }   
     
-    saveChanges = () => {
-
+    saveChanges() {
         FirebaseApp.voxette.saveUserData(this.state.memberId, this.state, () => {
             this.setState({
                 hasChanges: false

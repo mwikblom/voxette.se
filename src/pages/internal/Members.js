@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseApp from '../../FirebaseApp';
+import { Redirect } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -20,26 +21,17 @@ const styles = theme => ({
     },
 });
 
-let id = 0;
-function createData(name, calories, fat, carbs, protein) {
-    id += 1;
-    return { id, name, calories, fat, carbs, protein };
+function memberUri(memberId) {
+    return '/inloggad/medlem/' + memberId;
 }
-
-const data = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 class Members extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            members: {}
+            members: {},
+            selectedMemberId: null
         };
     }
 
@@ -55,9 +47,13 @@ class Members extends Component {
 
     render() {
         const { classes } = this.props;
-        const { members } = this.state;
+        const { members, selectedMemberId } = this.state;
 
-        return (            
+        if (selectedMemberId) {
+            return <Redirect push to={memberUri(selectedMemberId)}/>;
+        }
+
+        return ( 
             <div>
                 <h2>Medlemmar</h2>
                 <p>Visar inloggade medlemmens uppgifter samt listar alla medlemmar i kören.</p>
@@ -68,22 +64,22 @@ class Members extends Component {
                             <TableRow>
                                 <TableCell>Namn</TableCell>
                                 <TableCell>Stämma</TableCell>
-                                <TableCell numeric>Telefon</TableCell>
-                                <TableCell numeric>Epost</TableCell>
-                                <TableCell numeric>Adress</TableCell>
+                                <TableCell>Telefon</TableCell>
+                                <TableCell>Epost</TableCell>
+                                <TableCell>Adress</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Object.values(members).map(mmeber => {
+                            {Object.values(members).map(member => {
                                 return (
-                                    <TableRow key={mmeber.userData.memberId}>
+                                    <TableRow hover key={member.userData.memberId} onClick={() => this.handleClick(member.userData.memberId)}>
                                         <TableCell component="th" scope="row">
-                                            {mmeber.userData.firstName} {mmeber.userData.laastName}
+                                            {member.userData.firstName} {member.userData.lastName}
                                         </TableCell>
-                                        <TableCell numeric>{mmeber.userData.part}</TableCell>
-                                        <TableCell numeric>{mmeber.userData.phone}</TableCell>
-                                        <TableCell numeric>{mmeber.userData.email}</TableCell>
-                                        <TableCell numeric>{mmeber.userData.address}</TableCell>
+                                        <TableCell>{member.userData.part}</TableCell>
+                                        <TableCell>{member.userData.phone}</TableCell>
+                                        <TableCell>{member.userData.email}</TableCell>
+                                        <TableCell>{member.userData.address}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -92,6 +88,12 @@ class Members extends Component {
                 </Paper>            
             </div>
         );
+    }
+
+    handleClick = memberId => {
+        this.setState({
+            selectedMemberId: memberId
+        });
     }
 }
 
