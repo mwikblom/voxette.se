@@ -1,7 +1,6 @@
 import firebase from 'firebase';
 import config from './config.json';
 
-
 var firebaseConfig = {
     apiKey: config.firebase.apiKey,
     authDomain: config.firebase.authDomain,
@@ -10,11 +9,73 @@ var firebaseConfig = {
     storageBucket: config.firebase.storageBucket,
     messagingSenderId: config.firebase.messagingSenderId,
 };
+
 var firebaseApp = firebase.initializeApp(firebaseConfig);
 firebaseApp.customSettings = config.customSettings;
 
+function createFilePointer(fullPath, file, done) {
+    console.log('storing file pointer for ' + fullPath);
+
+    firebase
+        .database()
+        .ref('files/' + fullPath)
+        .set({ 
+            fullPath: fullPath,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+
+        }, () => {
+            console.log('file pointer saved');
+            done();
+        });
+}
+
 // some Utils
 const voxette = {
+
+    fetchAllFiles: (done) => {
+
+        // TODO attributes to filter files
+
+        console.log('fetching all files');
+
+        firebase
+            .database()
+            .ref('files')
+            .once('value')
+            .then((snapshot) => {
+                const files = snapshot.val();
+
+                console.log('data: ' + JSON.stringify(files));
+
+                if (files) { 
+                    // TODO getDownloadURL().then(function(url) { }
+
+                    done(files);
+                } else {
+                    console.log('No data available');
+                    done();
+                }
+            });
+    },
+
+    uploadFile: (fullPath, file, done) => {
+
+        console.log('uploading file to ' + fullPath);
+
+        firebase
+            .storage()
+            .ref()
+            .child(fullPath)
+            .put(file)
+            .then((snapshot) => {
+                console.log('uploaded a file to ' + fullPath + ' snapshot: ' + snapshot);
+
+                createFilePointer(fullPath, file, done);
+            });
+    },
+
     fetchUserData: (googleId, done) => {
         if (googleId) {
 
@@ -42,7 +103,7 @@ const voxette = {
     },
 
     fetchAllMembers: (done) => {
-        // TODO attributes which filter a member
+        // TODO attributes to filter members
         
         console.log('fetching all members');
 
