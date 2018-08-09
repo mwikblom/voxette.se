@@ -105,7 +105,7 @@ class Documents extends Component {
                         <TableBody>
                             {Object.values(files).map(file => {
                                 return (
-                                    <TableRow hover key={file.fullPath}>
+                                    <TableRow hover key={file.fullPath} onClick={() => this.handleClick(file.fullPath)}>
                                         <TableCell component="th" scope="row">
                                             {file.name}
                                         </TableCell>
@@ -119,6 +119,20 @@ class Documents extends Component {
                 </Paper>                   
             </div>
         );
+    }
+
+    handleClick = fullPath => {
+        FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {
+            window.open(url); // just open in new tab for now. Might be better to download due to bandwidth
+
+            /*var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function(event) {
+                var blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();*/
+        });
     }
 }
 

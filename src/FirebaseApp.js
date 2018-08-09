@@ -76,6 +76,22 @@ const voxette = {
             });
     },
 
+    getDownloadUrl: (fullPath, done) => {
+
+        console.log('downloading from ' + fullPath);
+
+        firebase
+            .storage()
+            .ref(fullPath)
+            .getDownloadURL()
+            .then((url) => {
+
+                console.log('URL is' + url);
+
+                done(url);
+            });
+    },
+    
     fetchUserData: (googleId, done) => {
         if (googleId) {
 
