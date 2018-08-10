@@ -119,7 +119,7 @@ class Documents extends Component {
         return (
             <div>
                 <h2>Filer</h2>
-                <p>Här kan du hitta noter och stämfiler</p>
+                <p>Här kan du hitta noter och stämfiler. Sökning på namn sker från början och är "case sensitive" dvs. 'A' hittar Advent.pdf.</p>
 
                 <Paper className={classes.root}>
 
@@ -139,7 +139,6 @@ class Documents extends Component {
 
                 <div>                     
                     <form onSubmit={(e) => this.search(e)}>
-                    <FilterListIcon />
                     <TextField
                         id="name"
                         label="Namn"
@@ -151,7 +150,7 @@ class Documents extends Component {
                     <TextField
                         id="type"
                         select
-                        label="Select"
+                        label="Typ"
                         className={classes.textField}
                         value={filterType}
                         onChange={(event) => this.handleChange(event, 'filterType')}

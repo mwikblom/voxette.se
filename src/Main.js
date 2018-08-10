@@ -30,6 +30,9 @@ const styles = {
         marginLeft: -12,
         marginRight: 20,
     },
+    content: {
+        padding: '0 1em 0 1em',
+    }
 };
 
 class Main extends Component {
@@ -113,10 +116,10 @@ class Main extends Component {
                             </Toolbar>
                         </AppBar>
 
-                        <div>
+                        <div className={classes.content}>
                             <h1>Välkommen till KFUM Voxette!</h1>
 
-                            <div className="content">
+                            <div>
                                 <div id="info-message"></div>
                                 <Switch>
                                     <Route exact path="/" render={this.pageController.HomePage} />
