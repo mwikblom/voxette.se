@@ -10,6 +10,12 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import SearchIcon from '@material-ui/icons/Search';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import { link } from 'fs';
 
 const styles = theme => ({
     root: {
@@ -25,8 +31,37 @@ const styles = theme => ({
     }, 
     input: {
         display: 'none',
-    },       
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 400,
+    },
+    download: {
+        cursor: 'pointer'
+    }
 });
+
+const types = [
+    {
+        value: 'application/pdf',
+        label: 'PDF',
+    },
+    {
+        value: 'audio',
+        label: 'Ljudfiler',
+    },
+    {
+        value: 'image',
+        label: 'Bilder',
+    }
+];
+
+function humanFileSize(size) {
+    var i = Math.floor( Math.log(size) / Math.log(1024) );
+    return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+};
+
 
 class Documents extends Component {
     
@@ -34,18 +69,26 @@ class Documents extends Component {
         super(props);
 
         this.state = {
-            files: [] 
+            files: [],
+            filterName: '',
+            filterType: ''
         };
     }
 
-    componentWillMount() {
-        FirebaseApp.voxette.fetchAllFiles((files) => {
+    search(e) {
+        const { filterName, filterType } = this.state;
+
+        e.preventDefault();
+
+        FirebaseApp.voxette.fetchFiles(filterName, filterType, (files) => {
             if (files) {
                 this.setState({
                     files: files
                 });
             }
         });
+
+        return false;
     }
 
     handleFiles(event) {
@@ -71,7 +114,7 @@ class Documents extends Component {
 
     render() {
         const { classes } = this.props;
-        const { files } = this.state;
+        const { files, filterName, filterType } = this.state;
 
         return (
             <div>
@@ -79,38 +122,78 @@ class Documents extends Component {
                 <p>Här kan du hitta noter och stämfiler</p>
 
                 <Paper className={classes.root}>
-                    
-                    <input
-                        accept="*/*"
-                        className={classes.input}
-                        id="upload-input"
-                        multiple
-                        type="file"
-                        onChange={(event) => this.handleFiles(event)} 
+
+                <input
+                    accept="*/*"
+                    className={classes.input}
+                    id="upload-input"
+                    multiple
+                    type="file"
+                    onChange={(event) => this.handleFiles(event)} 
+                />
+                <label htmlFor="upload-input">
+                    <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button}>
+                        <AddIcon />
+                    </Button>
+                </label>    
+
+                <div>                     
+                    <form onSubmit={(e) => this.search(e)}>
+                    <FilterListIcon />
+                    <TextField
+                        id="name"
+                        label="Namn"
+                        className={classes.textField}
+                        value={filterName}
+                        onChange={(event) => this.handleChange(event, 'filterName')}
+                        margin="normal"
                     />
-                    <label htmlFor="upload-input">
-                        <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button}>
-                            <AddIcon />
-                        </Button>
-                    </label>    
+                    <TextField
+                        id="type"
+                        select
+                        label="Select"
+                        className={classes.textField}
+                        value={filterType}
+                        onChange={(event) => this.handleChange(event, 'filterType')}
+                        SelectProps={{
+                            MenuProps: {
+                                className: classes.menu,
+                            },
+                        }}
+                        margin="normal"
+                    >
+                        {types.map(option => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>                    
+                    <Button type="submit" variant="contained">
+                        <SearchIcon />
+                    </Button>
+                    </form>
+
+                </div>
 
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
                                 <TableCell>Namn</TableCell>
                                 <TableCell>Storlek</TableCell>
-                                <TableCell>Typ</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Object.values(files).map(file => {
+                            {files.map(file => {
                                 return (
-                                    <TableRow hover key={file.fullPath} onClick={() => this.handleClick(file.fullPath)}>
+                                    <TableRow hover key={file.fullPath}>
                                         <TableCell component="th" scope="row">
                                             {file.name}
                                         </TableCell>
-                                        <TableCell>{file.size}</TableCell>
-                                        <TableCell>{file.type}</TableCell>
+                                        <TableCell>{humanFileSize(file.size)}</TableCell>
+                                        <TableCell>
+                                            <CloudDownloadIcon className={classes.download} onClick={() => this.handleClick(file.fullPath)}/>                                            
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -121,6 +204,12 @@ class Documents extends Component {
         );
     }
 
+    handleChange(event, name) {
+        this.setState({
+            [name]: event.target.value
+        });
+    }   
+
     handleClick = fullPath => {
         FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {
             window.open(url); // just open in new tab for now. Might be better to download due to bandwidth
@@ -129,6 +218,7 @@ class Documents extends Component {
             xhr.responseType = 'blob';
             xhr.onload = function(event) {
                 var blob = xhr.response;
+
             };
             xhr.open('GET', url);
             xhr.send();*/

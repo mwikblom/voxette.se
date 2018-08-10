@@ -34,29 +34,46 @@ function createFilePointer(fullPath, file, done) {
 // some Utils
 const voxette = {
 
-    fetchAllFiles: (done) => {
+    fetchFiles: (filterName, filterType, done) => {
 
-        // TODO attributes to filter files
+        console.log('fetching files with filter: ' + filterName + ' ' + filterType);
 
-        console.log('fetching all files');
-
-        firebase
+        var filesRef = firebase
             .database()
-            .ref('files')
+            .ref('files');
+    
+        if (filterName) {
+            filesRef = filesRef
+                .orderByChild('name')
+                .startAt(filterName);
+        } else if (filterType) {
+            filesRef = filesRef
+                .orderByChild('type')
+                .startAt(filterType);
+        }
+        
+        filesRef
             .once('value')
             .then((snapshot) => {
-                const files = snapshot.val();
+                const value = snapshot.val();
+                const files = value ? Object.values(value) : [];
 
-                console.log('data: ' + JSON.stringify(files));
+                const filteredFiles = files.filter(file => {
+                    if (filterName && filterType) {
+                        return file.name.startsWith(filterName) && file.type.startsWith(filterType);
+                    }
+                    if (filterName) {
+                        return file.name.startsWith(filterName);
+                    }
+                    if (filterType) {
+                        return file.type.startsWith(filterType);
+                    }
+                    return true;
+                });
 
-                if (files) { 
-                    // TODO getDownloadURL().then(function(url) { }
-
-                    done(files);
-                } else {
-                    console.log('No data available');
-                    done();
-                }
+                if (filteredFiles) { 
+                    done(filteredFiles);
+                } 
             });
     },
 
