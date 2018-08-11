@@ -10,7 +10,6 @@ class Calendar extends Component {
     render() {
         return (
             <div>
-                <EditableContent dataKey="contact" loggedIn={this.props.loggedIn} />
                 <h2>Kalender</h2>
                 <p>Här kan du höra oss</p>
             </div>

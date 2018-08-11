@@ -10,6 +10,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 const styles = {
+    content: {
+        paddingRight: '2em'
+    }
 };
 
 class Authentication extends Component {
@@ -32,9 +35,10 @@ class Authentication extends Component {
     }
     render() {
         const { anchorEl } = this.state;
+        const { classes } = this.props;
 
         return this.props.loggedIn ? 
-            <div>
+            <div className={ classes.content } >
                 <IconButton
                     aria-owns={anchorEl ? 'menu-appbar' : null}
                     aria-haspopup="true"

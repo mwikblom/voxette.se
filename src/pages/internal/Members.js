@@ -30,7 +30,7 @@ class Members extends Component {
         super(props);
 
         this.state = {
-            members: {},
+            members: [],
             selectedMemberId: null
         };
     }
@@ -70,7 +70,7 @@ class Members extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Object.values(members).map(member => {
+                            {members.map(member => {
                                 return (
                                     <TableRow hover key={member.userData.memberId} onClick={() => this.handleClick(member.userData.memberId)}>
                                         <TableCell component="th" scope="row">

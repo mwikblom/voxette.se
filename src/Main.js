@@ -3,6 +3,7 @@ import { Route, Switch, NavLink, BrowserRouter } from 'react-router-dom';
 import PageController from './pages/PageController';
 import FirebaseApp from './FirebaseApp';
 import NotFound from './pages/NotFound';
+import Message from './components/Message';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles } from '@material-ui/core/styles';
@@ -30,6 +31,9 @@ const styles = {
         marginLeft: -12,
         marginRight: 20,
     },
+    content: {
+        padding: '0 1em 0 1em',
+    }
 };
 
 class Main extends Component {
@@ -38,8 +42,10 @@ class Main extends Component {
         this.state = {
             loggedIn: false,
             user: undefined,
-            anchorEl: null
-        };
+            anchorEl: null,
+            messageText: undefined,
+            messageVariant: 'info'
+        };        
 
         // Functions
         this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
@@ -62,20 +68,23 @@ class Main extends Component {
             : undefined;
         
         const { classes } = this.props;
-        const { anchorEl } = this.state;
+        const { anchorEl, messageText, messageVariant } = this.state;
 
         return (
             <React.Fragment>
                 <CssBaseline />
+                <Message text={messageText} variant={messageVariant} />                
                 <BrowserRouter>
                     <div className={classes.root}>
                         <AppBar position="static">
                             <Toolbar>
-                                <IconButton className={classes.menuButton} color="inherit" aria-label="Menu"
+                                <IconButton 
+                                    className={classes.menuButton} 
+                                    color="inherit" 
+                                    aria-label="Menu"
                                     aria-owns={anchorEl ? 'simple-menu' : null}
                                     aria-haspopup="true"
                                     onClick={this.handleClick}
-                                    color="inherit"
                                 >
                                     <MenuIcon />
                                 </IconButton>
@@ -113,20 +122,20 @@ class Main extends Component {
                             </Toolbar>
                         </AppBar>
 
-                        <div className="content">
+                        <div className={classes.content}>
                             <div id="info-message"></div>
                             <Switch>
                                 <Route exact path="/" render={this.pageController.HomePage} />
                                 <Route path="/kalender" render={this.pageController.CalendarPage} />
                                 <Route path="/kontakt" render={this.pageController.ContactPage} />
                                 <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
-
+                        
                                 <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
                                 <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
                                 <Route path="/inloggad/medlem/:memberId" render={this.pageController.MemberPage} />
                                 <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
                                 <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
-
+                        
                                 <Route component={NotFound} />
                             </Switch>
                         </div>
@@ -139,23 +148,51 @@ class Main extends Component {
     // Functions
     handleLoginSuccess(response) {
 
-        FirebaseApp.voxette.fetchUserData(response.uid, (userData) => {
+        const email = response.email;
+        const googleId = response.uid;
+        const picture = response.photoURL;
+
+        FirebaseApp.voxette.fetchUserData(email, (userData) => {
 
             if (userData) {
 
-                this.setState({
-                    loggedIn: true,
-                    user: new User(response.uid, userData)
-                });
+                if (typeof userData === 'string') { // no data available, only email (inital)
+
+                    const displayName = response.displayName;
+                    const user = new User(googleId, displayName, email, picture);
+
+                    this.setState({
+                        loggedIn: true,
+                        user: user,
+                        messageText: 'Du är inloggad med ' + email,
+                        messageVariant: 'info'
+                    });
+
+                    const initialUserData = user.InitialUserData;
+                    initialUserData.memberId = FirebaseApp.voxette.getValidDatabsePathItem(email);
+
+                    FirebaseApp.voxette.saveUserData(email, initialUserData, () => {
+                        this.setState({
+                            messageText: 'Skapade användare för ' + user.FirstName,
+                            messageVariant: 'info'
+                        });
+                    });
+
+                } else {
+                    this.setState({
+                        loggedIn: true,
+                        user: new User(googleId, userData, email, picture),
+                        messageText: 'Hej igen ' + userData.firstName,
+                        messageVariant: 'success'
+                    });
+                }
         
             } else {
-                // TODO: redirect to member when no data exists. Prepopulate with data in User
                 this.setState({
-                    loggedIn: true,
-                    user: new User(response.uid,
-                        response.displayName,
-                        response.email,
-                        response.photoURL)
+                    loggedIn: false,
+                    user: undefined,
+                    messageText: 'Hoppsan! Användare ' + email + ' saknas',
+                    messageVariant: 'warning'
                 });
             }
         });
