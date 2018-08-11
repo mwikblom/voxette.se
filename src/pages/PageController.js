@@ -5,6 +5,7 @@ import Home from './external/Home';
 import Calendar from './external/Calendar';
 import Contact from './external/Contact';
 import ApplyForMembership from './external/ApplyForMembership';
+import Conductor from './external/Conductor';
 import RequiresLogin from './RequiresLogin';
 
 // Internal pages
@@ -25,6 +26,7 @@ export default class PageController {
         this.DocumentsPage = this.DocumentsPage.bind(this);
         this.MembersPage = this.MembersPage.bind(this);
         this.MemberPage = this.MemberPage.bind(this);
+        this.Conductor = this.Conductor.bind(this);
         // External Pages
         this.HomePage = this.HomePage.bind(this);
         this.CalendarPage = this.CalendarPage.bind(this);
@@ -65,22 +67,27 @@ export default class PageController {
     // External pages
     HomePage() {
         return (
-            <Home loggedIn={this.loggedIn} user={this.user} />
+            <Home />
         );
     }
     CalendarPage() {
         return (
-            <Calendar loggedIn={this.loggedIn} user={this.user} />
+            <Calendar />
         );
     }
     ContactPage() {
         return (
-            <Contact loggedIn={this.loggedIn} user={this.user} />
+            <Contact />
         );
     }
     ApplyForMembershipPage() {
         return (
-            <ApplyForMembership loggedIn={this.loggedIn} user={this.user} />
+            <ApplyForMembership />
+        );
+    }
+    Conductor() {
+        return (
+            <Conductor />
         );
     }
 }

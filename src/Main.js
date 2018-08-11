@@ -14,13 +14,33 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
 
 // Components
 import Authentication from './components/Authentication';
 import User from './models/User';
 //import { Editor } from '@tinymce/tinymce-react';
 
-const styles = {
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: '#E8F5E9',
+            main: '#C8E6C9',
+            dark: '#A5D6A7',
+            contrastText: '#000',
+        },
+        secondary: {
+            light: '#FFEBEE',
+            main: '#FFCDD2',
+            dark: '#EF9A9A',
+            contrastText: '#000',
+        },    
+    }
+});
+
+const styles = theme => ({
     root: {
         flexGrow: 1,
     },
@@ -32,9 +52,14 @@ const styles = {
         marginRight: 20,
     },
     content: {
-        padding: '0 1em 0 1em',
+        padding: '1em',
+        margin: '1em'
+    },
+    navLink: {
+        textDecoration: 'none',
+        color: theme.palette.text.primary
     }
-};
+});
 
 class Main extends Component {
     constructor(props) {
@@ -55,23 +80,23 @@ class Main extends Component {
     render() {
         this.pageController = new PageController(this.state.loggedIn, this.state.user);
 
+        const { classes } = this.props;
+        const { anchorEl, messageText, messageVariant } = this.state;
+
         // Init internal routing
         const internalMenu = this.state.loggedIn
             ? (
                 <React.Fragment>
-                    <MenuItem onClick={this.handleClose}><NavLink exact to="/inloggad/">Information</NavLink></MenuItem>
-                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/medlemmar">Medlemmar</NavLink></MenuItem>
-                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/kalender">Intern kalender</NavLink></MenuItem>
-                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/dokument">Dokument</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} exact to="/inloggad/">Information</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/medlemmar">Medlemmar</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/kalender">Intern kalender</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/dokument">Dokument</NavLink></MenuItem>
                 </React.Fragment>
             )
             : undefined;
-        
-        const { classes } = this.props;
-        const { anchorEl, messageText, messageVariant } = this.state;
 
         return (
-            <React.Fragment>
+            <MuiThemeProvider theme={theme}>
                 <CssBaseline />
                 <Message text={messageText} variant={messageVariant} />                
                 <BrowserRouter>
@@ -103,10 +128,15 @@ class Main extends Component {
                                         horizontal: 'right',
                                     }}
                                 >
-                                    <MenuItem onClick={this.handleClose}><NavLink exact to="/">Hem</NavLink></MenuItem>
-                                    <MenuItem onClick={this.handleClose}><NavLink to="/kalender">Kalender</NavLink></MenuItem>
-                                    <MenuItem onClick={this.handleClose}><NavLink to="/kontakt">Kontakt</NavLink></MenuItem>
-                                    <MenuItem onClick={this.handleClose}><NavLink to="/ansokan">Ansökan</NavLink></MenuItem>
+                                    <MenuItem onClick={this.handleClose}>
+                                        <NavLink className={classes.navLink} exact to="/">Hem</NavLink>
+                                    </MenuItem>
+                                    <MenuItem onClick={this.handleClose}>
+                                        <NavLink className={classes.navLink} exact to="/dirigent">Dirigent</NavLink>
+                                    </MenuItem>
+                                    <MenuItem onClick={this.handleClose}>
+                                        <NavLink className={classes.navLink} to="/kontakt">Kontakt</NavLink>
+                                    </MenuItem>
                                     {internalMenu}
                                 </Menu>
 
@@ -122,13 +152,14 @@ class Main extends Component {
                             </Toolbar>
                         </AppBar>
 
-                        <div className={classes.content}>
+                        <Paper className={classes.content}>
                             <div id="info-message"></div>
                             <Switch>
                                 <Route exact path="/" render={this.pageController.HomePage} />
                                 <Route path="/kalender" render={this.pageController.CalendarPage} />
                                 <Route path="/kontakt" render={this.pageController.ContactPage} />
                                 <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
+                                <Route path="/dirigent" render={this.pageController.Conductor} />
                         
                                 <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
                                 <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
@@ -138,10 +169,10 @@ class Main extends Component {
                         
                                 <Route component={NotFound} />
                             </Switch>
-                        </div>
+                        </Paper>
                     </div>
                 </BrowserRouter>
-            </React.Fragment>
+            </MuiThemeProvider>
         );
     }
 	

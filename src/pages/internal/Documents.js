@@ -12,10 +12,8 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import SearchIcon from '@material-ui/icons/Search';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import { link } from 'fs';
 
 const styles = theme => ({
     root: {
@@ -37,12 +35,16 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 400,
     },
-    download: {
+    clickable: {
         cursor: 'pointer'
     }
 });
 
 const types = [
+    {
+        value: '',
+        label: 'Alla'
+    },
     {
         value: 'application/pdf',
         label: 'PDF',
@@ -100,20 +102,17 @@ class Documents extends Component {
             const fullPath = new Date().getTime() + '_' + marker;
 
             FirebaseApp.voxette.uploadFile(fullPath, file, () => { // TODO update state after last file
-                FirebaseApp.voxette.fetchAllFiles((files) => {
-                    if (files) {
-                        this.setState({
-                            files: files
-                        });
-                    }
-                });
             });
         }            
     }
 
     render() {
         const { classes } = this.props;
-        const { files, filterName, filterType } = this.state;
+        const { files, filterName, filterType, editable } = this.state;
+
+        const nameField = function(file) {
+            return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name)
+        }
 
         return (
             <div>
@@ -185,12 +184,13 @@ class Documents extends Component {
                             {files.map(file => {
                                 return (
                                     <TableRow hover key={file.fullPath}>
-                                        <TableCell component="th" scope="row">
-                                            {file.name}
+
+                                        <TableCell component="th" scope="row" onClick={() => this.handleClickName(file.fullPath)} className={classes.clickable}>
+                                            {nameField(file)}
                                         </TableCell>
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
                                         <TableCell>
-                                            <CloudDownloadIcon className={classes.download} onClick={() => this.handleClick(file.fullPath)}/>                                            
+                                            <CloudDownloadIcon className={classes.clickable} onClick={() => this.handleClick(file.fullPath)}/>                                            
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -220,6 +220,12 @@ class Documents extends Component {
             };
             xhr.open('GET', url);
             xhr.send();*/
+        });
+    }
+
+    handleClickName = fullPath => {
+        this.setState({
+            editable: fullPath
         });
     }
 }
