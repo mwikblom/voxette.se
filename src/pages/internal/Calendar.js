@@ -1,39 +1,40 @@
 import React, { Component } from 'react';
-import CalendarEvent from '../../models/CalendarEvent';
+import FirebaseApp from '../../FirebaseApp';
+import CalendarEventForm from './CalendarEventForm';
 import CalendarItem from '../../components/CalendarItem';
 
 export default class InternalCalendar extends Component {
     constructor(props) {
         super(props);
-        this.calendarEvents = this.calendarEvents.bind(this);
+
+        this.state = {
+            events: {},
+            selectedEventId: null
+        };
     }
+
+    componentWillMount() {
+        FirebaseApp.voxette.fetchAllEvents((events) => {
+            if (events) {
+                this.setState({
+                    events: events
+                });
+            }
+        });
+    }
+
     render() {
+        const { events } = this.state;
+
         return (
             <div>
-                <h2>Kalender</h2>
+                <h2>Intern kalender</h2>
                 <p>Interna kalendern med närvaro.</p>
-                {this.calendarEvents().map((element) => {
-                    return (<CalendarItem calendarEvent={element} />);
+                <CalendarEventForm />
+                {Object.values(events).map((event) => {
+                    return (<CalendarItem calendarEvent={event} />);
                 })}
             </div>
         );
-    }
-    calendarEvents() { // TODO: change mocked events
-        return [
-            new CalendarEvent(
-                'Kördag/Genrep inför Voxette 20 år',
-                '2018-06-01',
-                '10:00',
-                '2018-06-01',
-                '15:00'
-            ), 
-            new CalendarEvent(
-                'Konsert - Voxette 20 år',
-                '2018-06-02',
-                '15:00',
-                '2018-06-02',
-                '17:00'
-            )
-        ];
     }
 }

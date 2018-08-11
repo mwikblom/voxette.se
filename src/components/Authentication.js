@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import firebase from 'firebase';
 import FirebaseApp from '../FirebaseApp';
 import PropTypes from 'prop-types';

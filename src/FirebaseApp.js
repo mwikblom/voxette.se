@@ -37,7 +37,7 @@ const voxette = {
                     }
                 });
         } else {
-            throw 'No googleId available for user';
+            throw new Error('No googleId available for user');
         }
     },
 
@@ -63,7 +63,7 @@ const voxette = {
                 }
             });
     },
-
+    
     saveUserData: (googleId, userData, done) => {
         if (googleId && userData) {
 
@@ -77,9 +77,74 @@ const voxette = {
                     done();
                 });
         } else {
-            throw 'No googleId available for user';
+            throw new Error('No googleId available for user');
+        }
+    },
+
+    
+    fetchEventData: (eventId, done) => {
+        if (eventId) {
+
+            console.log('fetching data for ' + eventId);
+
+            firebase
+                .database()
+                .ref('events/' + eventId)
+                .once('value')
+                .then((snapshot) => {
+                    const eventData = snapshot.val() && snapshot.val().eventData;
+    
+                    console.log('data: ' + JSON.stringify(eventData));
+
+                    if (eventData) { // prefere the data in our database
+                        done(eventData);
+                    } else {
+                        console.log('No data available for ' + eventId);
+                        done();
+                    }
+                });
+        } else {
+            throw new Error('No eventId recieved');
+        }
+    },
+
+    fetchAllEvents: (done) => {
+        console.log('fetching all events');
+
+        firebase
+            .database()
+            .ref('events')
+            .once('value')
+            .then((snapshot) => {
+                const events = snapshot.val();
+
+                console.log('data: ' + JSON.stringify(events));
+
+                if (events) { // prefere the data in our database
+                    done(events);
+                } else {
+                    console.log('No data available');
+                    done();
+                }
+            });
+    },
+
+    addEventData: (eventData, done) => {
+        if (eventData) {
+
+            console.log('adding event, data: ' + JSON.stringify(eventData));
+
+            var newEvent = firebase
+                .database()
+                .ref('events')
+                .push({ eventData: eventData });
+            
+            done(newEvent.key);
+        } else {
+            throw new Error('No eventData to add recieved');
         }
     }
+
 };
 
 firebaseApp.voxette = voxette;

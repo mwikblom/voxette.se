@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // External pages
 import Home from './external/Home';

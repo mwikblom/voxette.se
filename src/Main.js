@@ -39,7 +39,7 @@ class Main extends Component {
             loggedIn: false,
             user: undefined,
             anchorEl: null
-        };        
+        };
 
         // Functions
         this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
@@ -55,7 +55,7 @@ class Main extends Component {
                 <React.Fragment>
                     <MenuItem onClick={this.handleClose}><NavLink exact to="/inloggad/">Information</NavLink></MenuItem>
                     <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/medlemmar">Medlemmar</NavLink></MenuItem>
-                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/kalender">Kalender</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/kalender">Intern kalender</NavLink></MenuItem>
                     <MenuItem onClick={this.handleClose}><NavLink to="/inloggad/dokument">Dokument</NavLink></MenuItem>
                 </React.Fragment>
             )
@@ -99,7 +99,7 @@ class Main extends Component {
                                     <MenuItem onClick={this.handleClose}><NavLink to="/kontakt">Kontakt</NavLink></MenuItem>
                                     <MenuItem onClick={this.handleClose}><NavLink to="/ansokan">Ansökan</NavLink></MenuItem>
                                     {internalMenu}
-                                </Menu>           
+                                </Menu>
 
                                 <Typography variant="title" color="inherit" className={classes.flex}>
                                     KFUM Voxette
@@ -113,30 +113,26 @@ class Main extends Component {
                             </Toolbar>
                         </AppBar>
 
-                        <div>
-                            <h1>Välkommen till KFUM Voxette!</h1>
+                        <div className="content">
+                            <div id="info-message"></div>
+                            <Switch>
+                                <Route exact path="/" render={this.pageController.HomePage} />
+                                <Route path="/kalender" render={this.pageController.CalendarPage} />
+                                <Route path="/kontakt" render={this.pageController.ContactPage} />
+                                <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
 
-                            <div className="content">
-                                <div id="info-message"></div>
-                                <Switch>
-                                    <Route exact path="/" render={this.pageController.HomePage} />
-                                    <Route path="/kalender" render={this.pageController.CalendarPage} />
-                                    <Route path="/kontakt" render={this.pageController.ContactPage} />
-                                    <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
-							
-                                    <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
-                                    <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
-                                    <Route path="/inloggad/medlem/:memberId" render={this.pageController.MemberPage} />
-                                    <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
-                                    <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
-							
-                                    <Route component={NotFound} />
-                                </Switch>
-                            </div>
-                        </div>		
-                    </div>            
+                                <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
+                                <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
+                                <Route path="/inloggad/medlem/:memberId" render={this.pageController.MemberPage} />
+                                <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
+                                <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
+
+                                <Route component={NotFound} />
+                            </Switch>
+                        </div>
+                    </div>
                 </BrowserRouter>
-            </React.Fragment>            
+            </React.Fragment>
         );
     }
 	
@@ -162,7 +158,7 @@ class Main extends Component {
                         response.photoURL)
                 });
             }
-        });        
+        });
     }
     
     handleLoginFailure(response) {
