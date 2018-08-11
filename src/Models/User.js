@@ -1,5 +1,3 @@
-import firebase from 'firebase';
-
 export default class User {
     constructor(googleId, displayNameOrUserData, email, picture = '') {
 
@@ -16,7 +14,7 @@ export default class User {
             this.firstName = displayNameOrUserData.firstName;
             this.lastName = displayNameOrUserData.lastName;
             this.email = displayNameOrUserData.email;
-            this.picture = displayNameOrUserData.address;
+            this.picture = displayNameOrUserData.picture;
         }
     }
 
@@ -34,5 +32,14 @@ export default class User {
     }
     get Picture() {
         return this.picture;
+    }
+    get InitialUserData() {
+        return {
+            googleId: this.googleId,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            pictureUrl: this.picture
+        };
     }
 }

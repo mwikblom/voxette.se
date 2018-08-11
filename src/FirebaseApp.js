@@ -34,6 +34,11 @@ function createFilePointer(fullPath, file, done) {
 // some Utils
 const voxette = {
 
+    getValidDatabsePathItem: (name) => {
+        const invalidChars = /[.#$[\]/]/gi; 
+        return name.replace(invalidChars, '_');
+    },
+
     fetchFiles: (filterName, filterType, done) => {
 
         console.log('fetching files with filter: ' + filterName + ' ' + filterType);
@@ -109,29 +114,35 @@ const voxette = {
             });
     },
     
-    fetchUserData: (googleId, done) => {
-        if (googleId) {
+    fetchUserData: (email, done) => {
+        if (email) {
 
-            console.log('fetching data for ' + googleId);
+            const userId = voxette.getValidDatabsePathItem(email);
+
+            console.log('fetching data for ' + email + ' userId ' + userId);
 
             firebase
                 .database()
-                .ref('members/' + googleId)
+                .ref('members/' + userId)
                 .once('value')
                 .then((snapshot) => {
-                    const userData = snapshot.val() && snapshot.val().userData;
+                    const data = snapshot.val();
     
-                    console.log('data: ' + JSON.stringify(userData));
+                    console.log('data: ' + JSON.stringify(data));
 
-                    if (userData) { // prefere the data in our database
-                        done(userData);
+                    if (data) {
+                        if (data.userData) { // prefere the data in our database
+                            done(data.userData);
+                        } else {
+                            done(data); // i.e. no data available - only the member access
+                        }
                     } else {
-                        console.log('No data available for ' + googleId);
+                        console.log('No data available for ' + email);
                         done();
                     }
                 });
         } else {
-            throw 'No googleId available for user';
+            throw 'No email available for user';
         }
     },
 
@@ -149,29 +160,31 @@ const voxette = {
 
                 console.log('data: ' + JSON.stringify(users));
 
-                if (users) { // prefere the data in our database
-                    done(users);
+                if (users) {
+                    done(Object.values(users));
                 } else {
                     console.log('No data available');
-                    done();
+                    done([]);
                 }
             });
     },
 
-    saveUserData: (googleId, userData, done) => {
-        if (googleId && userData) {
+    saveUserData: (email, userData, done) => {
+        if (email && userData) {
 
-            console.log('saving user data for ' + googleId + ' data: ' + JSON.stringify(userData));
+            const userId = voxette.getValidDatabsePathItem(email);
+
+            console.log('saving user data for ' + userId + ' data: ' + JSON.stringify(userData));
 
             firebase
                 .database()
-                .ref('members/' + googleId)
+                .ref('members/' + userId)
                 .set({ userData: userData }, () => {
                     console.log('data saved');
                     done();
                 });
         } else {
-            throw 'No googleId available for user';
+            throw 'No email available for user';
         }
     }
 };

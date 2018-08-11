@@ -96,8 +96,7 @@ class Documents extends Component {
 
         for (var i = 0; i < files.length; i++) {
             const file = files[i];
-            const invalidChars = /[.#$]/gi; // TODO also remove [ and ]
-            const marker = file.name.replace(invalidChars, '_');
+            const marker = FirebaseApp.voxette.getValidDatabsePathItem(file.name);
             const fullPath = new Date().getTime() + '_' + marker;
 
             FirebaseApp.voxette.uploadFile(fullPath, file, () => { // TODO update state after last file
