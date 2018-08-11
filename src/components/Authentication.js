@@ -8,12 +8,18 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Avatar from '@material-ui/core/Avatar';
+import FaceIcon from '@material-ui/icons/Face';
+import Chip from '@material-ui/core/Chip';
 
-const styles = {
+const styles = theme => ({
     content: {
         paddingRight: '2em'
-    }
-};
+    },
+    chip: {
+        margin: theme.spacing.unit,
+    },
+});
 
 class Authentication extends Component {
     constructor (props) {
@@ -35,9 +41,29 @@ class Authentication extends Component {
     }
     render() {
         const { anchorEl } = this.state;
-        const { classes } = this.props;
+        const { classes, user, loggedIn } = this.props;
 
-        return this.props.loggedIn ? 
+        const avatar = function() {
+            return (user && user.Picture) ? (
+                <Chip
+                    avatar={<Avatar src={user.Picture} />}
+                    label={user.FirstName}
+                    className={classes.chip}
+                  />                    
+                ) : (
+                <Chip
+                avatar={
+                    <Avatar>
+                    <FaceIcon />
+                    </Avatar>
+                }
+                label="user.FirstName"
+                className={classes.chip}
+                />        
+            );
+        }
+
+        return loggedIn ? 
             <div className={ classes.content } >
                 <IconButton
                     aria-owns={anchorEl ? 'menu-appbar' : null}
@@ -45,8 +71,7 @@ class Authentication extends Component {
                     onClick={this.handleMenu}
                     color="inherit"
                     >
-                    <AccountCircle />
-                    {this.props.user.FirstName} {this.props.user.LastName} 
+                    {avatar()} 
                 </IconButton>
                 <Menu
                     id="menu-appbar"
@@ -122,7 +147,7 @@ Authentication.propTypes = {
     onLoginSuccess: PropTypes.func.isRequired,
     onLogoutSuccess: PropTypes.func.isRequired,
     onLoginFailure: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired
+    user: PropTypes.object
 };
   
 export default withStyles(styles)(Authentication);

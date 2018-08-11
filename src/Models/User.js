@@ -14,7 +14,7 @@ export default class User {
             this.firstName = displayNameOrUserData.firstName;
             this.lastName = displayNameOrUserData.lastName;
             this.email = displayNameOrUserData.email;
-            this.picture = displayNameOrUserData.picture;
+            this.picture = displayNameOrUserData.pictureUrl;
         }
     }
 
