@@ -86,6 +86,49 @@ const voxette = {
             });
     },
 
+    fetchFileData: (fullPath, done) => {
+        if (fullPath) {
+
+            console.log('fetching data for ' + fullPath);
+
+            firebase
+                .database()
+                .ref('files/' + fullPath)
+                .once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+    
+                    console.log('data: ' + JSON.stringify(data));
+
+                    if (data) {
+                        done(data);
+                    } else {
+                        console.log('No data available for ' + fullPath);
+                        done();
+                    }
+                });
+        } else {
+            throw new Error('No full path available for file');
+        }
+    },
+
+    saveFileData: (fullPath, name, done) => {
+        if (fullPath) {
+
+            console.log('saving file name for ' + fullPath + ' name: ' + name);
+
+            firebase
+                .database()
+                .ref('files/' + fullPath + '/name')
+                .set(name, () => {
+                    console.log('data saved');
+                    done();
+                });
+        } else {
+            throw new Error('No full path available for file');
+        }
+    },
+
     uploadFile: (fullPath, file, done) => {
 
         console.log('uploading file to ' + fullPath);
@@ -121,13 +164,13 @@ const voxette = {
     fetchUserData: (email, done) => {
         if (email) {
 
-            const userId = voxette.getValidDatabsePathItem(email);
+            const memberId = voxette.getValidDatabsePathItem(email);
 
-            console.log('fetching data for ' + email + ' userId ' + userId);
+            console.log('fetching data for ' + email + ' memberId ' + memberId);
 
             firebase
                 .database()
-                .ref('members/' + userId)
+                .ref('members/' + memberId)
                 .once('value')
                 .then((snapshot) => {
                     const data = snapshot.val();
@@ -197,27 +240,26 @@ const voxette = {
 
     addMember: (email, done) => {
         if (email) {
-            const userId = voxette.getValidDatabsePathItem(email);
+            const memberId = voxette.getValidDatabsePathItem(email);
 
-            voxette.saveUserData(email, {
-                email: email,
-                memberId: userId
+            voxette.saveUserData(memberId, {
+                email: email
             }, done);
         } else {
             throw new Error('No email available for user');
         }
     },
 
-    saveUserData: (email, userData, done) => {
-        if (email && userData) {
+    saveUserData: (memberId, userData, done) => {
+        if (memberId && userData) {
 
-            const userId = voxette.getValidDatabsePathItem(email);
+            console.log('saving user data for ' + memberId + ' data: ' + JSON.stringify(userData));
 
-            console.log('saving user data for ' + userId + ' data: ' + JSON.stringify(userData));
+            userData.memberId = memberId;
 
             firebase
                 .database()
-                .ref('members/' + userId)
+                .ref('members/' + memberId)
                 .set({ userData: userData }, () => {
                     console.log('data saved');
                     done();

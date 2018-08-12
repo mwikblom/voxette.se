@@ -5,9 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
     paper: {
@@ -24,6 +26,9 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 400,
     },
+    action: {
+        marginRight: theme.spacing.unit * 3,
+    }
 });
 
 const parts = [
@@ -51,7 +56,6 @@ class Member extends Component {
         super(props);
 
         this.state = {
-            memberId: props.memberId,
             firstName : '',
             lastName : '',
             email: '',
@@ -63,7 +67,7 @@ class Member extends Component {
     }
 
     componentWillMount() {
-        const { memberId } = this.state;
+        const { memberId } = this.props;
 
         FirebaseApp.voxette.fetchUserData(memberId, (userData) => {
             if (userData) {
@@ -77,13 +81,12 @@ class Member extends Component {
 
     render() {
         const { classes } = this.props;
-        const { memberId, firstName, lastName, email, phone, address, part, hasChanges} = this.state;
+        const { firstName, lastName, email, phone, address, part, hasChanges} = this.state;
 
         return (            
             <div>
-                <h1>ID: {memberId}</h1>
                 <Paper className={classes.paper}>
-                    <form className={classes.container} noValidate autoComplete="off">
+                    <form className={classes.container} noValidate autoComplete="off" onSubmit={(e) => this.saveChanges(e)}>
                         <Grid container spacing={24}>
                             <Grid item xs={12}>
                                 <TextField
@@ -156,7 +159,11 @@ class Member extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <Button variant="contained" onClick={() => this.saveChanges()} color="primary" disabled={!hasChanges}>
+                                <Button component={Link} className={classes.action} variant="contained" to="/inloggad/medlemmar">
+                                    <CancelIcon />
+                                    Stäng
+                                </Button>
+                                <Button variant="contained" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
                                     <SaveIcon />
                                     Spara ändringar
                                 </Button>
@@ -175,8 +182,12 @@ class Member extends Component {
         });
     }   
     
-    saveChanges() {
-        FirebaseApp.voxette.saveUserData(this.state.memberId, this.state, () => {
+    saveChanges(e) {
+        const { memberId } = this.props;
+
+        e.preventDefault();
+
+        FirebaseApp.voxette.saveUserData(memberId, this.state, () => {
             this.setState({
                 hasChanges: false
             });

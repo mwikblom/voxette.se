@@ -19,6 +19,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit';
 
 const styles = theme => ({
     root: {
@@ -40,9 +41,10 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 400,
     },
-    clickable: {
-        cursor: 'pointer'
-    }
+    action: {
+        cursor: 'pointer',
+        marginRight: theme.spacing.unit * 3
+    } 
 });
 
 // TODO duplicated in Member
@@ -100,8 +102,6 @@ class Members extends Component {
                 });
             }
         });
-
-        return false;
     }
 
     render() {
@@ -198,12 +198,13 @@ class Members extends Component {
                                 <TableCell>Telefon</TableCell>
                                 <TableCell>Epost</TableCell>
                                 <TableCell>Adress</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {members.map(member => {
                                 return (
-                                    <TableRow hover key={member.userData.memberId} onClick={() => this.handleClick(member.userData.memberId)}>
+                                    <TableRow hover key={member.userData.memberId}>
                                         <TableCell component="th" scope="row">
                                             {member.userData.firstName} {member.userData.lastName}
                                         </TableCell>
@@ -211,6 +212,9 @@ class Members extends Component {
                                         <TableCell>{member.userData.phone}</TableCell>
                                         <TableCell>{member.userData.email}</TableCell>
                                         <TableCell>{member.userData.address}</TableCell>
+                                        <TableCell>
+                                            <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
+                                        </TableCell>
                                     </TableRow>
                                 );
                             })}

@@ -11,9 +11,11 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import EditIcon from '@material-ui/icons/Edit';
 import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
     root: {
@@ -35,8 +37,9 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 400,
     },
-    clickable: {
-        cursor: 'pointer'
+    action: {
+        cursor: 'pointer',
+        marginRight: theme.spacing.unit * 3
     }
 });
 
@@ -64,6 +67,9 @@ function humanFileSize(size) {
     return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 };
 
+function fileUri(fullPath) {
+    return '/inloggad/fil/' + fullPath;
+}
 
 class Documents extends Component {
     
@@ -73,7 +79,8 @@ class Documents extends Component {
         this.state = {
             files: [],
             filterName: '',
-            filterType: ''
+            filterType: '',
+            selectedFullPath: null
         };
     }
 
@@ -89,8 +96,6 @@ class Documents extends Component {
                 });
             }
         });
-
-        return false;
     }
 
     handleFiles(event) {
@@ -108,10 +113,14 @@ class Documents extends Component {
 
     render() {
         const { classes } = this.props;
-        const { files, filterName, filterType, editable } = this.state;
+        const { files, filterName, filterType, editable, selectedFullPath } = this.state;
 
         const nameField = function(file) {
             return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name)
+        }
+
+        if (selectedFullPath) {
+            return <Redirect push to={fileUri(selectedFullPath)}/>;
         }
 
         return (
@@ -184,12 +193,13 @@ class Documents extends Component {
                                 return (
                                     <TableRow hover key={file.fullPath}>
 
-                                        <TableCell component="th" scope="row" onClick={() => this.handleClickName(file.fullPath)} className={classes.clickable}>
+                                        <TableCell component="th" scope="row">
                                             {nameField(file)}
                                         </TableCell>
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
                                         <TableCell>
-                                            <CloudDownloadIcon className={classes.clickable} onClick={() => this.handleClick(file.fullPath)}/>                                            
+                                            <CloudDownloadIcon className={classes.action} onClick={() => this.handleClickDownload(file.fullPath)}/>
+                                            <EditIcon className={classes.action} onClick={() => this.handleClickEdit(file.fullPath)}/>
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -207,7 +217,7 @@ class Documents extends Component {
         });
     }   
 
-    handleClick = fullPath => {
+    handleClickDownload = fullPath => {
         FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {
             window.open(url); // just open in new tab for now. Might be better to download due to bandwidth
 
@@ -222,9 +232,9 @@ class Documents extends Component {
         });
     }
 
-    handleClickName = fullPath => {
+    handleClickEdit = fullPath => {
         this.setState({
-            editable: fullPath
+            selectedFullPath: fullPath
         });
     }
 }

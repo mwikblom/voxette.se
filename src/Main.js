@@ -87,10 +87,9 @@ class Main extends Component {
         const internalMenu = this.state.loggedIn
             ? (
                 <React.Fragment>
-                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} exact to="/inloggad/">Information</NavLink></MenuItem>
                     <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/medlemmar">Medlemmar</NavLink></MenuItem>
                     <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/kalender">Intern kalender</NavLink></MenuItem>
-                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/dokument">Dokument</NavLink></MenuItem>
+                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/filer">Filer</NavLink></MenuItem>
                 </React.Fragment>
             )
             : undefined;
@@ -165,7 +164,8 @@ class Main extends Component {
                                 <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
                                 <Route path="/inloggad/medlem/:memberId" render={this.pageController.MemberPage} />
                                 <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
-                                <Route path="/inloggad/dokument" render={this.pageController.DocumentsPage} />
+                                <Route path="/inloggad/filer" render={this.pageController.DocumentsPage} />
+                                <Route path="/inloggad/fil/:fullPath" render={this.pageController.FilePage} />
                         
                                 <Route component={NotFound} />
                             </Switch>
@@ -198,9 +198,8 @@ class Main extends Component {
                 } else {
                     const user = new User(googleId, response.displayName, email, picture);
                     const initialUserData = user.InitialUserData;
-                    initialUserData.memberId = userData.memberId;
 
-                    FirebaseApp.voxette.saveUserData(email, initialUserData, () => {
+                    FirebaseApp.voxette.saveUserData(userData.memberId, initialUserData, () => {
                         this.setState({
                             loggedIn: true,
                             user: user,

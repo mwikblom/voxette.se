@@ -12,6 +12,7 @@ import RequiresLogin from './RequiresLogin';
 import Information from './internal/Information';
 import InternalCalendar from './internal/Calendar';
 import Documents from './internal/Documents';
+import File from './internal/File';
 import Members from './internal/Members';
 import Member from './internal/Member';
 
@@ -24,6 +25,7 @@ export default class PageController {
         this.InformationPage = this.InformationPage.bind(this);
         this.InternalCalendarPage = this.InternalCalendarPage.bind(this);
         this.DocumentsPage = this.DocumentsPage.bind(this);
+        this.FilePage = this.FilePage.bind(this);
         this.MembersPage = this.MembersPage.bind(this);
         this.MemberPage = this.MemberPage.bind(this);
         this.Conductor = this.Conductor.bind(this);
@@ -51,6 +53,11 @@ export default class PageController {
     DocumentsPage() {
         return this.loggedIn 
             ? (<Documents loggedIn={this.loggedIn} user={this.user} />)
+            : (<RequiresLogin />);
+    }
+    FilePage(options) {
+        return this.loggedIn 
+            ? (<File user={this.user} fullPath={options.match.params.fullPath} />)
             : (<RequiresLogin />);
     }
     MembersPage() {
