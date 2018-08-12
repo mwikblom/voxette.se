@@ -68,7 +68,7 @@ class Main extends Component {
             loggedIn: false,
             user: undefined,
             anchorEl: null,
-            messageText: undefined,
+            messageText: 'Den här sidan är under uppbyggnad!',
             messageVariant: 'info'
         };        
 
