@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
     img: {
         float: 'right',
-        marginLeft: '1em'
+        marginLeft: theme.spacing.unit
     }
 });
 

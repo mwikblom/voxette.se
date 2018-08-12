@@ -10,7 +10,7 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3,
         overflowX: 'auto',
         textAlign: 'center',
-        padding: '1em'
+        padding: theme.spacing.unit
     }
 });
 

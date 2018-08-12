@@ -13,7 +13,7 @@ import Chip from '@material-ui/core/Chip';
 
 const styles = theme => ({
     content: {
-        paddingRight: '2em'
+        paddingRight: theme.spacing.unit * 3
     },
     chip: {
         margin: theme.spacing.unit,

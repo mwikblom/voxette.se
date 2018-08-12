@@ -52,8 +52,8 @@ const styles = theme => ({
         marginRight: 20,
     },
     content: {
-        padding: '1em',
-        margin: '1em'
+        padding: theme.spacing.unit,
+        margin: theme.spacing.unit
     },
     navLink: {
         textDecoration: 'none',
