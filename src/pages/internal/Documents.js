@@ -16,6 +16,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
     root: {
@@ -43,23 +44,13 @@ const styles = theme => ({
     }
 });
 
-const types = [
-    {
-        value: '',
-        label: 'Alla'
-    },
-    {
-        value: 'application/pdf',
-        label: 'PDF',
-    },
-    {
-        value: 'audio',
-        label: 'Ljudfiler',
-    },
-    {
-        value: 'image',
-        label: 'Bilder',
-    }
+// TODO duplicated in File.js
+const tagValues = [
+    'Noter',
+    'Bilder',
+    'Ljudfiler',
+    'Dokument',
+    'Övrigt'
 ];
 
 function humanFileSize(size) {
@@ -79,17 +70,17 @@ class Documents extends Component {
         this.state = {
             files: [],
             filterName: '',
-            filterType: '',
+            filterTag: '',
             selectedFullPath: null
         };
     }
 
     search(e) {
-        const { filterName, filterType } = this.state;
+        const { filterName, filterTag } = this.state;
 
         e.preventDefault();
 
-        FirebaseApp.voxette.fetchFiles(filterName, filterType, (files) => {
+        FirebaseApp.voxette.fetchFiles(filterName, filterTag, (files) => {
             if (files) {
                 this.setState({
                     files: files
@@ -107,13 +98,23 @@ class Documents extends Component {
             const fullPath = new Date().getTime() + '_' + marker;
 
             FirebaseApp.voxette.uploadFile(fullPath, file, () => { // TODO update state after last file
+
+                const { filterName, filterTag } = this.state;
+
+                FirebaseApp.voxette.fetchFiles(filterName, filterTag, (files) => {
+                    if (files) {
+                        this.setState({
+                            files: files
+                        });
+                    }
+                });
             });
         }            
     }
 
     render() {
         const { classes } = this.props;
-        const { files, filterName, filterType, editable, selectedFullPath } = this.state;
+        const { files, filterName, filterTag, editable, selectedFullPath } = this.state;
 
         const nameField = function(file) {
             return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name)
@@ -126,7 +127,9 @@ class Documents extends Component {
         return (
             <div>
                 <h1>Filer</h1>
-                <p>Här kan du hitta noter och stämfiler. Sökning sker från början av filens namn och är "case sensitive" dvs. 'A' hittar Advent.pdf.</p>
+                <p>
+                    Här kan du hitta noter, stämfiler och annat. Sökning sker från början av filens namn. 
+                </p>
 
                 <Paper className={classes.root}>
 
@@ -139,9 +142,11 @@ class Documents extends Component {
                         onChange={(event) => this.handleFiles(event)} 
                     />
                     <label htmlFor="upload-input">
-                        <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button}>
-                            <AddIcon />
-                        </Button>
+                        <Tooltip title="Lägg till nya filer">
+                            <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button}>
+                                <AddIcon />
+                            </Button>
+                        </Tooltip>
                     </label>    
 
                     <div>                     
@@ -159,8 +164,8 @@ class Documents extends Component {
                                 select
                                 label="Typ"
                                 className={classes.textField}
-                                value={filterType}
-                                onChange={(event) => this.handleChange(event, 'filterType')}
+                                value={filterTag}
+                                onChange={(event) => this.handleChange(event, 'filterTag')}
                                 SelectProps={{
                                     MenuProps: {
                                         className: classes.menu,
@@ -168,15 +173,20 @@ class Documents extends Component {
                                 }}
                                 margin="normal"
                             >
-                                {types.map(option => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
+                                <MenuItem value="">
+                                    <em>Alla</em>
+                                </MenuItem>
+                                {tagValues.map(tag => (
+                                    <MenuItem key={tag} value={tag}>
+                                        {tag}
                                     </MenuItem>
                                 ))}
-                            </TextField>                    
-                            <Button type="submit" variant="contained">
-                                <SearchIcon />
-                            </Button>
+                            </TextField>      
+                            <Tooltip title="Sök efter filer">              
+                                <Button type="submit" variant="contained">
+                                    <SearchIcon />
+                                </Button>
+                            </Tooltip>
                         </form>
                     </div>
 
@@ -198,8 +208,12 @@ class Documents extends Component {
                                         </TableCell>
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
                                         <TableCell>
-                                            <CloudDownloadIcon className={classes.action} onClick={() => this.handleClickDownload(file.fullPath)}/>
-                                            <EditIcon className={classes.action} onClick={() => this.handleClickEdit(file.fullPath)}/>
+                                            <Tooltip title="Öppna fil">
+                                                <CloudDownloadIcon className={classes.action} onClick={() => this.handleClickDownload(file.fullPath)}/>
+                                            </Tooltip>    
+                                            <Tooltip title="Ändra namn eller filens taggar">
+                                                <EditIcon className={classes.action} onClick={() => this.handleClickEdit(file.fullPath)}/>
+                                            </Tooltip>
                                         </TableCell>
                                     </TableRow>
                                 );

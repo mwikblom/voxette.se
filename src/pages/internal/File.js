@@ -10,6 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { Link } from 'react-router-dom';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Chip from '@material-ui/core/Chip';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 
 const styles = theme => ({
     paper: {
@@ -28,7 +33,19 @@ const styles = theme => ({
     },
     action: {
         marginRight: theme.spacing.unit * 3,
-    }
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+        maxWidth: 300,
+    },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: theme.spacing.unit / 4,
+    },    
 });
 
 // TODO duplicated in Documents.js
@@ -36,6 +53,25 @@ function humanFileSize(size) {
     var i = Math.floor( Math.log(size) / Math.log(1024) );
     return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
+
+const tagValues = [
+    'Noter',
+    'Bilder',
+    'Ljudfiler',
+    'Dokument',
+    'Övrigt'
+];
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 class File extends Component {
     
@@ -46,7 +82,8 @@ class File extends Component {
             hasChanges: false,
             name: '',
             size: '',
-            type: ''
+            type: '',
+            tags: []
         };
     }
 
@@ -84,6 +121,32 @@ class File extends Component {
                                     autoFocus
                                     required
                                 />
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="select-multiple-chip">Taggar</InputLabel>
+                                    <Select
+                                        multiple
+                                        value={this.state.tags}
+                                        onChange={(event) => this.handleChange(event, 'tags')}
+                                        input={<Input id="select-multiple-chip" />}
+                                        renderValue={selected => (
+                                            <div className={classes.chips}>
+                                                {selected.map(value => (
+                                                    <Chip key={value} label={value} className={classes.chip} />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {tagValues.map(tag => (
+                                            <MenuItem
+                                                key={tag}
+                                                value={tag}
+                                            >
+                                                {tag}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -126,15 +189,15 @@ class File extends Component {
             hasChanges: true
         });
     }   
-    
+
     saveChanges(e) {
         const { fullPath } = this.props;
-        const { name } = this.state;
+        const { name, tags } = this.state;
 
         e.preventDefault();
 
         if (name) {
-            FirebaseApp.voxette.saveFileData(fullPath, name, () => {
+            FirebaseApp.voxette.saveFileData(fullPath, name, tags, () => {
                 this.setState({
                     hasChanges: false
                 });

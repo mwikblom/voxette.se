@@ -43,23 +43,7 @@ class Authentication extends Component {
         const { classes, user, loggedIn } = this.props;
 
         const avatar = function() {
-            return (user && user.Picture) ? (
-                <Chip
-                    avatar={<Avatar src={user.Picture} />}
-                    label={user.FirstName}
-                    className={classes.chip}
-                  />                    
-                ) : (
-                <Chip
-                avatar={
-                    <Avatar>
-                    <FaceIcon />
-                    </Avatar>
-                }
-                label="user.FirstName"
-                className={classes.chip}
-                />        
-            );
+            return (user && user.Picture) ? (<Avatar src={user.Picture} />) : (<Avatar><FaceIcon /></Avatar>)
         }
 
         return loggedIn ? 
@@ -70,7 +54,12 @@ class Authentication extends Component {
                     onClick={this.handleMenu}
                     color="inherit"
                     >
-                    {avatar()} 
+                    <Chip
+                        avatar={avatar()} 
+                        label={user.FirstName}
+                        className={classes.chip}
+                        color="secondary" 
+                    />        
                 </IconButton>
                 <Menu
                     id="menu-appbar"

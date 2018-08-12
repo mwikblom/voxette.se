@@ -14,7 +14,21 @@ var firebaseApp = firebase.initializeApp(firebaseConfig);
 firebaseApp.customSettings = config.customSettings;
 
 function createFilePointer(fullPath, file, done) {
+
     console.log('storing file pointer for ' + fullPath);
+
+    const tags = [];
+
+    // TODO somewhat duplicated with File.js
+    if (file.type.endsWith('pdf')) {
+        tags.push('Noter');
+    } else if (file.type.startsWith('audio')) {
+        tags.push('Ljudfiler');
+    } else if (file.type.startsWith('image')) {
+        tags.push('Bilder');
+    } else {
+        tags.push('Övrigt');
+    }
 
     firebase
         .database()
@@ -22,9 +36,10 @@ function createFilePointer(fullPath, file, done) {
         .set({ 
             fullPath: fullPath,
             name: file.name,
+            nameLowerCase: file.name.toLowerCase(),
             size: file.size,
             type: file.type,
-
+            tags: tags
         }, () => {
             console.log('file pointer saved');
             done();
@@ -39,23 +54,18 @@ const voxette = {
         return name.replace(invalidChars, '_');
     },
 
-    fetchFiles: (filterName, filterType, done) => {
+    fetchFiles: (filterName, filterTag, done) => {
 
-        console.log('fetching files with filter: ' + filterName + ' ' + filterType);
+        console.log('fetching files with filter: ' + filterName + ' ' + filterTag);
 
         var filesRef = firebase
             .database()
-            .ref('files');
+            .ref('files')
+            .orderByChild('nameLowerCase');
     
         if (filterName) {
-            filesRef = filesRef
-                .orderByChild('name')
-                .startAt(filterName);
-        } else if (filterType) {
-            filesRef = filesRef
-                .orderByChild('type')
-                .startAt(filterType);
-        }
+            filesRef = filesRef.startAt(filterName);
+        } 
         
         filesRef
             .once('value')
@@ -65,19 +75,21 @@ const voxette = {
 
                 const filteredFiles = files
                     .filter(file => {
-                        if (filterName && filterType) {
-                            return file.name.startsWith(filterName) && file.type.startsWith(filterType);
+                        const { nameLowerCase, tags } = file;
+
+                        if (filterName && filterTag) {
+                            return nameLowerCase.startsWith(filterName.toLowerCase()) && tags && tags.includes(filterTag);
                         }
                         if (filterName) {
-                            return file.name.startsWith(filterName);
+                            return nameLowerCase.startsWith(filterName.toLowerCase());
                         }
-                        if (filterType) {
-                            return file.type.startsWith(filterType);
+                        if (filterTag) {
+                            return tags && tags.includes(filterTag);
                         }
                         return true;
                     })
                     .sort((a, b) => {
-                        return (a.name === b.name) ? 0 : ((a.name < b.name) ? -1 : 1);
+                        return (a.nameLowerCase === b.nameLowerCase) ? 0 : ((a.nameLowerCase < b.nameLowerCase) ? -1 : 1);
                     });                    
 
                 if (filteredFiles) { 
@@ -112,15 +124,19 @@ const voxette = {
         }
     },
 
-    saveFileData: (fullPath, name, done) => {
+    saveFileData: (fullPath, name, tags, done) => {
         if (fullPath) {
 
-            console.log('saving file name for ' + fullPath + ' name: ' + name);
+            console.log('saving file name and tags for ' + fullPath + ' name: ' + name + ' tags: ' + tags);
+
+            var updates = {};
+            updates['/files/' + fullPath + '/name'] = name;
+            updates['/files/' + fullPath + '/tags'] = tags;
 
             firebase
                 .database()
-                .ref('files/' + fullPath + '/name')
-                .set(name, () => {
+                .ref()
+                .update(updates, () => {
                     console.log('data saved');
                     done();
                 });
