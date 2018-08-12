@@ -198,6 +198,7 @@ class Main extends Component {
                 } else {
                     const user = new User(googleId, response.displayName, email, picture);
                     const initialUserData = user.InitialUserData;
+                    initialUserData.memberId = userData.memberId;
 
                     FirebaseApp.voxette.saveUserData(email, initialUserData, () => {
                         this.setState({
