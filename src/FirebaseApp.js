@@ -205,22 +205,17 @@ const voxette = {
         }
     },
 
-    fetchMembers: (filterName, filterPart, done) => {
+    fetchMembers: (filterName, filterTag, done) => {
 
-        console.log('fetching members with filter: ' + filterName + ' ' + filterPart);
+        console.log('fetching members with filter: ' + filterName + ' ' + filterTag);
 
         var membersRef = firebase
             .database()
-            .ref('members');
+            .ref('members')
+            .orderByChild('userData/firstName');
     
         if (filterName) {
-            membersRef = membersRef
-                .orderByChild('userData/firstName')
-                .startAt(filterName);
-        } else if (filterPart) {
-            membersRef = membersRef
-                .orderByChild('userData/part')
-                .startAt(filterPart);
+            membersRef = membersRef.startAt(filterName);
         }
         
         membersRef
@@ -232,15 +227,16 @@ const voxette = {
 
                 const filteredMembers = members
                     .filter(member => {
+                        const { firstName, tags } = member.userData;
 
-                        if (filterName && filterPart) {
-                            return member.userData.firstName.startsWith(filterName) && member.userData.part.startsWith(filterPart);
+                        if (filterName && filterTag) {
+                            return firstName.startsWith(filterName) && tags && tags.includes(filterTag);
                         }
                         if (filterName) {
-                            return member.userData.firstName.startsWith(filterName);
+                            return firstName.startsWith(filterName);
                         }
-                        if (filterPart) {
-                            return member.userData.part.startsWith(filterPart);
+                        if (filterTag) {
+                            return tags && tags.includes(filterTag);
                         }
                         return true;
                     })

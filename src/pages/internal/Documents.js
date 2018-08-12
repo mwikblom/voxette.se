@@ -17,6 +17,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
+import Chip from '@material-ui/core/Chip';
+
+// TODO byt namn till Files.js
 
 const styles = theme => ({
     root: {
@@ -41,7 +44,13 @@ const styles = theme => ({
     action: {
         cursor: 'pointer',
         marginRight: theme.spacing.unit * 3
-    }
+    },
+    chipRoot: {
+        whiteSpace: 'nowrap',
+    },    
+    chip: {
+        margin: theme.spacing.unit / 2,
+    },          
 });
 
 // TODO duplicated in File.js
@@ -202,6 +211,7 @@ class Documents extends Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Namn</TableCell>
+                                <TableCell>Taggar</TableCell>
                                 <TableCell>Storlek</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -213,6 +223,17 @@ class Documents extends Component {
 
                                         <TableCell component="th" scope="row">
                                             {nameField(file)}
+                                        </TableCell>
+                                        <TableCell className={classes.chipRoot}>
+                                            {file.tags && file.tags.map(tag => {
+                                                return (
+                                                    <Chip
+                                                        key={tag}
+                                                        label={tag}
+                                                        className={classes.chip}
+                                                    />
+                                                );        
+                                            })}
                                         </TableCell>
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
                                         <TableCell>
