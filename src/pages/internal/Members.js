@@ -115,7 +115,12 @@ class Members extends Component {
         return ( 
             <div>
                 <h1>Medlemmar</h1>
-                <p>Här kan du lista körens medlemmar. Sökning sker från början av förnamnet och är "case sensitive" dvs. 'A' hittar Anna.</p>
+                <p>
+                    Här är körens medlemsregister. Du kan söka genom att klicka på sökknappen, då listas samtliga medlemmar i kören.
+                    Du kan även begränsa sökningen genom att ange första delen av förnamnet. Börja med stor bokstav; exemelvis hittas
+                    Anna genom att ange 'A'. Det är också möjligt att begränsa sökningen genom att filtrera på en 'tagg', exempelvis 
+                    stämtillhörighet.
+                </p>
                 
                 <Paper className={classes.root}>
 
