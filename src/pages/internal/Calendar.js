@@ -17,7 +17,7 @@ export default class InternalCalendar extends Component {
         FirebaseApp.voxette.fetchAllEvents((events) => {
             if (events) {
                 this.setState({
-                    events: events
+                    events
                 });
             }
         });
@@ -32,7 +32,7 @@ export default class InternalCalendar extends Component {
                 <p>Interna kalendern med närvaro.</p>
                 <CalendarEventForm />
                 {Object.values(events).map((event) => {
-                    return (<CalendarItem calendarEvent={event} />);
+                    return (<CalendarItem calendarEvent={event.eventData} />);
                 })}
             </div>
         );

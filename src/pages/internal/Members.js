@@ -66,8 +66,8 @@ const parts = [
         label: 'Alt 1',
     },
     {
-        value: 'Alt2',
-        label: 'Alt2',
+        value: 'Alt 2',
+        label: 'Alt 2',
     },
 ];
 

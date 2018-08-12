@@ -49,7 +49,7 @@ function createFilePointer(fullPath, file, done) {
 // some Utils
 const voxette = {
 
-    getValidDatabsePathItem: (name) => {
+    getValidDatabasePathItem: (name) => {
         const invalidChars = /[.#$[\]/]/gi; 
         return name.replace(invalidChars, '_');
     },
@@ -180,7 +180,7 @@ const voxette = {
     fetchUserData: (email, done) => {
         if (email) {
 
-            const memberId = voxette.getValidDatabsePathItem(email);
+            const memberId = voxette.getValidDatabasePathItem(email);
 
             console.log('fetching data for ' + email + ' memberId ' + memberId);
 
@@ -256,7 +256,7 @@ const voxette = {
 
     addMember: (email, done) => {
         if (email) {
-            const memberId = voxette.getValidDatabsePathItem(email);
+            const memberId = voxette.getValidDatabasePathItem(email);
 
             voxette.saveUserData(memberId, {
                 email: email
@@ -340,13 +340,34 @@ const voxette = {
             var newEvent = firebase
                 .database()
                 .ref('events')
-                .push({ eventData: eventData });
+                .push({ eventData: eventData }, () => {
+                    console.log('data added');        
+                    done(newEvent.key);
+                });
             
-            done(newEvent.key);
         } else {
             throw new Error('No eventData to add recieved');
         }
-    }
+    },
+
+    updateEventData: (eventId, eventData, done) => {
+        if (eventId && eventData) {
+
+            console.log('saving event data for ' + eventId + ' data: ' + JSON.stringify(eventData));
+
+            eventData.eventId = eventId;
+
+            firebase
+                .database()
+                .ref('events/' + eventId)
+                .set({ eventData: eventData }, () => {
+                    console.log('data saved');
+                    done(eventId);
+                });
+        } else {
+            throw new Error('No id or data for event');
+        }
+    },
 
 };
 
