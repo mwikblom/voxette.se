@@ -187,37 +187,27 @@ class Main extends Component {
 
             if (userData) {
 
-                if (typeof userData === 'string') { // no data available, only email (inital)
-
-                    const displayName = response.displayName;
-                    const user = new User(googleId, displayName, email, picture);
-
+                // first login - generate the user data
+                if (userData.googleId) {
                     this.setState({
                         loggedIn: true,
-                        user: user,
-                        messageText: 'Du är inloggad med ' + email,
-                        messageVariant: 'info'
+                        user: new User(googleId, userData, email, picture),
+                        messageText: 'Du är nu inloggad!',
+                        messageVariant: 'success'
                     });
-
+                } else {
+                    const user = new User(googleId, response.displayName, email, picture);
                     const initialUserData = user.InitialUserData;
-                    initialUserData.memberId = FirebaseApp.voxette.getValidDatabsePathItem(email);
 
                     FirebaseApp.voxette.saveUserData(email, initialUserData, () => {
                         this.setState({
+                            loggedIn: true,
+                            user: user,
                             messageText: 'Skapade användare för ' + user.FirstName,
                             messageVariant: 'info'
                         });
                     });
-
-                } else {
-                    this.setState({
-                        loggedIn: true,
-                        user: new User(googleId, userData, email, picture),
-                        messageText: 'Hej igen ' + userData.firstName,
-                        messageVariant: 'success'
-                    });
                 }
-        
             } else {
                 this.setState({
                     loggedIn: false,

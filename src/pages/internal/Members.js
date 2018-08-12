@@ -9,6 +9,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
     root: {
@@ -19,35 +29,84 @@ const styles = theme => ({
     table: {
         minWidth: 700,
     },
+    button: {
+        margin: theme.spacing.unit,
+    }, 
+    input: {
+        display: 'none',
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 400,
+    },
+    clickable: {
+        cursor: 'pointer'
+    }
 });
+
+// TODO duplicated in Member
+const parts = [
+    {
+        value: '',
+        label: 'Alla',
+    },
+    {
+        value: 'Sopran 1',
+        label: 'Sopran 1',
+    },
+    {
+        value: 'Sopran 2',
+        label: 'Sopran 2',
+    },
+    {
+        value: 'Alt 1',
+        label: 'Alt 1',
+    },
+    {
+        value: 'Alt2',
+        label: 'Alt2',
+    },
+];
 
 function memberUri(memberId) {
     return '/inloggad/medlem/' + memberId;
 }
 
 class Members extends Component {
+
     constructor(props) {
         super(props);
 
         this.state = {
             members: [],
-            selectedMemberId: null
+            selectedMemberId: null,
+            filterName: '',
+            filterPart: '',
+            addOpen: false,
+            newMemberEmail: ''
         };
     }
 
-    componentWillMount() {
-        FirebaseApp.voxette.fetchAllMembers((members) => {
+    search(e) {
+        const { filterName, filterPart } = this.state;
+
+        e.preventDefault();
+
+        FirebaseApp.voxette.fetchMembers(filterName, filterPart, (members) => {
             if (members) {
                 this.setState({
                     members: members
                 });
             }
         });
+
+        return false;
     }
 
     render() {
         const { classes } = this.props;
-        const { members, selectedMemberId } = this.state;
+        const { members, selectedMemberId, filterName, filterPart, addOpen } = this.state;
 
         if (selectedMemberId) {
             return <Redirect push to={memberUri(selectedMemberId)}/>;
@@ -55,10 +114,82 @@ class Members extends Component {
 
         return ( 
             <div>
-                <h2>Medlemmar</h2>
-                <p>Visar inloggade medlemmens uppgifter samt listar alla medlemmar i kören.</p>
+                <h1>Medlemmar</h1>
+                <p>Här kan du lista körens medlemmar. Sökning sker från början av förnamnet och är "case sensitive" dvs. 'A' hittar Anna.</p>
                 
                 <Paper className={classes.root}>
+
+                    <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button} onClick={this.handleClickOpen}>
+                        <AddIcon/>
+                    </Button>
+
+                    <Dialog
+                        open={addOpen}
+                        onClose={this.handleClose}
+                        aria-labelledby="form-dialog-title"
+                        >
+                        <DialogTitle id="form-dialog-title">Ny medlem</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                            Lägg till epost till den nya medlemmen. Eposten måste överensstämma med den inloggningsmetod som ska användas.
+                            Om exemelvis gmail används som inloggning måste det vara en gmail-adress.
+                            </DialogContentText>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="email"
+                                label="Email"
+                                type="email"
+                                fullWidth
+                                onChange={(event) => this.handleChange(event, 'newMemberEmail')}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleClose}>
+                            Avbryt
+                            </Button>
+                            <Button onClick={this.handleClose} color="primary">
+                            Lägg till
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <div>                     
+                        <form onSubmit={(e) => this.search(e)}>
+                            <TextField
+                                id="name"
+                                label="Förnamn"
+                                className={classes.textField}
+                                value={filterName}
+                                onChange={(event) => this.handleChange(event, 'filterName')}
+                                margin="normal"
+                            />
+                            <TextField
+                                id="part"
+                                select
+                                label="Stämma"
+                                className={classes.textField}
+                                value={filterPart}
+                                onChange={(event) => this.handleChange(event, 'filterPart')}
+                                SelectProps={{
+                                    MenuProps: {
+                                        className: classes.menu,
+                                    },
+                                }}
+                                margin="normal"
+                            >
+                                {parts.map(option => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>                    
+                            <Button type="submit" variant="contained">
+                                <SearchIcon />
+                            </Button>
+                        </form>
+                    </div>
+
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
@@ -90,11 +221,36 @@ class Members extends Component {
         );
     }
 
+    handleClickOpen = () => {
+        this.setState({ addOpen: true });
+    }
+    
+    handleClose = () => {
+        const { newMemberEmail } = this.state; 
+
+        if (!newMemberEmail) {
+            this.setState({ addOpen: false });
+        }
+
+        FirebaseApp.voxette.addMember(newMemberEmail, () => {
+            this.setState({ 
+                addOpen: false,
+                newMemberEmail: ''
+             });
+        });
+    }
+      
     handleClick = memberId => {
         this.setState({
             selectedMemberId: memberId
         });
     }
+
+    handleChange(event, name) {
+        this.setState({
+            [name]: event.target.value
+        });
+    }   
 }
 
 Members.propTypes = {

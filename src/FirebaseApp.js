@@ -63,18 +63,22 @@ const voxette = {
                 const value = snapshot.val();
                 const files = value ? Object.values(value) : [];
 
-                const filteredFiles = files.filter(file => {
-                    if (filterName && filterType) {
-                        return file.name.startsWith(filterName) && file.type.startsWith(filterType);
-                    }
-                    if (filterName) {
-                        return file.name.startsWith(filterName);
-                    }
-                    if (filterType) {
-                        return file.type.startsWith(filterType);
-                    }
-                    return true;
-                });
+                const filteredFiles = files
+                    .filter(file => {
+                        if (filterName && filterType) {
+                            return file.name.startsWith(filterName) && file.type.startsWith(filterType);
+                        }
+                        if (filterName) {
+                            return file.name.startsWith(filterName);
+                        }
+                        if (filterType) {
+                            return file.type.startsWith(filterType);
+                        }
+                        return true;
+                    })
+                    .sort((a, b) => {
+                        return (a.name === b.name) ? 0 : ((a.name < b.name) ? -1 : 1);
+                    });                    
 
                 if (filteredFiles) { 
                     done(filteredFiles);
@@ -131,11 +135,7 @@ const voxette = {
                     console.log('data: ' + JSON.stringify(data));
 
                     if (data) {
-                        if (data.userData) { // prefere the data in our database
-                            done(data.userData);
-                        } else {
-                            done(data); // i.e. no data available - only the member access
-                        }
+                        done(data.userData);
                     } else {
                         console.log('No data available for ' + email);
                         done();
@@ -146,27 +146,66 @@ const voxette = {
         }
     },
 
-    fetchAllMembers: (done) => {
-        // TODO attributes to filter members
-        
-        console.log('fetching all members');
+    fetchMembers: (filterName, filterPart, done) => {
 
-        firebase
+        console.log('fetching members with filter: ' + filterName + ' ' + filterPart);
+
+        var membersRef = firebase
             .database()
-            .ref('members')
+            .ref('members');
+    
+        if (filterName) {
+            membersRef = membersRef
+                .orderByChild('userData/firstName')
+                .startAt(filterName);
+        } else if (filterPart) {
+            membersRef = membersRef
+                .orderByChild('userData/part')
+                .startAt(filterPart);
+        }
+        
+        membersRef
             .once('value')
             .then((snapshot) => {
-                const users = snapshot.val();
 
-                console.log('data: ' + JSON.stringify(users));
+                const value = snapshot.val();
+                const members = value ? Object.values(value) : [];
 
-                if (users) {
-                    done(Object.values(users));
-                } else {
-                    console.log('No data available');
-                    done([]);
-                }
+                const filteredMembers = members
+                    .filter(member => {
+
+                        if (filterName && filterPart) {
+                            return member.userData.firstName.startsWith(filterName) && member.userData.part.startsWith(filterPart);
+                        }
+                        if (filterName) {
+                            return member.userData.firstName.startsWith(filterName);
+                        }
+                        if (filterPart) {
+                            return member.userData.part.startsWith(filterPart);
+                        }
+                        return true;
+                    })
+                    .sort((a, b) => {
+                        return (a.userData.firstName === b.userData.firstName) ? 0 : ((a.userData.firstName < b.userData.firstName) ? -1 : 1);
+                    });
+
+                if (filteredMembers) { 
+                    done(filteredMembers);
+                } 
             });
+    },
+
+    addMember: (email, done) => {
+        if (email) {
+            const userId = voxette.getValidDatabsePathItem(email);
+
+            voxette.saveUserData(email, {
+                email: email,
+                memberId: userId
+            }, done);
+        } else {
+            throw new Error('No email available for user');
+        }
     },
 
     saveUserData: (email, userData, done) => {
@@ -187,7 +226,6 @@ const voxette = {
             throw new Error('No email available for user');
         }
     },
-
     
     fetchEventData: (eventId, done) => {
         if (eventId) {

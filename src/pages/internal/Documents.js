@@ -116,61 +116,60 @@ class Documents extends Component {
 
         return (
             <div>
-                <h2>Filer</h2>
-                <p>Här kan du hitta noter och stämfiler. Sökning på namn sker från början och är "case sensitive" dvs. 'A' hittar Advent.pdf.</p>
+                <h1>Filer</h1>
+                <p>Här kan du hitta noter och stämfiler. Sökning sker från början av filens namn och är "case sensitive" dvs. 'A' hittar Advent.pdf.</p>
 
                 <Paper className={classes.root}>
 
-                <input
-                    accept="*/*"
-                    className={classes.input}
-                    id="upload-input"
-                    multiple
-                    type="file"
-                    onChange={(event) => this.handleFiles(event)} 
-                />
-                <label htmlFor="upload-input">
-                    <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button}>
-                        <AddIcon />
-                    </Button>
-                </label>    
-
-                <div>                     
-                    <form onSubmit={(e) => this.search(e)}>
-                    <TextField
-                        id="name"
-                        label="Namn"
-                        className={classes.textField}
-                        value={filterName}
-                        onChange={(event) => this.handleChange(event, 'filterName')}
-                        margin="normal"
+                    <input
+                        accept="*/*"
+                        className={classes.input}
+                        id="upload-input"
+                        multiple
+                        type="file"
+                        onChange={(event) => this.handleFiles(event)} 
                     />
-                    <TextField
-                        id="type"
-                        select
-                        label="Typ"
-                        className={classes.textField}
-                        value={filterType}
-                        onChange={(event) => this.handleChange(event, 'filterType')}
-                        SelectProps={{
-                            MenuProps: {
-                                className: classes.menu,
-                            },
-                        }}
-                        margin="normal"
-                    >
-                        {types.map(option => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>                    
-                    <Button type="submit" variant="contained">
-                        <SearchIcon />
-                    </Button>
-                    </form>
+                    <label htmlFor="upload-input">
+                        <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button}>
+                            <AddIcon />
+                        </Button>
+                    </label>    
 
-                </div>
+                    <div>                     
+                        <form onSubmit={(e) => this.search(e)}>
+                            <TextField
+                                id="name"
+                                label="Namn"
+                                className={classes.textField}
+                                value={filterName}
+                                onChange={(event) => this.handleChange(event, 'filterName')}
+                                margin="normal"
+                            />
+                            <TextField
+                                id="type"
+                                select
+                                label="Typ"
+                                className={classes.textField}
+                                value={filterType}
+                                onChange={(event) => this.handleChange(event, 'filterType')}
+                                SelectProps={{
+                                    MenuProps: {
+                                        className: classes.menu,
+                                    },
+                                }}
+                                margin="normal"
+                            >
+                                {types.map(option => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>                    
+                            <Button type="submit" variant="contained">
+                                <SearchIcon />
+                            </Button>
+                        </form>
+                    </div>
 
                     <Table className={classes.table}>
                         <TableHead>

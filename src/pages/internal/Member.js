@@ -81,7 +81,7 @@ class Member extends Component {
 
         return (            
             <div>
-                <h2>ID: {memberId}</h2>
+                <h1>ID: {memberId}</h1>
                 <Paper className={classes.paper}>
                     <form className={classes.container} noValidate autoComplete="off">
                         <Grid container spacing={24}>
