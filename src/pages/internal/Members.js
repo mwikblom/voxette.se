@@ -58,7 +58,7 @@ const styles = theme => ({
 // TODO duplicated in Member.js
 const tagValues = [
     'Sopran 1',
-    'Sporan 2',
+    'Sopran 2',
     'Alt 1',
     'Alt 2',
     'Styrelsemedlem',

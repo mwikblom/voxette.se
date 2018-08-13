@@ -50,7 +50,7 @@ const styles = theme => ({
 
 const tagValues = [
     'Sopran 1',
-    'Sporan 2',
+    'Sopran 2',
     'Alt 1',
     'Alt 2',
     'Styrelsemedlem',
