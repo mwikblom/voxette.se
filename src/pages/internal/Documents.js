@@ -17,6 +17,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
+import Chip from '@material-ui/core/Chip';
+
+// TODO byt namn till Files.js
 
 const styles = theme => ({
     root: {
@@ -41,7 +44,13 @@ const styles = theme => ({
     action: {
         cursor: 'pointer',
         marginRight: theme.spacing.unit * 3
-    }
+    },
+    chipRoot: {
+        whiteSpace: 'nowrap',
+    },    
+    chip: {
+        margin: theme.spacing.unit / 2,
+    },          
 });
 
 // TODO duplicated in File.js
@@ -128,7 +137,15 @@ class Documents extends Component {
             <div>
                 <h1>Filer</h1>
                 <p>
-                    Här kan du hitta noter, stämfiler och annat. Sökning sker från början av filens namn. 
+                    Här kan du hitta noter, stämfiler och annat. Du kan söka genom att klicka på sökknappen; då listas samtliga filer.
+                    Du kan även begränsa sökningen genom att ange första delen av filnamnet, exemelvis hittas
+                    DotterSion.pdf genom att ange 'do'. Det är också möjligt att begränsa sökningen genom att filtrera på en 'typ', exempelvis 
+                    noter och ljudfiler.
+                </p>
+                <p>
+                    För att lägga till nya filer använder du den gröna knappen med plus. PDF-filer kommer automatiskt taggas som noter, audio-format 
+                    såsom MP3 taggas som ljudfiler och bild-format som bilder. Övriga filtyper taggas som övrigt. När filen är uppladdad kan du llicka 
+                    på pennan om du vill ändra filens namn eller byta tagg.
                 </p>
 
                 <Paper className={classes.root}>
@@ -194,6 +211,7 @@ class Documents extends Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Namn</TableCell>
+                                <TableCell>Taggar</TableCell>
                                 <TableCell>Storlek</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -205,6 +223,17 @@ class Documents extends Component {
 
                                         <TableCell component="th" scope="row">
                                             {nameField(file)}
+                                        </TableCell>
+                                        <TableCell className={classes.chipRoot}>
+                                            {file.tags && file.tags.map(tag => {
+                                                return (
+                                                    <Chip
+                                                        key={tag}
+                                                        label={tag}
+                                                        className={classes.chip}
+                                                    />
+                                                );        
+                                            })}
                                         </TableCell>
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
                                         <TableCell>

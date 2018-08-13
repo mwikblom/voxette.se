@@ -26,7 +26,7 @@ class Home extends Component {
                 <p>Vi är en kör bestående av enbart skönsjungande damer. </p>
                 <p>Leder oss med läderpiska och ett sjuhelsikes engagemang gör sång-, kör- och musikteoripedagogen Anna Wikblom utbildad vid musikhögskolan i Örebro.</p>
                 <p>KFUM Voxette, Örebro grundades i januari 1997 av en handfull sångentusiaster ur en av Medborgarskolans körkurser. Kören sökte medlemskap i KFUM för att 
-                    få en officiell föreningstillhörighet och det är i KFUMs lokaler på Borgmästaregatan 9 i Örebro som vi har våra repetitioner.</p>
+                    få en officiell föreningstillhörighet. Vi repeterar i Betaniakyrkan på Venavägen 21 på norr i Örebro.</p>
                 <p>Vi har en bred repertoar med allt från psalmer, klassiskt, visor och pop till lättsammare sånger för festliga tillfällen. Voxette framträder både i 
                     offentliga och privata sammanhang och har med tiden blivit mer &quot;kända&quot; vilket innebär förfrågningar av de mest skiftande slag. Det kan variera med allt 
                     från sångarting, luciatåg, personalfester till gästspel i kyrkor. Vi har även gjort en direktsänd radiokonsert i P4.</p>

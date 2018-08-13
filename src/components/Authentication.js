@@ -10,6 +10,13 @@ import Menu from '@material-ui/core/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import FaceIcon from '@material-ui/icons/Face';
 import Chip from '@material-ui/core/Chip';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import PersonIcon from '@material-ui/icons/Person';
 
 const styles = theme => ({
     content: {
@@ -32,14 +39,15 @@ class Authentication extends Component {
         });
 
         this.state = {
-            anchorEl: null
+            anchorEl: null,
+            loginOpen: false
         };  
 
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
     }
     render() {
-        const { anchorEl } = this.state;
+        const { anchorEl, loginOpen } = this.state;
         const { classes, user, loggedIn } = this.props;
 
         const avatar = function() {
@@ -79,10 +87,47 @@ class Authentication extends Component {
                 </Menu> 
             </div>           
             :
-            <Button onClick={this.handleLogin} color="inherit">Logga in</Button>;
+            <div className={ classes.content } >
+                <Button onClick={this.handleClickOpen} color="inherit">Logga in</Button>
+
+                <Dialog 
+                    open={loginOpen}
+                    onClose={this.handleClickClose} 
+                    aria-labelledby="simple-dialog-title">
+                <DialogTitle id="simple-dialog-title">Logga in med</DialogTitle>
+                <div>
+                    <List>
+                        <ListItem button onClick={() => this.handleLogin('gmail')}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <PersonIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Gmail" />
+                        </ListItem>
+                        <ListItem button onClick={() => this.handleLogin('facebook')}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <PersonIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Facebook" />
+                        </ListItem>
+                    </List>
+                </div>
+            </Dialog>
+          </div>
     }
     
-    handleLogin() {
+    handleClickOpen = () => {
+        this.setState({ loginOpen: true });
+    }
+
+    handleClickClose = () => {
+        this.setState({ loginOpen: false });
+    }
+
+    handleLogin(method) {
         var self = this;
         var user = FirebaseApp.auth().currentUser;
         
@@ -92,8 +137,13 @@ class Authentication extends Component {
                 return false;
             }
             FirebaseApp.auth().useDeviceLanguage();
-            var provider = new firebase.auth.GoogleAuthProvider();
-            //provider.addScope('https://www.googleapis.com/auth/groups');
+
+            var provider;
+            if (method === 'gmail') {
+                provider = new firebase.auth.GoogleAuthProvider();
+            } else if (method === 'facebook') {
+                provider = new firebase.auth.FacebookAuthProvider();
+            }
             
             document.getElementById('info-message').innerHTML = '';
             FirebaseApp.auth().signInWithPopup(provider).then(function(result) {
@@ -101,9 +151,12 @@ class Authentication extends Component {
                 var user = result.user;
                 
                 self.props.onLoginSuccess(user);
+
+                this.setState({ loginOpen: false });
             }).catch(function(error) {
                 document.getElementById('info-message').innerHTML = '<p class="error">Något gick fel vid inloggning.</p>';
                 console.error(error);
+
             });
         }
     }

@@ -102,7 +102,7 @@ class File extends Component {
 
     render() {
         const { classes } = this.props;
-        const { name, size, type, hasChanges } = this.state;
+        const { name, size, type, tags, hasChanges } = this.state;
 
         return (            
             <div>
@@ -125,7 +125,7 @@ class File extends Component {
                                     <InputLabel htmlFor="select-multiple-chip">Taggar</InputLabel>
                                     <Select
                                         multiple
-                                        value={this.state.tags}
+                                        value={tags}
                                         onChange={(event) => this.handleChange(event, 'tags')}
                                         input={<Input id="select-multiple-chip" />}
                                         renderValue={selected => (

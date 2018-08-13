@@ -10,6 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Link } from 'react-router-dom';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Chip from '@material-ui/core/Chip';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 
 const styles = theme => ({
     paper: {
@@ -28,27 +33,43 @@ const styles = theme => ({
     },
     action: {
         marginRight: theme.spacing.unit * 3,
-    }
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+        maxWidth: 300,
+    },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: theme.spacing.unit / 4,
+    },        
 });
 
-const parts = [
-    {
-        value: 'Sopran 1',
-        label: 'Sopran 1',
-    },
-    {
-        value: 'Sopran 2',
-        label: 'Sopran 2',
-    },
-    {
-        value: 'Alt 1',
-        label: 'Alt 1',
-    },
-    {
-        value: 'Alt2',
-        label: 'Alt2',
-    },
+const tagValues = [
+    'Sopran 1',
+    'Sopran 2',
+    'Alt 1',
+    'Alt 2',
+    'Styrelsemedlem',
+    'Dirigent',
+    'Admin',
+    'Kassör',
+    'Inaktiv'
 ];
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 class Member extends Component {
     
@@ -61,7 +82,7 @@ class Member extends Component {
             email: '',
             phone: '',
             address: '',
-            part: '',
+            tags: [],
             hasChanges: false
         };
     }
@@ -81,7 +102,7 @@ class Member extends Component {
 
     render() {
         const { classes } = this.props;
-        const { firstName, lastName, email, phone, address, part, hasChanges} = this.state;
+        const { firstName, lastName, email, phone, address, tags, hasChanges} = this.state;
 
         return (            
             <div>
@@ -127,26 +148,32 @@ class Member extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    id="part"
-                                    select
-                                    label="Select"
-                                    className={classes.textField}
-                                    value={part}
-                                    onChange={(event) => this.handleChange(event, 'part')}
-                                    SelectProps={{
-                                        MenuProps: {
-                                            className: classes.menu,
-                                        },
-                                    }}
-                                    margin="normal"
-                                >
-                                    {parts.map(option => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="select-multiple-chip">Taggar</InputLabel>
+                                    <Select
+                                        multiple
+                                        value={tags}
+                                        onChange={(event) => this.handleChange(event, 'tags')}
+                                        input={<Input id="select-multiple-chip" />}
+                                        renderValue={selected => (
+                                            <div className={classes.chips}>
+                                                {selected.map(value => (
+                                                    <Chip key={value} label={value} className={classes.chip} />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {tagValues.map(tag => (
+                                            <MenuItem
+                                                key={tag}
+                                                value={tag}
+                                            >
+                                                {tag}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                                 <TextField
                                     id="address"
                                     label="Adress"

@@ -20,6 +20,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@material-ui/core/Tooltip';
+import Chip from '@material-ui/core/Chip';
 
 const styles = theme => ({
     root: {
@@ -44,31 +46,26 @@ const styles = theme => ({
     action: {
         cursor: 'pointer',
         marginRight: theme.spacing.unit * 3
-    } 
+    },
+    chipRoot: {
+        whiteSpace: 'nowrap',
+    },    
+    chip: {
+        margin: theme.spacing.unit / 2,
+    },          
 });
 
-// TODO duplicated in Member
-const parts = [
-    {
-        value: '',
-        label: 'Alla',
-    },
-    {
-        value: 'Sopran 1',
-        label: 'Sopran 1',
-    },
-    {
-        value: 'Sopran 2',
-        label: 'Sopran 2',
-    },
-    {
-        value: 'Alt 1',
-        label: 'Alt 1',
-    },
-    {
-        value: 'Alt 2',
-        label: 'Alt 2',
-    },
+// TODO duplicated in Member.js
+const tagValues = [
+    'Sopran 1',
+    'Sopran 2',
+    'Alt 1',
+    'Alt 2',
+    'Styrelsemedlem',
+    'Dirigent',
+    'Admin',
+    'Kassör',
+    'Inaktiv'
 ];
 
 function memberUri(memberId) {
@@ -84,18 +81,18 @@ class Members extends Component {
             members: [],
             selectedMemberId: null,
             filterName: '',
-            filterPart: '',
+            filterTag: '',
             addOpen: false,
             newMemberEmail: ''
         };
     }
 
     search(e) {
-        const { filterName, filterPart } = this.state;
+        const { filterName, filterTag } = this.state;
 
         e.preventDefault();
 
-        FirebaseApp.voxette.fetchMembers(filterName, filterPart, (members) => {
+        FirebaseApp.voxette.fetchMembers(filterName, filterTag, (members) => {
             if (members) {
                 this.setState({
                     members: members
@@ -106,7 +103,7 @@ class Members extends Component {
 
     render() {
         const { classes } = this.props;
-        const { members, selectedMemberId, filterName, filterPart, addOpen } = this.state;
+        const { members, selectedMemberId, filterName, filterTag, addOpen } = this.state;
 
         if (selectedMemberId) {
             return <Redirect push to={memberUri(selectedMemberId)}/>;
@@ -115,13 +112,27 @@ class Members extends Component {
         return ( 
             <div>
                 <h1>Medlemmar</h1>
-                <p>Här kan du lista körens medlemmar. Sökning sker från början av förnamnet och är "case sensitive" dvs. 'A' hittar Anna.</p>
+                <p>
+                    Här är körens medlemsregister. Du kan söka genom att klicka på sökknappen, då listas samtliga medlemmar i kören.
+                    Du kan även begränsa sökningen genom att ange första delen av förnamnet. Börja med stor bokstav; exemelvis hittas
+                    Anna genom att ange 'A'. Det är också möjligt att begränsa sökningen genom att filtrera på en 'tagg', exempelvis 
+                    stämtillhörighet.
+                </p>
+                <h3>GDPR</h3>
+                <p>
+                    Uppgifterna kommer endast användas som kontaktinformation för Voxette och dess medlemmar. Informationen kommer aldrig 
+                    säljas eller skickas vidare till tredje part. Endast de uppgifter som behövs för att kontakta medlemmarna samlas in.
+                    Var och en i kören ansvarar för att uppgifterna är korrekta och relevanta. Uppgifterna kommer tas bort så snart en 
+                    medlem ej längre är aktiv såvida personen själv inte önskar ta del av utskick.
+                </p>
                 
                 <Paper className={classes.root}>
 
-                    <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button} onClick={this.handleClickOpen}>
-                        <AddIcon/>
-                    </Button>
+                    <Tooltip title="Lägg till ny medlem">
+                        <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button} onClick={this.handleClickOpen}>
+                            <AddIcon/>
+                        </Button>
+                    </Tooltip>
 
                     <Dialog
                         open={addOpen}
@@ -145,10 +156,10 @@ class Members extends Component {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.handleClose}>
+                            <Button onClick={() => this.handleClose(false)}>
                             Avbryt
                             </Button>
-                            <Button onClick={this.handleClose} color="primary">
+                            <Button onClick={() => this.handleClose(true)} color="primary">
                             Lägg till
                             </Button>
                         </DialogActions>
@@ -165,12 +176,12 @@ class Members extends Component {
                                 margin="normal"
                             />
                             <TextField
-                                id="part"
+                                id="tag"
                                 select
-                                label="Stämma"
+                                label="Tagg"
                                 className={classes.textField}
-                                value={filterPart}
-                                onChange={(event) => this.handleChange(event, 'filterPart')}
+                                value={filterTag}
+                                onChange={(event) => this.handleChange(event, 'filterTag')}
                                 SelectProps={{
                                     MenuProps: {
                                         className: classes.menu,
@@ -178,15 +189,20 @@ class Members extends Component {
                                 }}
                                 margin="normal"
                             >
-                                {parts.map(option => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
+                                <MenuItem value="">
+                                    <em>Alla</em>
+                                </MenuItem>
+                                {tagValues.map(tag => (
+                                    <MenuItem key={tag} value={tag}>
+                                        {tag}
                                     </MenuItem>
                                 ))}
                             </TextField>                    
-                            <Button type="submit" variant="contained">
-                                <SearchIcon />
-                            </Button>
+                            <Tooltip title="Sök efter medlemmar">
+                                <Button type="submit" variant="contained">
+                                    <SearchIcon />
+                                </Button>
+                            </Tooltip>
                         </form>
                     </div>
 
@@ -194,7 +210,7 @@ class Members extends Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Namn</TableCell>
-                                <TableCell>Stämma</TableCell>
+                                <TableCell>Taggar</TableCell>
                                 <TableCell>Telefon</TableCell>
                                 <TableCell>Epost</TableCell>
                                 <TableCell>Adress</TableCell>
@@ -208,12 +224,24 @@ class Members extends Component {
                                         <TableCell component="th" scope="row">
                                             {member.userData.firstName} {member.userData.lastName}
                                         </TableCell>
-                                        <TableCell>{member.userData.part}</TableCell>
+                                        <TableCell className={classes.chipRoot}>
+                                            {member.userData.tags && member.userData.tags.map(tag => {
+                                                return (
+                                                    <Chip
+                                                        key={tag}
+                                                        label={tag}
+                                                        className={classes.chip}
+                                                    />
+                                                );        
+                                            })}
+                                        </TableCell>
                                         <TableCell>{member.userData.phone}</TableCell>
                                         <TableCell>{member.userData.email}</TableCell>
                                         <TableCell>{member.userData.address}</TableCell>
                                         <TableCell>
-                                            <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
+                                            <Tooltip title="Ändra uppgifter">
+                                                <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
+                                            </Tooltip>
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -229,19 +257,27 @@ class Members extends Component {
         this.setState({ addOpen: true });
     }
     
-    handleClose = () => {
+    handleClose = (save) => {
+
         const { newMemberEmail } = this.state; 
 
         if (!newMemberEmail) {
             this.setState({ addOpen: false });
         }
 
-        FirebaseApp.voxette.addMember(newMemberEmail, () => {
+        if (save) {
+            FirebaseApp.voxette.addMember(newMemberEmail, () => {
+                this.setState({ 
+                    addOpen: false,
+                    newMemberEmail: ''
+                });
+            });
+        } else {
             this.setState({ 
                 addOpen: false,
                 newMemberEmail: ''
-             });
-        });
+            });
+        }
     }
       
     handleClick = memberId => {
