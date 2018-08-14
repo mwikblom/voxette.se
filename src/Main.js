@@ -5,16 +5,20 @@ import FirebaseApp from './FirebaseApp';
 import NotFound from './pages/NotFound';
 import Message from './components/Message';
 import PropTypes from 'prop-types';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
+import {
+    CssBaseline,
+    AppBar,
+    Toolbar,
+    Typography,
+    IconButton,
+    Menu,
+    MenuItem,
+    Paper,
+    Divider
+} from '@material-ui/core';
+
 import MenuIcon from '@material-ui/icons/Menu';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 
 // Components
 import Authentication from './components/Authentication';
@@ -87,6 +91,7 @@ class Main extends Component {
         const internalMenu = this.state.loggedIn
             ? (
                 <React.Fragment>
+                    <Divider />
                     <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/medlemmar">Medlemmar</NavLink></MenuItem>
                     <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/kalender">Intern kalender</NavLink></MenuItem>
                     <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/filer">Filer</NavLink></MenuItem>
