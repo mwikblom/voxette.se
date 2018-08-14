@@ -1,4 +1,5 @@
 import React from 'react';
+import RequiresLogin from './RequiresLogin';
 
 // External pages
 import Home from './external/Home';
@@ -6,7 +7,7 @@ import Calendar from './external/Calendar';
 import Contact from './external/Contact';
 import ApplyForMembership from './external/ApplyForMembership';
 import Conductor from './external/Conductor';
-import RequiresLogin from './RequiresLogin';
+import GDPR from './external/GDPR';
 
 // Internal pages
 import Information from './internal/Information';
@@ -34,6 +35,7 @@ export default class PageController {
         this.CalendarPage = this.CalendarPage.bind(this);
         this.ContactPage = this.ContactPage.bind(this);
         this.ApplyForMembershipPage = this.ApplyForMembershipPage.bind(this);
+        this.GDPR = this.GDPR.bind(this);
     }
 
     loggedIn = false;
@@ -96,5 +98,10 @@ export default class PageController {
         return (
             <Conductor />
         );
+    }
+    GDPR() {
+        return (
+            <GDPR />
+        )
     }
 }

@@ -159,6 +159,7 @@ class Main extends Component {
                                 <Route path="/kontakt" render={this.pageController.ContactPage} />
                                 <Route path="/ansokan" render={this.pageController.ApplyForMembershipPage} />
                                 <Route path="/dirigent" render={this.pageController.Conductor} />
+                                <Route path="/gdpr" render={this.pageController.GDPR} />
                         
                                 <Route exact path="/inloggad/" render={this.pageController.InformationPage} />
                                 <Route path="/inloggad/medlemmar" render={this.pageController.MembersPage} />
