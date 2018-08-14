@@ -124,7 +124,6 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
     }
 
     handleEventSaved = (key) => {
-        this.props
         this.setState({
             hasChanges: false
         });

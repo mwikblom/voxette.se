@@ -145,19 +145,21 @@ class Authentication extends Component {
                 provider = new firebase.auth.FacebookAuthProvider();
             }
             
-            document.getElementById('info-message').innerHTML = '';
-            FirebaseApp.auth().signInWithPopup(provider).then(function(result) {
-                //var token = result.credential.accessToken;
-                var user = result.user;
-                
-                self.props.onLoginSuccess(user);
+            FirebaseApp
+                .auth()
+                .signInWithPopup(provider)
+                .then(function(result) {
+                    //var token = result.credential.accessToken;
+                    var user = result.user;
+                    
+                    self.props.onLoginSuccess(user);
 
-                this.setState({ loginOpen: false });
-            }).catch(function(error) {
-                document.getElementById('info-message').innerHTML = '<p class="error">Något gick fel vid inloggning.</p>';
-                console.error(error);
-
-            });
+                    self.setState({ loginOpen: false });
+                }).catch(function(error) {
+                    console.error(error);
+                    self.props.onLoginFailure(error);
+                    self.setState({ loginOpen: false })
+                });
         }
     }
 

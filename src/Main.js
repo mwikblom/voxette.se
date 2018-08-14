@@ -225,12 +225,12 @@ class Main extends Component {
         });
     }
     
-    handleLoginFailure(response) {
-        // TODO: Show error message
-        console.log('Failure: ', response);
+    handleLoginFailure(error) {
         this.setState({
             loggedIn: false,
-            user: undefined
+            user: undefined,
+            messageText: `Inloggningen misslyckades: ${error.message}`,
+            messageVariant: 'warning'
         });
     }
     

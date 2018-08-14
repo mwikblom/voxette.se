@@ -75,6 +75,7 @@ class Message extends Component {
         const { classes, variant, text } = this.props;
         const Icon = variantIcon[variant];
         const { open } = this.state;
+        const hideDuration = variant === 'warning' || variant === 'error' ? null : 7000;
 
         return (open && text !== undefined) ? (
             <Snackbar
@@ -84,7 +85,7 @@ class Message extends Component {
                 }}
                 className={classNames(classes[variant])}
                 open={open}
-                autoHideDuration={6000}
+                autoHideDuration={hideDuration}
                 onClose={this.handleClose}
                 ContentProps={{
                     'aria-describedby': 'message-id',
