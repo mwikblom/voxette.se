@@ -8,6 +8,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import classNames from 'classnames';
 import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
@@ -49,8 +50,6 @@ const styles = theme => ({
     },    
 });
 
-// TODO fix colors
-
 class Message extends Component {
 
     constructor(props) {
@@ -59,15 +58,9 @@ class Message extends Component {
         this.state = {
             open: true
         };
-
-        console.log('Message is open: ' + this.state.open + ' text is ' + props.text);
     }
     
-    handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
+    handleClose = () => {
         this.setState({ open: false });
     }
 
@@ -83,35 +76,38 @@ class Message extends Component {
                     vertical: 'bottom',
                     horizontal: 'left',
                 }}
-                className={classNames(classes[variant])}
                 open={open}
                 autoHideDuration={hideDuration}
                 onClose={this.handleClose}
                 ContentProps={{
                     'aria-describedby': 'message-id',
                 }}
-                message={
-                    <span id="client-snackbar" className={classes.message}>
-                        <Icon className={classNames(classes.icon, classes.iconVariant)} />
-                        {text}
-                    </span>                    
-                }
-                action={[
-                    <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        className={classes.close}
-                        onClick={this.handleClose}
-                    >
-                        <CloseIcon />
-                    </IconButton>,
-                ]}
-            />                
+            >
+                <SnackbarContent
+                    className={classNames(classes[variant])}
+                    aria-describedby="client-snackbar"
+                    message={
+                        <span id="client-snackbar" className={classes.message}>
+                            <Icon className={classNames(classes.icon, classes.iconVariant)} />
+                            {text}
+                        </span>                    
+                    }
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className={classes.close}
+                            onClick={this.handleClose}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                />
+            </Snackbar>                
             )
             : null;
     }
-
 }
 
 Message.propTypes = {
