@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { Grid, TextField, FormControlLabel, Checkbox, Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { Link } from 'react-router-dom';
 
 const styles = {
     root: {
@@ -12,6 +11,12 @@ const styles = {
     textField: {
         width: '100%',
         marginTop: '10px'
+    },
+    action: {
+        margin: '10px 10px 10px 0'
+    },
+    buttonIcon: {
+        marginRight: '5px'   
     }
 };
 
@@ -130,7 +135,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, closeFormEvent } = this.props;
         const { 
             editMode,
             hasChanges,
@@ -231,12 +236,12 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                         </Grid>
                     </Grid>
                     
-                    <Button component={Link} className={classes.action} variant="contained" to="/inloggad/kalender">
-                        <CancelIcon />
+                    <Button className={classes.action} variant="outlined" onClick={closeFormEvent}>
+                        <CancelIcon className={classes.buttonIcon} />
                         Stäng
                     </Button>
-                    <Button variant="contained" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
-                        <SaveIcon />
+                    <Button variant="outlined" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
+                        <SaveIcon className={classes.buttonIcon} />
                         Spara ändringar
                     </Button>
                 </form>
