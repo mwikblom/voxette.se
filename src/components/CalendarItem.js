@@ -1,19 +1,41 @@
 import React, { Component } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 
 export default class CalendarItem extends Component {
+    handleSelectEdit = () => {
+        var { handleSelectEditEvent, event } = this.props;
+        handleSelectEditEvent(event);
+    }
     render() {
-        if (this.props.calendarEvent === undefined) return null;
-        var event = this.props.calendarEvent;
-        var eventDate = event.startDate + ' kl: ' + event.startTime + ' - ';
-        if (event.startDate === event.endDate){
-            eventDate += event.endTime;
+        if (this.props.event === undefined) return null;
+        
+        const {
+            event: {
+                startDate,
+                startTime,
+                endDate,
+                endTime,
+                title,
+                description
+            }
+        } = this.props;
+        
+        var eventDate = startDate + ' kl: ' + startTime + ' - ';
+        if (startDate === endDate){
+            eventDate += endTime;
         } else {
-            eventDate += event.endDate + ' kl: ' + event.endTime;
+            eventDate += endDate + ' kl: ' + endTime;
         }
         return (
             <div className="calendar-item">
-                <h3>{event.title}</h3>
-                <p>{event.description}</p>
+                <h3>
+                    {title}
+                    <IconButton aria-label="redigera" color="primary" onClick={this.handleSelectEdit}>
+                        <EditIcon />
+                    </IconButton>
+                </h3>
+                <p>{description}</p>
                 <p>
                     När: {eventDate}
                 </p>

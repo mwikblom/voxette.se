@@ -9,7 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 const styles = {
     buttonRight: {
         float: 'right',
-        marginRight: '5px'    
+        marginRight: '10px'    
     }
 };
 
@@ -19,7 +19,8 @@ export default withStyles(styles)(class InternalCalendar extends Component {
 
         this.state = {
             events: {},
-            showForm: false
+            showForm: false,
+            selectedEvent: null
         };
     }
 
@@ -33,7 +34,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         });
     }
 
-    toggleEventForm = (close = null) => {
+    handleToggleEventForm = (close = null) => {
         var isShowing = this.state.showForm;
         if (close){
             isShowing = true;
@@ -43,25 +44,32 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         });
     }
 
+    handleSelectEditEvent = (event) => {
+        this.setState({
+            selectedEvent: event,
+            showForm: true
+        });
+    }
+
     render() {
         const { classes } = this.props;
-        const { events } = this.state;
+        const { events, showForm, selectedEvent } = this.state;
 
         return (
             <div>
-                <Button variant="fab" color="primary" onClick={this.toggleEventForm} className={classes.buttonRight}>
-                    <AddIcon />
-                </Button>
+                { !showForm
+                    ? <Button variant="fab" color="primary" onClick={() => this.handleToggleEventForm()} className={classes.buttonRight}>
+                        <AddIcon />
+                    </Button>
+                    : undefined }
                 <h2>Intern kalender</h2>
-                <p>Interna kalendern med närvaro.</p>
-                {
-                    this.state.showForm
-                        ? <CalendarEventForm closeFormEvent={() => this.toggleEventForm(false)} />
-                        : undefined
-                }
+                <p>Kommande evenemang. Kommer även att innehålla närvaro-koll.</p>
+                { showForm
+                    ? <CalendarEventForm closeFormEvent={() => this.handleToggleEventForm(false)} event={selectedEvent} />
+                    : undefined }
                 
                 {Object.values(events).map((event, i) => {
-                    return (<CalendarItem calendarEvent={event.eventData} key={i} />);
+                    return (<CalendarItem event={event.eventData} key={i} handleSelectEditEvent={(e) => this.handleSelectEditEvent(e)} />);
                 })}
             </div>
         );

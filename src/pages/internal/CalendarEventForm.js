@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, TextField, FormControlLabel, Checkbox, Button } from '@material-ui/core';
+import { Grid, Paper, TextField, FormControlLabel, Checkbox, Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 const styles = {
-    root: {
+    paper: {
+        padding: 10
     },
     textField: {
         width: '100%',
@@ -51,13 +52,41 @@ const getDefaultTime = (plusHours = 0) => {
     }
     return hour + ':00';
 }
+const getCurrentTimestamp = () => {
+    var today = new Date();
+
+    var day = today.getDate();
+    var month = today.getMonth() + 1; // starts at 0
+    var year = today.getFullYear();
+
+    if (day < 10) {
+        day = '0' + day;
+    }
+    if (month < 10) {
+        month = '0' + month;
+    }
+    
+    var hour = today.getHours();
+    if (hour < 10) {
+        hour = '0' + hour;
+    }
+
+    var minutes = today.getMinutes();
+    if (minutes < 10) {
+        minutes = '0' + minutes;
+    }
+
+    var today = new Date();
+    var hour = today.getHours();
+
+    return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
+}
 
 export default withStyles(styles)(class CalendarEventForm extends Component {
     state = this.getInitalState();
     
     getInitalState() {
         const { event, eventId } = this.props;
-
         
         return event 
             ? {
@@ -71,6 +100,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                 event: {
                     title: '',
                     description: '',
+                    location: '',
                                 
                     startDate: getDefaultDate(),
                     endDate: getDefaultDate(),
@@ -110,16 +140,18 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
     saveEvent = (e) => {
         e.preventDefault();
 
-        const { eventId, editMode } = this.state;
+        const { eventId, event, editMode } = this.state;
 
         if (editMode){
-            FirebaseApp.voxette.updateEventData(eventId, this.state.event, () => {
+            event.updated = getCurrentTimestamp();
+            FirebaseApp.voxette.updateEventData(eventId, event, () => {
                 this.setState({
                     hasChanges: false
                 });
             });
         } else {
-            FirebaseApp.voxette.addEventData(this.state.event, (eventId) => {
+            event.created = getCurrentTimestamp();
+            FirebaseApp.voxette.addEventData(event, (eventId) => {
                 this.setState({
                     hasChanges: false,
                     eventId
@@ -142,6 +174,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
             event: {
                 title,
                 description,
+                location,
                 startDate,
                 startTime,
                 endDate,
@@ -156,95 +189,107 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
 
         return (
             <div>
-                <h2>Kalender - {heading}</h2>
-                <form className={classes.root} autoComplete="off" onSubmit={(e) => this.saveEvent(e)}>
-                    <Grid container spacing={24}>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="title"
-                                label="Titel"
-                                className={classes.textField}
-                                value={title}
-                                onChange={this.handleChange('title')}
-                            />
+                <Paper className={classes.paper}>
+                    <h2>Kalender - {heading}</h2>
+                    <form className={classes.root} autoComplete="off" onSubmit={(e) => this.saveEvent(e)}>
+                        <Grid container spacing={24}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="title"
+                                    label="Titel"
+                                    className={classes.textField}
+                                    value={title}
+                                    onChange={this.handleChange('title')}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="description"
+                                    label="Beskrivning"
+                                    multiline={true}
+                                    className={classes.textField}
+                                    value={description}
+                                    onChange={this.handleChange('description')}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="location"
+                                    label="Plats"
+                                    multiline={true}
+                                    className={classes.textField}
+                                    value={location}
+                                    onChange={this.handleChange('location')}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="startDate"
+                                    label="Startdatum"
+                                    type="date"
+                                    className={classes.textField}
+                                    value={startDate}
+                                    onChange={this.handleChange('startDate')}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="startTime"
+                                    label="Starttid"
+                                    type="time"
+                                    className={classes.textField}
+                                    value={startTime}
+                                    onChange={this.handleChange('startTime')}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="endDate"
+                                    label="Slutdatum"
+                                    type="date"
+                                    className={classes.textField}
+                                    value={endDate}
+                                    onChange={this.handleChange('endDate')}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="endTime"
+                                    label="Sluttid"
+                                    type="time"
+                                    className={classes.textField}
+                                    value={endTime}
+                                    onChange={this.handleChange('endTime')}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={isPublic}
+                                            onChange={this.handleCheckedChange('isPublic')}
+                                            value="isPublic"
+                                        />
+                                    }
+                                    label="Publikt evenemang"
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="description"
-                                label="Beskrivning"
-                                multiline={true}
-                                className={classes.textField}
-                                value={description}
-                                onChange={this.handleChange('description')}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                id="startDate"
-                                label="Startdatum"
-                                type="date"
-                                className={classes.textField}
-                                value={startDate}
-                                onChange={this.handleChange('startDate')}
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                id="startTime"
-                                label="Starttid"
-                                type="time"
-                                className={classes.textField}
-                                value={startTime}
-                                onChange={this.handleChange('startTime')}
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                id="endDate"
-                                label="Slutdatum"
-                                type="date"
-                                className={classes.textField}
-                                value={endDate}
-                                onChange={this.handleChange('endDate')}
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                id="endTime"
-                                label="Sluttid"
-                                type="time"
-                                className={classes.textField}
-                                value={endTime}
-                                onChange={this.handleChange('endTime')}
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={isPublic}
-                                        onChange={this.handleCheckedChange('isPublic')}
-                                        value="isPublic"
-                                    />
-                                }
-                                label="Publikt evenemang"
-                            />
-                        </Grid>
-                    </Grid>
-                    
-                    <Button className={classes.action} variant="outlined" onClick={closeFormEvent}>
-                        <CancelIcon className={classes.buttonIcon} />
-                        Stäng
-                    </Button>
-                    <Button variant="outlined" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
-                        <SaveIcon className={classes.buttonIcon} />
-                        Spara ändringar
-                    </Button>
-                </form>
+                        
+                        <Button className={classes.action} variant="outlined" onClick={closeFormEvent}>
+                            <CancelIcon className={classes.buttonIcon} />
+                            Stäng
+                        </Button>
+                        <Button variant="outlined" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
+                            <SaveIcon className={classes.buttonIcon} />
+                            Spara ändringar
+                        </Button>
+                    </form>
+                </Paper>
             </div>
         );
     }
