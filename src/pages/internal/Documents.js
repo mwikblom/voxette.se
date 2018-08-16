@@ -18,6 +18,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // TODO byt namn till Files.js
 
@@ -50,7 +51,15 @@ const styles = theme => ({
     },    
     chip: {
         margin: theme.spacing.unit / 2,
-    },          
+    },      
+    buttonProgress: {
+        color: theme.palette.secondary.main,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -83,
+        marginLeft: 149,
+      },
 });
 
 // TODO duplicated in File.js
@@ -80,7 +89,9 @@ class Documents extends Component {
             files: [],
             filterName: '',
             filterTag: '',
-            selectedFullPath: null
+            selectedFullPath: null,
+            loading: false,
+            disabled: false
         };
     }
 
@@ -89,12 +100,21 @@ class Documents extends Component {
 
         e.preventDefault();
 
+        this.setState({
+            loading: true,
+            disabled: true
+        })
+
         FirebaseApp.voxette.fetchFiles(filterName, filterTag, (files) => {
             if (files) {
                 this.setState({
                     files: files
                 });
             }
+            this.setState({
+                loading: false,
+                disabled: false
+            });
         });
     }
 
@@ -123,7 +143,7 @@ class Documents extends Component {
 
     render() {
         const { classes } = this.props;
-        const { files, filterName, filterTag, editable, selectedFullPath } = this.state;
+        const { files, filterName, filterTag, editable, selectedFullPath, loading, disabled } = this.state;
 
         const nameField = function(file) {
             return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name)
@@ -200,10 +220,11 @@ class Documents extends Component {
                                 ))}
                             </TextField>      
                             <Tooltip title="Sök efter filer">              
-                                <Button type="submit" variant="contained">
+                                <Button type="submit" variant="contained" disabled={disabled}>
                                     <SearchIcon />
                                 </Button>
                             </Tooltip>
+                            {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
                         </form>
                     </div>
 

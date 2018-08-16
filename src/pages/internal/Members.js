@@ -22,6 +22,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
     root: {
@@ -52,7 +53,15 @@ const styles = theme => ({
     },    
     chip: {
         margin: theme.spacing.unit / 2,
-    },          
+    },    
+    buttonProgress: {
+        color: theme.palette.secondary.main,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -23,
+        marginLeft: 149,
+      },          
 });
 
 // TODO duplicated in Member.js
@@ -83,7 +92,9 @@ class Members extends Component {
             filterName: '',
             filterTag: '',
             addOpen: false,
-            newMemberEmail: ''
+            newMemberEmail: '',
+            loading: false,
+            disabled: false
         };
     }
 
@@ -92,18 +103,27 @@ class Members extends Component {
 
         e.preventDefault();
 
+        this.setState({
+            loading: true,
+            disabled: true
+        });
+
         FirebaseApp.voxette.fetchMembers(filterName, filterTag, (members) => {
             if (members) {
                 this.setState({
                     members: members
                 });
             }
+            this.setState({
+                loading: false,
+                disabled: false
+            });
         });
     }
 
     render() {
         const { classes } = this.props;
-        const { members, selectedMemberId, filterName, filterTag, addOpen } = this.state;
+        const { members, selectedMemberId, filterName, filterTag, addOpen, loading, disabled } = this.state;
 
         if (selectedMemberId) {
             return <Redirect push to={memberUri(selectedMemberId)}/>;
@@ -199,10 +219,11 @@ class Members extends Component {
                                 ))}
                             </TextField>                    
                             <Tooltip title="Sök efter medlemmar">
-                                <Button type="submit" variant="contained">
+                                <Button type="submit" variant="contained" disabled={disabled}>
                                     <SearchIcon />
-                                </Button>
-                            </Tooltip>
+                                </Button>                                         
+                            </Tooltip>            
+                            {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
                         </form>
                     </div>
 
