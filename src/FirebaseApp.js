@@ -30,19 +30,21 @@ function createFilePointer(fullPath, file, done) {
         tags.push('Övrigt');
     }
 
+    const data = {
+        fullPath: fullPath,
+        name: file.name,
+        nameLowerCase: file.name.toLowerCase(),
+        size: file.size,
+        type: file.type,
+        tags: tags
+    };
+
     firebase
         .database()
         .ref('files/' + fullPath)
-        .set({ 
-            fullPath: fullPath,
-            name: file.name,
-            nameLowerCase: file.name.toLowerCase(),
-            size: file.size,
-            type: file.type,
-            tags: tags
-        }, () => {
+        .set(data, () => {
             console.log('file pointer saved');
-            done();
+            done(data);
         });
 }
 

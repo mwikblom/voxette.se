@@ -54,13 +54,17 @@ const styles = theme => ({
     chip: {
         margin: theme.spacing.unit / 2,
     },    
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },    
     buttonProgress: {
         color: theme.palette.secondary.main,
         position: 'absolute',
         top: '50%',
         left: '50%',
-        marginTop: -23,
-        marginLeft: 149,
+        marginTop: -12,
+        marginLeft: -12,
       },          
 });
 
@@ -218,12 +222,14 @@ class Members extends Component {
                                     </MenuItem>
                                 ))}
                             </TextField>                    
-                            <Tooltip title="Sök efter medlemmar">
-                                <Button type="submit" variant="contained" disabled={disabled}>
-                                    <SearchIcon />
-                                </Button>                                         
-                            </Tooltip>            
-                            {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
+                            <div className={classes.wrapper}>
+                                <Tooltip title="Sök efter medlemmar">
+                                    <Button type="submit" variant="contained" disabled={disabled}>
+                                        <SearchIcon />
+                                    </Button>                                         
+                                </Tooltip>            
+                                {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
+                            </div>
                         </form>
                     </div>
 

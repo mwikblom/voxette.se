@@ -126,16 +126,14 @@ class Documents extends Component {
             const marker = FirebaseApp.voxette.getValidDatabasePathItem(file.name);
             const fullPath = new Date().getTime() + '_' + marker;
 
-            FirebaseApp.voxette.uploadFile(fullPath, file, () => { // TODO update state after last file
+            FirebaseApp.voxette.uploadFile(fullPath, file, (data) => { 
 
-                const { filterName, filterTag } = this.state;
+                const newFiles = this.state.files.splice(0);
 
-                FirebaseApp.voxette.fetchFiles(filterName, filterTag, (files) => {
-                    if (files) {
-                        this.setState({
-                            files: files
-                        });
-                    }
+                newFiles.unshift(data);
+
+                this.setState({
+                    files: newFiles
                 });
             });
         }            
