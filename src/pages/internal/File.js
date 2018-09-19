@@ -59,6 +59,7 @@ const tagValues = [
     'Bilder',
     'Ljudfiler',
     'Dokument',
+    'Aktuellt',
     'Övrigt'
 ];
 
