@@ -23,12 +23,14 @@ import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Grid } from '@material-ui/core';
 
 const styles = theme => ({
     root: {
         width: '100%',
         marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto',
+        overflow: 'hidden',
+        padding: '10px'
     },
     table: {
         minWidth: 700,
@@ -40,9 +42,7 @@ const styles = theme => ({
         display: 'none',
     },
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 400,
+        width: '100%',
     },
     action: {
         cursor: 'pointer',
@@ -55,7 +55,7 @@ const styles = theme => ({
         margin: theme.spacing.unit / 2,
     },    
     wrapper: {
-        margin: theme.spacing.unit,
+        marginTop: theme.spacing.unit,
         position: 'relative',
     },    
     buttonProgress: {
@@ -65,7 +65,10 @@ const styles = theme => ({
         left: '50%',
         marginTop: -12,
         marginLeft: -12,
-      },          
+    },
+    tableContainer: {
+        overflowX: 'auto'
+    }       
 });
 
 // TODO duplicated in Member.js
@@ -151,7 +154,6 @@ class Members extends Component {
                 </p>
                 
                 <Paper className={classes.root}>
-
                     <Tooltip title="Lägg till ny medlem">
                         <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button} onClick={this.handleClickOpen}>
                             <AddIcon/>
@@ -188,93 +190,99 @@ class Members extends Component {
                             </Button>
                         </DialogActions>
                     </Dialog>
-
-                    <div>                     
-                        <form onSubmit={(e) => this.search(e)}>
-                            <TextField
-                                id="name"
-                                label="Förnamn"
-                                className={classes.textField}
-                                value={filterName}
-                                onChange={(event) => this.handleChange(event, 'filterName')}
-                                margin="normal"
-                            />
-                            <TextField
-                                id="tag"
-                                select
-                                label="Tagg"
-                                className={classes.textField}
-                                value={filterTag}
-                                onChange={(event) => this.handleChange(event, 'filterTag')}
-                                SelectProps={{
-                                    MenuProps: {
-                                        className: classes.menu,
-                                    },
-                                }}
-                                margin="normal"
-                            >
-                                <MenuItem value="">
-                                    <em>Alla</em>
-                                </MenuItem>
-                                {tagValues.map(tag => (
-                                    <MenuItem key={tag} value={tag}>
-                                        {tag}
+                   
+                    <form onSubmit={(e) => this.search(e)}>
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="name"
+                                    label="Förnamn"
+                                    className={classes.textField}
+                                    value={filterName}
+                                    onChange={(event) => this.handleChange(event, 'filterName')}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="tag"
+                                    select
+                                    label="Tagg"
+                                    className={classes.textField}
+                                    value={filterTag}
+                                    onChange={(event) => this.handleChange(event, 'filterTag')}
+                                    SelectProps={{
+                                        MenuProps: {
+                                            className: classes.menu,
+                                        },
+                                    }}
+                                    margin="normal"
+                                >
+                                    <MenuItem value="">
+                                        <em>Alla</em>
                                     </MenuItem>
-                                ))}
-                            </TextField>                    
-                            <div className={classes.wrapper}>
-                                <Tooltip title="Sök efter medlemmar">
-                                    <Button type="submit" variant="contained" disabled={disabled}>
-                                        <SearchIcon />
-                                    </Button>                                         
-                                </Tooltip>            
-                                {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
-                            </div>
-                        </form>
-                    </div>
+                                    {tagValues.map(tag => (
+                                        <MenuItem key={tag} value={tag}>
+                                            {tag}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                        </Grid>    
+                        <div className={classes.wrapper}>
+                            <Tooltip title="Sök efter medlemmar">
+                                <Button type="submit" variant="contained" disabled={disabled}>
+                                    <SearchIcon />
+                                </Button>                                         
+                            </Tooltip>            
+                            {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
+                        </div>
+                    </form>
 
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Namn</TableCell>
-                                <TableCell>Taggar</TableCell>
-                                <TableCell>Telefon</TableCell>
-                                <TableCell>Epost</TableCell>
-                                <TableCell>Adress</TableCell>
-                                <TableCell></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {members.map(member => {
-                                return (
-                                    <TableRow hover key={member.userData.memberId}>
-                                        <TableCell component="th" scope="row">
-                                            {member.userData.firstName} {member.userData.lastName}
-                                        </TableCell>
-                                        <TableCell className={classes.chipRoot}>
-                                            {member.userData.tags && member.userData.tags.map(tag => {
-                                                return (
-                                                    <Chip
-                                                        key={tag}
-                                                        label={tag}
-                                                        className={classes.chip}
-                                                    />
-                                                );        
-                                            })}
-                                        </TableCell>
-                                        <TableCell>{member.userData.phone}</TableCell>
-                                        <TableCell>{member.userData.email}</TableCell>
-                                        <TableCell>{member.userData.address}</TableCell>
-                                        <TableCell>
-                                            <Tooltip title="Ändra uppgifter">
-                                                <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
-                                            </Tooltip>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+                    <div className={classes.tableContainer}>
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Namn</TableCell>
+                                    <TableCell>Taggar</TableCell>
+                                    <TableCell>Telefon</TableCell>
+                                    <TableCell>Epost</TableCell>
+                                    <TableCell>Adress</TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {members.map(member => {
+                                    return (
+                                        <TableRow hover key={member.userData.memberId}>
+                                            <TableCell component="th" scope="row">
+                                                {member.userData.firstName} {member.userData.lastName}
+                                            </TableCell>
+                                            <TableCell className={classes.chipRoot}>
+                                                {member.userData.tags && member.userData.tags.map(tag => {
+                                                    return (
+                                                        <Chip
+                                                            key={tag}
+                                                            label={tag}
+                                                            className={classes.chip}
+                                                        />
+                                                    );        
+                                                })}
+                                            </TableCell>
+                                            <TableCell>{member.userData.phone}</TableCell>
+                                            <TableCell>{member.userData.email}</TableCell>
+                                            <TableCell>{member.userData.address}</TableCell>
+                                            <TableCell>
+                                                <Tooltip title="Ändra uppgifter">
+                                                    <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
+                                                </Tooltip>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </Paper>            
             </div>
         );

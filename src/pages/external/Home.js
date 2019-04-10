@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
     img: {
@@ -37,9 +36,9 @@ class Home extends Component {
                 <p><strong>Vill du vara med?</strong> Just nu tar vi inte in nya medlemmar, 
                     men kontakta vår körledare <a href="mailto:anna@wikblom.se">Anna Wikblom</a> om du vill anmäla ditt intresse eller har andra frågor.</p>
                 <p>Vill du boka oss finns mer information på vår <Link className={classes.navLink} to="/kontakt">Kontaktsida</Link></p>
-                <Paper className={classes.img}>
+                <div className={classes.img}>
                     <img alt="Voxette" src="/images/IMG_3373.jpg" height="300px" />
-                </Paper>
+                </div>
             </div>
         );
     }

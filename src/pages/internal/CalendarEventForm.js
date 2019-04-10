@@ -76,7 +76,6 @@ const getCurrentTimestamp = () => {
         minutes = '0' + minutes;
     }
 
-    var today = new Date();
     var hour = today.getHours();
 
     return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;

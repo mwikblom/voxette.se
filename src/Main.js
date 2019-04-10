@@ -14,7 +14,6 @@ import {
     IconButton,
     Menu,
     MenuItem,
-    Paper,
     Divider
 } from '@material-ui/core';
 
@@ -61,7 +60,10 @@ const styles = theme => ({
     },
     navLink: {
         textDecoration: 'none',
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
+        display: 'block',
+        maxWidth: '100%',
+        width: '250px'
     }
 });
 
@@ -156,7 +158,7 @@ class Main extends Component {
                             </Toolbar>
                         </AppBar>
 
-                        <Paper className={classes.content}>
+                        <div className={classes.content}>
                             <div id="info-message"></div>
                             <Switch>
                                 <Route exact path="/" render={this.pageController.HomePage} />
@@ -175,7 +177,7 @@ class Main extends Component {
                         
                                 <Route component={NotFound} />
                             </Switch>
-                        </Paper>
+                        </div>
                     </div>
                 </BrowserRouter>
             </MuiThemeProvider>
