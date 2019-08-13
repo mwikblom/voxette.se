@@ -84,7 +84,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
     
     getInitalState() {
         const { event, eventId } = this.props;
-        
+
         return event 
             ? {
                 eventId,
@@ -98,7 +98,8 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                     title: '',
                     description: '',
                     location: '',
-                                
+
+                    meetupTime: getDefaultTime(),
                     startDate: getDefaultDate(),
                     endDate: getDefaultDate(),
                     startTime: getDefaultTime(),
@@ -114,8 +115,12 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
         var event = this.state.event;
         event[name] = e.target.value;
 
-        if (event.endDate < event.startDate){
+        if (event.endDate < event.startDate) {
             event.endDate = event.startDate;
+        }
+
+        if (event.startTime > event.meetupTime) {
+            event.meetupTime = event.startTime;
         }
 
         this.setState({
@@ -139,12 +144,13 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
 
         const { eventId, event, editMode } = this.state;
 
-        if (editMode){
+        if (editMode) {
             event.updated = getCurrentTimestamp();
             FirebaseApp.voxette.updateEventData(eventId, event, () => {
                 this.setState({
                     hasChanges: false
                 });
+                this.props.closeFormEvent(eventId, event);
             });
         } else {
             event.created = getCurrentTimestamp();
@@ -153,6 +159,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                     hasChanges: false,
                     eventId
                 });
+                this.props.closeFormEvent(eventId, event);
             });
         }
     }
@@ -168,16 +175,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
         const { 
             editMode,
             hasChanges,
-            event: {
-                title,
-                description,
-                location,
-                startDate,
-                startTime,
-                endDate,
-                endTime,
-                isPublic
-            }
+            event
         } = this.state;
 
         const heading = editMode
@@ -195,7 +193,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     id="title"
                                     label="Titel"
                                     className={classes.textField}
-                                    value={title}
+                                    value={event.title}
                                     onChange={this.handleChange('title')}
                                 />
                             </Grid>
@@ -205,7 +203,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     label="Beskrivning"
                                     multiline={true}
                                     className={classes.textField}
-                                    value={description}
+                                    value={event.description}
                                     onChange={this.handleChange('description')}
                                 />
                             </Grid>
@@ -215,7 +213,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     label="Plats"
                                     multiline={true}
                                     className={classes.textField}
-                                    value={location}
+                                    value={event.location}
                                     onChange={this.handleChange('location')}
                                 />
                             </Grid>
@@ -225,7 +223,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     label="Startdatum"
                                     type="date"
                                     className={classes.textField}
-                                    value={startDate}
+                                    value={event.startDate}
                                     onChange={this.handleChange('startDate')}
                                     InputLabelProps={{ shrink: true }}
                                 />
@@ -236,7 +234,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     label="Starttid"
                                     type="time"
                                     className={classes.textField}
-                                    value={startTime}
+                                    value={event.startTime}
                                     onChange={this.handleChange('startTime')}
                                     InputLabelProps={{ shrink: true }}
                                 />
@@ -247,7 +245,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     label="Slutdatum"
                                     type="date"
                                     className={classes.textField}
-                                    value={endDate}
+                                    value={event.endDate}
                                     onChange={this.handleChange('endDate')}
                                     InputLabelProps={{ shrink: true }}
                                 />
@@ -258,8 +256,19 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     label="Sluttid"
                                     type="time"
                                     className={classes.textField}
-                                    value={endTime}
+                                    value={event.endTime}
                                     onChange={this.handleChange('endTime')}
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="meetupTime"
+                                    label="Samlingstid"
+                                    type="time"
+                                    className={classes.textField}
+                                    value={event.meetupTime}
+                                    onChange={this.handleChange('meetupTime')}
                                     InputLabelProps={{ shrink: true }}
                                 />
                             </Grid>
@@ -267,7 +276,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={isPublic}
+                                            checked={event.isPublic}
                                             onChange={this.handleCheckedChange('isPublic')}
                                             value="isPublic"
                                         />

@@ -4,8 +4,8 @@ import EditIcon from '@material-ui/icons/Edit';
 
 export default class CalendarItem extends Component {
     handleSelectEdit = () => {
-        var { handleSelectEditEvent, event } = this.props;
-        handleSelectEditEvent(event);
+        var { handleSelectEditEvent, event, eventId } = this.props;
+        handleSelectEditEvent({ ...event }, eventId);
     }
     render() {
         if (this.props.event === undefined) return null;

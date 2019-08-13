@@ -34,19 +34,25 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         });
     }
 
-    handleToggleEventForm = (close = null) => {
-        var isShowing = this.state.showForm;
-        if (close){
-            isShowing = true;
-        }
+    handleToggleEventForm = (openForm, eventId = undefined, event = undefined) => {
+        var isShowing = openForm ? true : this.state.showForm;
         this.setState({
-            showForm: !isShowing
+            showForm: !isShowing,
+            events: {
+                ...this.state.events,
+                [eventId]: {
+                    eventData: event
+                }
+            }
         });
     }
 
-    handleSelectEditEvent = (event) => {
+    handleSelectEditEvent = (event, eventId) => {
         this.setState({
-            selectedEvent: event,
+            selectedEvent: {
+                eventId,
+                event
+            },
             showForm: true
         });
     }
@@ -58,18 +64,18 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         return (
             <div>
                 { !showForm
-                    ? <Button variant="fab" color="primary" onClick={() => this.handleToggleEventForm()} className={classes.buttonRight}>
+                    ? <Button variant="fab" color="primary" onClick={() => this.handleToggleEventForm(true)} className={classes.buttonRight}>
                         <AddIcon />
                     </Button>
                     : undefined }
                 <h2>Intern kalender</h2>
                 <p>Kommande evenemang. Kommer även att innehålla närvaro-koll.</p>
                 { showForm
-                    ? <CalendarEventForm closeFormEvent={() => this.handleToggleEventForm(false)} event={selectedEvent} />
+                    ? <CalendarEventForm closeFormEvent={(id, e) => this.handleToggleEventForm(false, id, e)} event={selectedEvent.event} eventId={selectedEvent.eventId} />
                     : undefined }
                 
-                {Object.values(events).map((event, i) => {
-                    return (<CalendarItem event={event.eventData} key={i} handleSelectEditEvent={(e) => this.handleSelectEditEvent(e)} />);
+                {Object.keys(events).map((eventId, i) => {
+                    return (<CalendarItem event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />);
                 })}
             </div>
         );
