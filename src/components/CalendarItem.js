@@ -16,6 +16,7 @@ export default class CalendarItem extends Component {
                 startTime,
                 endDate,
                 endTime,
+                meetupTime,
                 title,
                 description
             }
@@ -31,13 +32,14 @@ export default class CalendarItem extends Component {
             <div className="calendar-item">
                 <h3>
                     {title}
-                    <IconButton aria-label="redigera" color="primary" onClick={this.handleSelectEdit}>
+                    <IconButton aria-label="redigera" color="secondary" onClick={this.handleSelectEdit}>
                         <EditIcon />
                     </IconButton>
                 </h3>
                 <p>{description}</p>
                 <p>
                     När: {eventDate}
+                    { meetupTime ? <span><br />Samling kl: {meetupTime}</span> : undefined }
                 </p>
             </div>
         );

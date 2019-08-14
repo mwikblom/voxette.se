@@ -21,23 +21,20 @@ const styles = theme => ({
         width: '100%',
         marginTop: theme.spacing.unit * 3,
         overflowX: 'auto',
-    },    
+        padding: theme.spacing.unit * 2
+    },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
     },
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 400,
+        width: '100%',
     },
     action: {
         marginRight: theme.spacing.unit * 3,
     },
     formControl: {
-        margin: theme.spacing.unit,
-        minWidth: 120,
-        maxWidth: 300,
+        width: '100%'
     },
     chips: {
         display: 'flex',
@@ -45,7 +42,10 @@ const styles = theme => ({
     },
     chip: {
         margin: theme.spacing.unit / 4,
-    },    
+    },
+    buttonIcon: {
+        marginRight: theme.spacing.unit
+    }
 });
 
 // TODO duplicated in Documents.js
@@ -110,7 +110,7 @@ class File extends Component {
                 <Paper className={classes.paper}>
                     <form className={classes.container} noValidate autoComplete="off" onSubmit={(e) => this.saveChanges(e)}>
                         <Grid container spacing={24}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     id="name"
                                     label="Namn"
@@ -122,6 +122,8 @@ class File extends Component {
                                     autoFocus
                                     required
                                 />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="select-multiple-chip">Taggar</InputLabel>
                                     <Select
@@ -149,7 +151,7 @@ class File extends Component {
                                     </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     id="size"
                                     label="Storlek"
@@ -158,6 +160,8 @@ class File extends Component {
                                     margin="normal"
                                     disabled
                                 />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     id="type"
                                     label="Typ"
@@ -169,11 +173,11 @@ class File extends Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <Button component={Link} className={classes.action} variant="contained" to="/inloggad/filer">
-                                    <CancelIcon />
+                                    <CancelIcon className={classes.buttonIcon} />
                                     Stäng
                                 </Button>
                                 <Button className={classes.action} variant="contained" color="primary" disabled={!hasChanges} type="submit">
-                                    <SaveIcon />
+                                    <SaveIcon className={classes.buttonIcon} />
                                     Spara ändringar
                                 </Button>
                             </Grid>

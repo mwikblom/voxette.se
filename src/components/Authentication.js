@@ -3,20 +3,22 @@ import firebase from 'firebase';
 import FirebaseApp from '../FirebaseApp';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Avatar from '@material-ui/core/Avatar';
 import FaceIcon from '@material-ui/icons/Face';
-import Chip from '@material-ui/core/Chip';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
 import PersonIcon from '@material-ui/icons/Person';
+import {
+    Button,
+    IconButton,
+    MenuItem,
+    Menu,
+    Avatar,
+    Chip,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+    DialogTitle,
+    Dialog
+} from '@material-ui/core';
 
 const styles = theme => ({
     content: {
@@ -25,6 +27,10 @@ const styles = theme => ({
     chip: {
         margin: theme.spacing.unit,
     },
+    menuItem: {
+        maxWidth: '100%',
+        width: '250px'
+    }
 });
 
 class Authentication extends Component {
@@ -54,9 +60,9 @@ class Authentication extends Component {
             return (user && user.Picture) ? (<Avatar src={user.Picture} />) : (<Avatar><FaceIcon /></Avatar>)
         }
 
-        return loggedIn ? 
+        return loggedIn ?
             <div className={ classes.content } >
-                <IconButton
+                <Button
                     aria-owns={anchorEl ? 'menu-appbar' : null}
                     aria-haspopup="true"
                     onClick={this.handleMenu}
@@ -66,9 +72,9 @@ class Authentication extends Component {
                         avatar={avatar()} 
                         label={user.FirstName}
                         className={classes.chip}
-                        color="secondary" 
-                    />        
-                </IconButton>
+                        color="primary" 
+                    />
+                </Button>
                 <Menu
                     id="menu-appbar"
                     anchorEl={anchorEl}
@@ -83,14 +89,14 @@ class Authentication extends Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                     >
-                    <MenuItem onClick={this.handleLogout}>Logga ut</MenuItem>
-                </Menu> 
-            </div>           
+                    <MenuItem className={classes.menuItem} onClick={this.handleLogout}>Logga ut</MenuItem>
+                </Menu>
+            </div>
             :
-            <div className={ classes.content } >
+            <div className={ classes.content }>
                 <Button onClick={this.handleClickOpen} color="inherit">Logga in</Button>
 
-                <Dialog 
+                <Dialog
                     open={loginOpen}
                     onClose={this.handleClickClose} 
                     aria-labelledby="simple-dialog-title">

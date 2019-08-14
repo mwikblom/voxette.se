@@ -64,7 +64,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         return (
             <div>
                 { !showForm
-                    ? <Button variant="fab" color="primary" onClick={() => this.handleToggleEventForm(true)} className={classes.buttonRight}>
+                    ? <Button variant="fab" color="secondary" onClick={() => this.handleToggleEventForm(true)} className={classes.buttonRight}>
                         <AddIcon />
                     </Button>
                     : undefined }

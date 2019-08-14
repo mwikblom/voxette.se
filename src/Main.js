@@ -29,16 +29,16 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
     palette: {
         primary: {
-            light: '#E8F5E9',
-            main: '#C8E6C9',
-            dark: '#A5D6A7',
-            contrastText: '#000',
+            light: '#ff9f99',
+            main: '#e5263e', // red
+            dark: '#450702',
+            contrastText: '#fff',
         },
         secondary: {
-            light: '#FFEBEE',
-            main: '#FFCDD2',
-            dark: '#EF9A9A',
-            contrastText: '#000',
+            light: '#00afde',
+            main: '#0069b2', // blue
+            dark: '#0a1b3f',
+            contrastText: '#fff',
         },    
     }
 });
@@ -47,8 +47,14 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
     },
-    flex: {
+    titleLink: {
+        color: 'inherit',
+        textDecoration: 'none',
+        display: 'flex'
+    },
+    title: {
         flex: 1,
+        fontSize: '20px'
     },
     menuButton: {
         marginLeft: -12,
@@ -56,7 +62,8 @@ const styles = theme => ({
     },
     content: {
         padding: theme.spacing.unit,
-        margin: theme.spacing.unit
+        margin: `${theme.spacing.unit}px auto`,
+        maxWidth: '1200px'
     },
     navLink: {
         textDecoration: 'none',
@@ -64,6 +71,12 @@ const styles = theme => ({
         display: 'block',
         maxWidth: '100%',
         width: '250px'
+    },
+    logo: {
+        width: '104px',
+        marginRight: theme.spacing.unit * 4,
+        background: '#fff',
+        padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit * 2}px`
     }
 });
 
@@ -145,11 +158,11 @@ class Main extends Component {
                                     </MenuItem>
                                     {internalMenu}
                                 </Menu>
-
-                                <Typography variant="title" color="inherit" className={classes.flex}>
-                                    KFUM Voxette
-                                </Typography>
-
+                                
+                                <NavLink className={classes.titleLink} exact to="/"><img src="/images/KFUM-voxette.png" className={classes.logo} /></NavLink>
+                                    <h2 className={classes.title}>
+                                    <NavLink className={classes.titleLink} exact to="/">KFUM Voxette</NavLink>
+                                </h2>
                                 <Authentication onLoginSuccess={this.handleLoginSuccess}
                                     onLoginFailure={this.handleLoginFailure}
                                     onLogoutSuccess={this.handleLogoutSuccess}

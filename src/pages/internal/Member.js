@@ -22,7 +22,7 @@ const styles = theme => ({
         width: '100%',
         marginTop: theme.spacing.unit * 3,
         overflowX: 'auto',
-    },    
+    },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -45,7 +45,10 @@ const styles = theme => ({
     },
     chip: {
         margin: theme.spacing.unit / 4,
-    },        
+    },
+    buttonIcon: {
+        marginRight: theme.spacing.unit
+    }
 });
 
 const tagValues = [
@@ -197,11 +200,11 @@ class Member extends Component {
                     </Grid>
             
                     <Button component={Link} className={classes.action} variant="contained" to="/inloggad/medlemmar">
-                        <CancelIcon />
+                        <CancelIcon className={classes.buttonIcon} />
                         Stäng
                     </Button>
                     <Button variant="contained" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
-                        <SaveIcon />
+                        <SaveIcon className={classes.buttonIcon} />
                         Spara ändringar
                     </Button>
                 </form>

@@ -4,12 +4,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
 const styles = theme => ({
-    img: {
-        width: '100%',
+    imgContainer: {
         marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto',
         textAlign: 'center',
-        padding: theme.spacing.unit
+    },
+    img: {
+        maxWidth: '100%',
+        maxHeight: '300px'
     }
 });
 
@@ -36,8 +37,8 @@ class Home extends Component {
                 <p><strong>Vill du vara med?</strong> Just nu tar vi inte in nya medlemmar, 
                     men kontakta vår körledare <a href="mailto:anna@wikblom.se">Anna Wikblom</a> om du vill anmäla ditt intresse eller har andra frågor.</p>
                 <p>Vill du boka oss finns mer information på vår <Link className={classes.navLink} to="/kontakt">Kontaktsida</Link></p>
-                <div className={classes.img}>
-                    <img alt="Voxette" src="/images/IMG_3373.jpg" height="300px" />
+                <div className={classes.imgContainer}>
+                    <img alt="Voxette" src="/images/IMG_3373.jpg" className={classes.img} />
                 </div>
             </div>
         );

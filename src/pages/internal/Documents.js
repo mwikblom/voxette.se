@@ -2,23 +2,26 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseApp from '../../FirebaseApp';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import EditIcon from '@material-ui/icons/Edit';
 import SearchIcon from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router-dom';
-import Tooltip from '@material-ui/core/Tooltip';
-import Chip from '@material-ui/core/Chip';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Paper,
+    Button,
+    TextField,
+    MenuItem,
+    Tooltip,
+    Chip,
+    CircularProgress
+} from '@material-ui/core/';
 
 // TODO byt namn till Files.js
 
@@ -27,20 +30,21 @@ const styles = theme => ({
         width: '100%',
         marginTop: theme.spacing.unit * 3,
         overflowX: 'auto',
+        padding: theme.spacing.unit * 2,
+        flexGrow: 1
     },
     table: {
         minWidth: 700,
     },
     button: {
         margin: theme.spacing.unit,
+        float: 'right'
     }, 
     input: {
         display: 'none',
     },
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 400,
+        width: '100%',
     },
     action: {
         cursor: 'pointer',
@@ -82,7 +86,6 @@ function fileUri(fullPath) {
 }
 
 class Documents extends Component {
-    
     constructor(props) {
         super(props);
 
@@ -179,7 +182,7 @@ class Documents extends Component {
                     />
                     <label htmlFor="upload-input">
                         <Tooltip title="Lägg till nya filer">
-                            <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button}>
+                            <Button variant="fab" component="span" color="secondary" aria-label="add" className={classes.button}>
                                 <AddIcon />
                             </Button>
                         </Tooltip>
@@ -187,39 +190,45 @@ class Documents extends Component {
 
                     <div>                     
                         <form onSubmit={(e) => this.search(e)}>
-                            <TextField
-                                id="name"
-                                label="Namn"
-                                className={classes.textField}
-                                value={filterName}
-                                onChange={(event) => this.handleChange(event, 'filterName')}
-                                margin="normal"
-                            />
-                            <TextField
-                                id="type"
-                                select
-                                label="Typ"
-                                className={classes.textField}
-                                value={filterTag}
-                                onChange={(event) => this.handleChange(event, 'filterTag')}
-                                SelectProps={{
-                                    MenuProps: {
-                                        className: classes.menu,
-                                    },
-                                }}
-                                margin="normal"
-                            >
-                                <MenuItem value="">
-                                    <em>Alla</em>
-                                </MenuItem>
-                                {tagValues.map(tag => (
-                                    <MenuItem key={tag} value={tag}>
-                                        {tag}
-                                    </MenuItem>
-                                ))}
-                            </TextField>      
+                            <Grid container spacing={24}>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        id="name"
+                                        label="Namn"
+                                        className={classes.textField}
+                                        value={filterName}
+                                        onChange={(event) => this.handleChange(event, 'filterName')}
+                                        margin="normal"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        id="type"
+                                        select
+                                        label="Typ"
+                                        className={classes.textField}
+                                        value={filterTag}
+                                        onChange={(event) => this.handleChange(event, 'filterTag')}
+                                        SelectProps={{
+                                            MenuProps: {
+                                                className: classes.menu,
+                                            },
+                                        }}
+                                        margin="normal"
+                                    >
+                                        <MenuItem value="">
+                                            <em>Alla</em>
+                                        </MenuItem>
+                                        {tagValues.map(tag => (
+                                            <MenuItem key={tag} value={tag}>
+                                                {tag}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                            </Grid>
                             <Tooltip title="Sök efter filer">              
-                                <Button type="submit" variant="contained" disabled={disabled}>
+                                <Button type="submit" variant="contained" disabled={disabled} color="primary">
                                     <SearchIcon />
                                 </Button>
                             </Tooltip>

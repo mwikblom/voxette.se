@@ -119,7 +119,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
             event.endDate = event.startDate;
         }
 
-        if (event.startTime > event.meetupTime) {
+        if (event.meetupTime > event.startTime) {
             event.meetupTime = event.startTime;
         }
 

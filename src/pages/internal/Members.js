@@ -3,40 +3,43 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseApp from '../../FirebaseApp';
 import { Redirect } from 'react-router-dom';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import EditIcon from '@material-ui/icons/Edit';
-import Tooltip from '@material-ui/core/Tooltip';
-import Chip from '@material-ui/core/Chip';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { Grid } from '@material-ui/core';
+import { 
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Paper,
+    Button,
+    TextField,
+    MenuItem,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Tooltip,
+    Chip,
+    CircularProgress
+} from '@material-ui/core';
 
 const styles = theme => ({
     root: {
         width: '100%',
         marginTop: theme.spacing.unit * 3,
         overflow: 'hidden',
-        padding: '10px'
+        padding: theme.spacing.unit * 2
     },
     table: {
         minWidth: 700,
     },
     button: {
         margin: theme.spacing.unit,
+        float: 'right'
     }, 
     input: {
         display: 'none',
@@ -155,7 +158,7 @@ class Members extends Component {
                 
                 <Paper className={classes.root}>
                     <Tooltip title="Lägg till ny medlem">
-                        <Button variant="fab" component="span" color="primary" aria-label="add" className={classes.button} onClick={this.handleClickOpen}>
+                        <Button variant="fab" component="span" color="secondary" aria-label="add" className={classes.button} onClick={this.handleClickOpen}>
                             <AddIcon/>
                         </Button>
                     </Tooltip>
@@ -183,17 +186,17 @@ class Members extends Component {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => this.handleClose(false)}>
-                            Avbryt
+                                Avbryt
                             </Button>
                             <Button onClick={() => this.handleClose(true)} color="primary">
-                            Lägg till
+                                Lägg till
                             </Button>
                         </DialogActions>
                     </Dialog>
                    
                     <form onSubmit={(e) => this.search(e)}>
                         <Grid container spacing={24}>
-                            <Grid item xs={6}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     id="name"
                                     label="Förnamn"
@@ -203,7 +206,7 @@ class Members extends Component {
                                     margin="normal"
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     id="tag"
                                     select
@@ -231,7 +234,7 @@ class Members extends Component {
                         </Grid>    
                         <div className={classes.wrapper}>
                             <Tooltip title="Sök efter medlemmar">
-                                <Button type="submit" variant="contained" disabled={disabled}>
+                                <Button type="submit" variant="contained" color="primary" disabled={disabled}>
                                     <SearchIcon />
                                 </Button>                                         
                             </Tooltip>            
@@ -240,7 +243,7 @@ class Members extends Component {
                     </form>
 
                     <div className={classes.tableContainer}>
-                        <Table className={classes.table}>
+                        <Table className={classes.table} size="small">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Namn</TableCell>

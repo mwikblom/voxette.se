@@ -1,8 +1,33 @@
+/**********     MAIN    **********/
+
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    color: #0a1b3f;
 }
+h1, h2, h3, h4 {
+    font-family: 'Bevan';
+    font-weight: 400;
+}
+
+/**********     LINKS    **********/
+
+a {
+    color: #0069b2;
+}
+a:hover {
+    text-decoration: none;
+}
+
+/**********     TABLES    **********/
+
+tbody th {
+    font-weight: bold;
+}
+
+/**********     BUTTONS    **********/
+
 .add-btn-close {
     transform: rotate(45deg);
     transition: all .3s ease-in;
