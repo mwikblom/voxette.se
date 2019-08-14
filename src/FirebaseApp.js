@@ -366,6 +366,22 @@ const voxette = {
             throw new Error('No id or data for event');
         }
     },
+    addEventAttendance: (eventId, memberId, attendance, done) => {
+        if (eventId && memberId && attendance) {
+
+            console.log('saving event attendance for event ' + eventId + ' and member ' + memberId + ', attendance: ' + JSON.stringify(attendance));
+
+            firebase
+                .database()
+                .ref('events/' + eventId + '/attendance/' + memberId)
+                .update(attendance, () => {
+                    console.log('attendance saved');
+                    done(eventId);
+                });
+        } else {
+            throw new Error('No id or data for event');
+        }
+    },
 
 };
 

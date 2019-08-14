@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Paper, TextField, FormControlLabel, Checkbox, Button } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
+import {
+    Save as SaveIcon, 
+    Cancel as CancelIcon
+ } from '@material-ui/icons';
+import DateTimeHelper from '../../common/DateTimeHelper';
 
 const styles = {
     paper: {
@@ -20,64 +23,6 @@ const styles = {
         marginRight: '5px'   
     }
 };
-
-const getDefaultDate = () => {
-    // Today
-    var today = new Date();
-    var day = today.getDate();
-    var month = today.getMonth() + 1;
-
-    var year = today.getFullYear();
-
-    if (day < 10) {
-        day = '0' + day;
-    }
-    if (month < 10) {
-        month = '0' + month;
-    }
-    return year + '-' + month + '-' + day;
-}
-
-const getDefaultTime = (plusHours = 0) => {
-    // Next full hour
-    var today = new Date();
-    var hour = today.getHours() + 1;
-    hour += plusHours;
-    if (hour > 23) {
-        hour = 0;
-    }
-
-    if (hour < 10) {
-        hour = '0' + hour;
-    }
-    return hour + ':00';
-}
-const getCurrentTimestamp = () => {
-    var today = new Date();
-
-    var day = today.getDate();
-    var month = today.getMonth() + 1; // starts at 0
-    var year = today.getFullYear();
-
-    if (day < 10) {
-        day = '0' + day;
-    }
-    if (month < 10) {
-        month = '0' + month;
-    }
-    
-    var hour = today.getHours();
-    if (hour < 10) {
-        hour = '0' + hour;
-    }
-
-    var minutes = today.getMinutes();
-    if (minutes < 10) {
-        minutes = '0' + minutes;
-    }
-
-    return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
-}
 
 export default withStyles(styles)(class CalendarEventForm extends Component {
     state = this.getInitalState();
@@ -99,12 +44,13 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                     description: '',
                     location: '',
 
-                    meetupTime: getDefaultTime(),
-                    startDate: getDefaultDate(),
-                    endDate: getDefaultDate(),
-                    startTime: getDefaultTime(),
-                    endTime: getDefaultTime(1),
-                    isPublic: false
+                    meetupTime: DateTimeHelper.getTimeNextFullHour(),
+                    startDate: DateTimeHelper.getDateToday(),
+                    endDate: DateTimeHelper.getDateToday(),
+                    startTime: DateTimeHelper.getTimeNextFullHour(),
+                    endTime: DateTimeHelper.getTimeNextFullHour(1),
+                    isPublic: false,
+                    attendance: {}
                 },
                 editMode: false,
                 hasChanges: false
@@ -145,7 +91,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
         const { eventId, event, editMode } = this.state;
 
         if (editMode) {
-            event.updated = getCurrentTimestamp();
+            event.updated = DateTimeHelper.getCurrentTimestamp();
             FirebaseApp.voxette.updateEventData(eventId, event, () => {
                 this.setState({
                     hasChanges: false
@@ -153,7 +99,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                 this.props.closeFormEvent(eventId, event);
             });
         } else {
-            event.created = getCurrentTimestamp();
+            event.created = DateTimeHelper.getCurrentTimestamp();
             FirebaseApp.voxette.addEventData(event, (eventId) => {
                 this.setState({
                     hasChanges: false,

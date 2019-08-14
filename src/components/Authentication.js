@@ -7,7 +7,6 @@ import FaceIcon from '@material-ui/icons/Face';
 import PersonIcon from '@material-ui/icons/Person';
 import {
     Button,
-    IconButton,
     MenuItem,
     Menu,
     Avatar,

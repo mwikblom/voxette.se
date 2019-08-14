@@ -10,7 +10,6 @@ import {
     CssBaseline,
     AppBar,
     Toolbar,
-    Typography,
     IconButton,
     Menu,
     MenuItem,
@@ -40,6 +39,13 @@ const theme = createMuiTheme({
             dark: '#0a1b3f',
             contrastText: '#fff',
         },    
+    },
+    overrides: {
+        MuiTableCell: {
+            root: {
+                padding: '4px 24px'
+            }
+        }
     }
 });
 
@@ -159,7 +165,7 @@ class Main extends Component {
                                     {internalMenu}
                                 </Menu>
                                 
-                                <NavLink className={classes.titleLink} exact to="/"><img src="/images/KFUM-voxette.png" className={classes.logo} /></NavLink>
+                                <NavLink className={classes.titleLink} exact to="/"><img src="/images/KFUM-voxette.png" className={classes.logo} alt="KFUM Örebro Voxette, logga" /></NavLink>
                                     <h2 className={classes.title}>
                                     <NavLink className={classes.titleLink} exact to="/">KFUM Voxette</NavLink>
                                 </h2>

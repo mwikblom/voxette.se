@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
 import CalendarEventForm from './CalendarEventForm';
 import CalendarItem from '../../components/CalendarItem';
-import { Button } from '@material-ui/core';
+import { Button, Tooltip, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import AttendanceCheck from '../../components/AttendanceCheck';
 
 const styles = {
     buttonRight: {
@@ -57,16 +58,34 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         });
     }
 
+    handleAttendanceChange = (eventId, memberId, attendance) => {
+        const event = this.state.events[eventId];
+        this.setState({
+            events: {
+                ...this.state.events,
+                [eventId]: {
+                    eventData: event.eventData,
+                    attendance: {
+                        ...event.attendance,
+                        [memberId]: attendance
+                    }
+                }
+            }
+        });
+    }
+
     render() {
-        const { classes } = this.props;
+        const { classes, user } = this.props;
         const { events, showForm, selectedEvent } = this.state;
 
         return (
             <div>
                 { !showForm
-                    ? <Button variant="fab" color="secondary" onClick={() => this.handleToggleEventForm(true)} className={classes.buttonRight}>
-                        <AddIcon />
-                    </Button>
+                    ? <Tooltip title="Lägg till evenemang">
+                        <Button variant="fab" color="secondary" onClick={() => this.handleToggleEventForm(true)} className={classes.buttonRight}>
+                            <AddIcon />
+                        </Button>
+                    </Tooltip>
                     : undefined }
                 <h2>Intern kalender</h2>
                 <p>Kommande evenemang. Kommer även att innehålla närvaro-koll.</p>
@@ -75,7 +94,19 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                     : undefined }
                 
                 {Object.keys(events).map((eventId, i) => {
-                    return (<CalendarItem event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />);
+                    return (
+                        <Fragment key={i}>
+                            <Grid container spacing={24}>
+                                <AttendanceCheck
+                                    user={user}
+                                    eventId={eventId}
+                                    eventAttendance={events[eventId].attendance}
+                                    onAttendanceChange={this.handleAttendanceChange}
+                                />
+                                <CalendarItem isInternalCalendar={true} event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
+                            </Grid>
+                        </Fragment>
+                    );
                 })}
             </div>
         );

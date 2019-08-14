@@ -1,16 +1,47 @@
 import React, { Component } from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
+import PropTypes from 'prop-types';
+import { IconButton, Grid } from '@material-ui/core';
+import {
+    Edit as EditIcon,
+    ExpandMore as ExpandMoreIcon,
+    ExpandLess as ExpandLessIcon
+} from '@material-ui/icons/';
+import {
+    withStyles,
+    Typography,
+    Tooltip
+} from '@material-ui/core';
 
-export default class CalendarItem extends Component {
+const styles = theme => ({
+    title: {
+        marginBottom: 0
+    },
+    meetupTime: {
+        paddingLeft: theme.spacing.unit
+    },
+    expandButton: {
+        display: 'block'
+    }
+});
+
+class CalendarItem extends Component {
+    state = {
+        expanded: false
+    }
     handleSelectEdit = () => {
         var { handleSelectEditEvent, event, eventId } = this.props;
         handleSelectEditEvent({ ...event }, eventId);
+    }
+    handleExpandClick = () => {
+        this.setState({
+            expanded: !this.state.expanded
+        });
     }
     render() {
         if (this.props.event === undefined) return null;
         
         const {
+            classes,
             event: {
                 startDate,
                 startTime,
@@ -18,9 +49,12 @@ export default class CalendarItem extends Component {
                 endTime,
                 meetupTime,
                 title,
-                description
-            }
+                description,
+                location
+            },
+            isInternalCalendar
         } = this.props;
+        const { expanded } = this.state;
         
         var eventDate = startDate + ' kl: ' + startTime + ' - ';
         if (startDate === endDate){
@@ -28,20 +62,52 @@ export default class CalendarItem extends Component {
         } else {
             eventDate += endDate + ' kl: ' + endTime;
         }
+
+        const previewLength = 500
+        const shouldExpand = description.length > previewLength;
+        const previewDescription = shouldExpand
+            ? description.substring(0, previewLength) + '...'
+            : description;
         return (
-            <div className="calendar-item">
-                <h3>
+            <Grid item xs={true}>
+                <h3 className={classes.title}>
                     {title}
-                    <IconButton aria-label="redigera" color="secondary" onClick={this.handleSelectEdit}>
-                        <EditIcon />
-                    </IconButton>
+                    {
+                        isInternalCalendar
+                            ? <Tooltip title="Redigera">
+                                <IconButton aria-label="Redigera" color="secondary" onClick={this.handleSelectEdit}>
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
+                            : undefined
+                    }
+                    <Typography variant="caption" component="p">
+                        {eventDate}
+                        { isInternalCalendar && meetupTime ? <span className={classes.meetupTime}>(Samling kl: {meetupTime})</span> : undefined }
+                    </Typography>
                 </h3>
-                <p>{description}</p>
+                <Typography variant="caption" component="p">Plats: {location}</Typography>
                 <p>
-                    När: {eventDate}
-                    { meetupTime ? <span><br />Samling kl: {meetupTime}</span> : undefined }
+                    { expanded 
+                        ? description
+                        : previewDescription
+                    }
+                    { shouldExpand
+                        ? <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
+                            <IconButton className={classes.expandButton} aria-label="Expandera" color="secondary" onClick={this.handleExpandClick}>
+                                { expanded ? <ExpandLessIcon /> : <ExpandMoreIcon /> }
+                            </IconButton>
+                        </Tooltip>
+                        : undefined
+                    }
                 </p>
-            </div>
+            </Grid>
         );
     }
 }
+
+CalendarItem.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(CalendarItem);

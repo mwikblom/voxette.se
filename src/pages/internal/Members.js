@@ -48,8 +48,7 @@ const styles = theme => ({
         width: '100%',
     },
     action: {
-        cursor: 'pointer',
-        marginRight: theme.spacing.unit * 3
+        cursor: 'pointer'
     },
     chipRoot: {
         whiteSpace: 'nowrap',
@@ -71,7 +70,11 @@ const styles = theme => ({
     },
     tableContainer: {
         overflowX: 'auto'
-    }       
+    },
+    lessPadding: {
+        paddingRight: theme.spacing.unit * 2,
+        paddingLeft: theme.spacing.unit
+    }
 });
 
 // TODO duplicated in Member.js
@@ -92,7 +95,6 @@ function memberUri(memberId) {
 }
 
 class Members extends Component {
-
     constructor(props) {
         super(props);
 
@@ -243,21 +245,26 @@ class Members extends Component {
                     </form>
 
                     <div className={classes.tableContainer}>
-                        <Table className={classes.table} size="small">
+                        <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
+                                    <TableCell></TableCell>
                                     <TableCell>Namn</TableCell>
                                     <TableCell>Taggar</TableCell>
                                     <TableCell>Telefon</TableCell>
                                     <TableCell>Epost</TableCell>
                                     <TableCell>Adress</TableCell>
-                                    <TableCell></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {members.map(member => {
                                     return (
                                         <TableRow hover key={member.userData.memberId}>
+                                            <TableCell className={classes.lessPadding}>
+                                                <Tooltip title="Ändra uppgifter">
+                                                    <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
+                                                </Tooltip>
+                                            </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {member.userData.firstName} {member.userData.lastName}
                                             </TableCell>
@@ -275,11 +282,6 @@ class Members extends Component {
                                             <TableCell>{member.userData.phone}</TableCell>
                                             <TableCell>{member.userData.email}</TableCell>
                                             <TableCell>{member.userData.address}</TableCell>
-                                            <TableCell>
-                                                <Tooltip title="Ändra uppgifter">
-                                                    <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
-                                                </Tooltip>
-                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
