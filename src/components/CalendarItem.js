@@ -16,6 +16,9 @@ const styles = theme => ({
     title: {
         marginBottom: 0
     },
+    description: {
+        marginBottom: 0
+    },
     meetupTime: {
         paddingLeft: theme.spacing.unit
     },
@@ -87,7 +90,7 @@ class CalendarItem extends Component {
                     </Typography>
                 </h3>
                 <Typography variant="caption" component="p">Plats: {location}</Typography>
-                <p>
+                <p className={classes.description}>
                     { expanded 
                         ? description
                         : previewDescription

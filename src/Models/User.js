@@ -1,6 +1,5 @@
 export default class User {
     constructor(googleId, displayNameOrUserData, email, picture = '') {
-
         this.googleId = googleId;
 
         if (typeof displayNameOrUserData === 'string') {
@@ -10,11 +9,13 @@ export default class User {
             this.lastName = index === -1 ? '' : displayNameOrUserData.substring(index + 1, displayNameOrUserData.length);
             this.email = email;    
             this.picture = picture;
+            this.part = '';
         } else {
             this.firstName = displayNameOrUserData.firstName;
             this.lastName = displayNameOrUserData.lastName;
             this.email = displayNameOrUserData.email;
             this.picture = displayNameOrUserData.pictureUrl;
+            this.part = displayNameOrUserData.part;
         }
     }
 
@@ -32,6 +33,9 @@ export default class User {
     }
     get Picture() {
         return this.picture;
+    }
+    get Part() {
+        return this.part;
     }
     get InitialUserData() {
         return {

@@ -6,13 +6,19 @@ import CalendarItem from '../../components/CalendarItem';
 import { Button, Tooltip, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import AttendanceCheck from '../../components/AttendanceCheck';
+import AttendanceList from '../../components/AttendanceList';
 
-const styles = {
+const styles = theme => ({
     buttonRight: {
         float: 'right',
         marginRight: '10px'    
+    },
+    eventGrid: {
+        [theme.breakpoints.down('xs')]: {
+            flexDirection: 'column-reverse'
+        }
     }
-};
+});
 
 export default withStyles(styles)(class InternalCalendar extends Component {
     constructor(props) {
@@ -88,7 +94,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                     </Tooltip>
                     : undefined }
                 <h2>Intern kalender</h2>
-                <p>Kommande evenemang. Kommer även att innehålla närvaro-koll.</p>
+                <p>Kommande evenemang. Innehåller även närvaro-koll.</p>
                 { showForm
                     ? <CalendarEventForm closeFormEvent={(id, e) => this.handleToggleEventForm(false, id, e)} event={selectedEvent.event} eventId={selectedEvent.eventId} />
                     : undefined }
@@ -96,7 +102,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                 {Object.keys(events).map((eventId, i) => {
                     return (
                         <Fragment key={i}>
-                            <Grid container spacing={24}>
+                            <Grid container spacing={24} className={classes.eventGrid}>
                                 <AttendanceCheck
                                     user={user}
                                     eventId={eventId}
@@ -104,6 +110,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                                     onAttendanceChange={this.handleAttendanceChange}
                                 />
                                 <CalendarItem isInternalCalendar={true} event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
+                                <AttendanceList eventAttendance={events[eventId].attendance} />
                             </Grid>
                         </Fragment>
                     );

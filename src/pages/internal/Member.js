@@ -16,6 +16,7 @@ import {
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { Link } from 'react-router-dom';
+import Constants from '../../common/Constants';
 
 const styles = theme => ({
     paper: {
@@ -51,18 +52,6 @@ const styles = theme => ({
     }
 });
 
-const tagValues = [
-    'Sopran 1',
-    'Sopran 2',
-    'Alt 1',
-    'Alt 2',
-    'Styrelsemedlem',
-    'Dirigent',
-    'Admin',
-    'Kassör',
-    'Inaktiv'
-];
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -85,6 +74,7 @@ class Member extends Component {
             email: '',
             phone: '',
             address: '',
+            part: '',
             tags: [],
             hasChanges: false
         };
@@ -105,7 +95,7 @@ class Member extends Component {
 
     render() {
         const { classes } = this.props;
-        const { firstName, lastName, email, phone, address, tags, hasChanges} = this.state;
+        const { firstName, lastName, email, phone, address, part, tags, hasChanges} = this.state;
 
         return (            
             <div>
@@ -131,8 +121,6 @@ class Member extends Component {
                                 margin="normal"
                             />
                         </Grid>
-                    </Grid>
-                    <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} lg={4}>
                             <TextField
                                 id="email"
@@ -155,8 +143,26 @@ class Member extends Component {
                                 keyboardType="phone-pad"
                             />
                         </Grid>
-                    </Grid>
-                    <Grid container spacing={24}>
+                        <Grid item xs={12} sm={6} lg={4}>
+                            <TextField
+                                id="part"
+                                select
+                                label="Stämma"
+                                className={classes.textField}
+                                value={part}
+                                onChange={(event) => this.handleChange(event, 'part')}
+                                margin="normal"
+                            >
+                                <MenuItem value="">
+                                    <em>Alla</em>
+                                </MenuItem>
+                                {Constants.partValues.map(part => (
+                                    <MenuItem key={part} value={part}>
+                                        {part}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
                         <Grid item xs={12} sm={6} lg={4}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="select-multiple-chip">Taggar</InputLabel>
@@ -174,7 +180,7 @@ class Member extends Component {
                                     )}
                                     MenuProps={MenuProps}
                                 >
-                                    {tagValues.map(tag => (
+                                    {Constants.tagValues.map(tag => (
                                         <MenuItem
                                             key={tag}
                                             value={tag}

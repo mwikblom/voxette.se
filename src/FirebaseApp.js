@@ -31,12 +31,12 @@ function createFilePointer(fullPath, file, done) {
     }
 
     const data = {
+        tags,
         fullPath: fullPath,
         name: file.name,
         nameLowerCase: file.name.toLowerCase(),
         size: file.size,
-        type: file.type,
-        tags: tags
+        type: file.type
     };
 
     firebase
@@ -207,7 +207,7 @@ const voxette = {
         }
     },
 
-    fetchMembers: (filterName, filterTag, done) => {
+    fetchMembers: (filterName, filterTag, filterPart, done) => {
 
         console.log('fetching members with filter: ' + filterName + ' ' + filterTag);
 
@@ -229,16 +229,25 @@ const voxette = {
 
                 const filteredMembers = members
                     .filter(member => {
-                        const { firstName, tags } = member.userData;
+                        const { firstName, tags, part } = member.userData;
 
+                        if (filterName && filterTag && filterPart) {
+                            return firstName.startsWith(filterName) && tags && tags.includes(filterTag) && part && part.startsWith(filterPart);
+                        }
                         if (filterName && filterTag) {
                             return firstName.startsWith(filterName) && tags && tags.includes(filterTag);
+                        }
+                        if (filterName && filterPart) {
+                            return firstName.startsWith(filterName) && part && part.startsWith(filterPart);
                         }
                         if (filterName) {
                             return firstName.startsWith(filterName);
                         }
                         if (filterTag) {
                             return tags && tags.includes(filterTag);
+                        }
+                        if (filterPart) {
+                            return part && part.startsWith(filterPart);
                         }
                         return true;
                     })

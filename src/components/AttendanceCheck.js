@@ -3,33 +3,52 @@ import PropTypes from 'prop-types';
 import {
     withStyles,
     Grid,
-    RadioGroup,
     Radio,
-    FormControl,
     FormControlLabel,
     Typography
 } from '@material-ui/core';
 import FirebaseApp from '../FirebaseApp';
 import DateTimeHelper from '../common/DateTimeHelper';
+import { green, yellow } from '@material-ui/core/colors';
 
 const styles = theme => ({
+    title: {
+        marginTop: 0,
+        [theme.breakpoints.up('md')]: {
+            marginTop: '30px'
+        }
+    }
 });
 
+const GreenRadio = withStyles({
+    root: {
+        '&$checked': {
+            color: green[400],
+        },
+    },
+    checked: {},
+})(props => <Radio color="default" {...props} />);
+
+const YellowRadio = withStyles({
+    root: {
+        '&$checked': {
+            color: yellow[600],
+        },
+    },
+    checked: {},
+})(props => <Radio color="default" {...props} />);
+
+
 class AttendanceCheck extends Component {
-    componentWillMount() {
-        const { user } = this.props;
-        const memberId = FirebaseApp.voxette.getValidDatabasePathItem(user.email);
-        console.log('member: ', memberId);
-    }
     saveAttendance = (e) => {
         const choice = e.target.value;
-        console.log(choice);
 
-        const { eventId, eventAttendance, user, onAttendanceChange } = this.props;
-        const memberId = FirebaseApp.voxette.getValidDatabasePathItem(user.email);
+        const { eventId, user, onAttendanceChange } = this.props;
+        const memberId = FirebaseApp.voxette.getValidDatabasePathItem(user.Email);
         let attendance = {
             choice,
-            updated: DateTimeHelper.getCurrentTimestamp(),        
+            part: user.Part,
+            updated: DateTimeHelper.getCurrentTimestamp(),
         };
         FirebaseApp.voxette.addEventAttendance(eventId, memberId, attendance, () => {
             onAttendanceChange(eventId, memberId, attendance);
@@ -50,36 +69,39 @@ class AttendanceCheck extends Component {
 
         return (
             <Grid item xs={12} sm={3}>
-                <RadioGroup
-                    aria-label="Närvaro"
-                    name="attendance"
-                    value={`${currentAttendance.choice}`}
-                    onChange={this.saveAttendance}
-                >
-                    {/* <Grid container spacing={24}> */}
-                        {/* <Grid item xs="auto"> */}
-                            <FormControlLabel
-                                value="1"
-                                control={<Radio color="primary" />}
-                                label="Ja"
-                            />
-                        {/* </Grid> */}
-                        {/* <Grid item xs="auto"> */}
-                            <FormControlLabel
-                                value="0"
-                                control={<Radio color="primary" />}
-                                label="Nej"
-                            />
-                        {/* </Grid> */}
-                        {/* <Grid item xs="auto"> */}
-                            <FormControlLabel
-                                value="2"
-                                control={<Radio color="primary" />}
-                                label="Kanske"
-                            />
-                        {/* </Grid> */}
-                    {/* </Grid> */}
-                </RadioGroup>
+                <h4 className={classes.title}>Närvaro</h4>
+                <Grid container spacing={8}>
+                    <Grid item xs={4} sm={6} md={4}>
+                        <FormControlLabel
+                            value="1"
+                            control={<GreenRadio />}
+                            label="Ja"
+                            checked={currentAttendance.choice == 1}
+                            onChange={this.saveAttendance}
+                            name="attendance"
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={6} md={4}>
+                        <FormControlLabel
+                            value="0"
+                            control={<Radio color="primary" />}
+                            label="Nej"
+                            checked={currentAttendance.choice == 0}
+                            onChange={this.saveAttendance}
+                            name="attendance"
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={6} md={4}>
+                        <FormControlLabel
+                            value="2"
+                            control={<YellowRadio />}
+                            label="Kanske"
+                            checked={currentAttendance.choice == 2}
+                            onChange={this.saveAttendance}
+                            name="attendance"
+                        />
+                    </Grid>
+                </Grid>
                 <Typography variant="caption" component="p">Senast ändrad: {currentAttendance.updated}</Typography>
             </Grid>
         );

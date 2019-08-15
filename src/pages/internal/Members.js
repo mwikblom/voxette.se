@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseApp from '../../FirebaseApp';
-import { Redirect } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import EditIcon from '@material-ui/icons/Edit';
@@ -26,6 +26,7 @@ import {
     Chip,
     CircularProgress
 } from '@material-ui/core';
+import Constants from '../../common/Constants';
 
 const styles = theme => ({
     root: {
@@ -77,19 +78,6 @@ const styles = theme => ({
     }
 });
 
-// TODO duplicated in Member.js
-const tagValues = [
-    'Sopran 1',
-    'Sopran 2',
-    'Alt 1',
-    'Alt 2',
-    'Styrelsemedlem',
-    'Dirigent',
-    'Admin',
-    'Kassör',
-    'Inaktiv'
-];
-
 function memberUri(memberId) {
     return '/inloggad/medlem/' + memberId;
 }
@@ -100,9 +88,9 @@ class Members extends Component {
 
         this.state = {
             members: [],
-            selectedMemberId: null,
             filterName: '',
             filterTag: '',
+            filterPart: '',
             addOpen: false,
             newMemberEmail: '',
             loading: false,
@@ -111,7 +99,7 @@ class Members extends Component {
     }
 
     search(e) {
-        const { filterName, filterTag } = this.state;
+        const { filterName, filterTag, filterPart } = this.state;
 
         e.preventDefault();
 
@@ -120,7 +108,7 @@ class Members extends Component {
             disabled: true
         });
 
-        FirebaseApp.voxette.fetchMembers(filterName, filterTag, (members) => {
+        FirebaseApp.voxette.fetchMembers(filterName, filterTag, filterPart, (members) => {
             if (members) {
                 this.setState({
                     members: members
@@ -135,11 +123,7 @@ class Members extends Component {
 
     render() {
         const { classes } = this.props;
-        const { members, selectedMemberId, filterName, filterTag, addOpen, loading, disabled } = this.state;
-
-        if (selectedMemberId) {
-            return <Redirect push to={memberUri(selectedMemberId)}/>;
-        }
+        const { members, filterName, filterTag, filterPart, addOpen, loading, disabled } = this.state;
 
         return ( 
             <div>
@@ -147,7 +131,7 @@ class Members extends Component {
                 <p>
                     Här är körens medlemsregister. Du kan söka genom att klicka på sökknappen, då listas samtliga medlemmar i kören.
                     Du kan även begränsa sökningen genom att ange första delen av förnamnet. Börja med stor bokstav; exemelvis hittas
-                    Anna genom att ange 'A'. Det är också möjligt att begränsa sökningen genom att filtrera på en 'tagg', exempelvis 
+                    Anna genom att ange 'A'. Det är också möjligt att begränsa sökningen genom att filtrera på en 'tagg' eller 
                     stämtillhörighet.
                 </p>
                 <h3>GDPR</h3>
@@ -198,7 +182,7 @@ class Members extends Component {
                    
                     <form onSubmit={(e) => this.search(e)}>
                         <Grid container spacing={24}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <TextField
                                     id="name"
                                     label="Förnamn"
@@ -208,7 +192,7 @@ class Members extends Component {
                                     margin="normal"
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <TextField
                                     id="tag"
                                     select
@@ -226,9 +210,29 @@ class Members extends Component {
                                     <MenuItem value="">
                                         <em>Alla</em>
                                     </MenuItem>
-                                    {tagValues.map(tag => (
+                                    {Constants.tagValues.map(tag => (
                                         <MenuItem key={tag} value={tag}>
                                             {tag}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} sm={6} md={4}>
+                                <TextField
+                                    id="part"
+                                    select
+                                    label="Stämma"
+                                    className={classes.textField}
+                                    value={filterPart}
+                                    onChange={(event) => this.handleChange(event, 'filterPart')}
+                                    margin="normal"
+                                >
+                                    <MenuItem value="">
+                                        <em>Alla</em>
+                                    </MenuItem>
+                                    {Constants.partValues.map(part => (
+                                        <MenuItem key={part} value={part}>
+                                            {part}
                                         </MenuItem>
                                     ))}
                                 </TextField>
@@ -250,6 +254,7 @@ class Members extends Component {
                                 <TableRow>
                                     <TableCell></TableCell>
                                     <TableCell>Namn</TableCell>
+                                    <TableCell>Stämma</TableCell>
                                     <TableCell>Taggar</TableCell>
                                     <TableCell>Telefon</TableCell>
                                     <TableCell>Epost</TableCell>
@@ -261,12 +266,26 @@ class Members extends Component {
                                     return (
                                         <TableRow hover key={member.userData.memberId}>
                                             <TableCell className={classes.lessPadding}>
-                                                <Tooltip title="Ändra uppgifter">
-                                                    <EditIcon className={classes.action} onClick={() => this.handleClick(member.userData.memberId)}/>
-                                                </Tooltip>
+                                                <Link to={memberUri(member.userData.memberId)}>
+                                                    <Tooltip title="Ändra uppgifter">
+                                                        <EditIcon className={classes.action} />
+                                                    </Tooltip>
+                                                </Link>
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {member.userData.firstName} {member.userData.lastName}
+                                            </TableCell>
+                                            <TableCell className={classes.chipRoot}>
+                                                {
+                                                    member.userData.part
+                                                    ? <Chip
+                                                        color="primary"
+                                                        key={member.userData.part}
+                                                        label={member.userData.part}
+                                                        className={classes.chip}
+                                                    />
+                                                    : undefined
+                                                }
                                             </TableCell>
                                             <TableCell className={classes.chipRoot}>
                                                 {member.userData.tags && member.userData.tags.map(tag => {
@@ -318,12 +337,6 @@ class Members extends Component {
                 newMemberEmail: ''
             });
         }
-    }
-      
-    handleClick = memberId => {
-        this.setState({
-            selectedMemberId: memberId
-        });
     }
 
     handleChange(event, name) {

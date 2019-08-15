@@ -214,7 +214,6 @@ class Main extends Component {
 
             if (userData) {
 
-                // first login - generate the user data
                 if (userData.googleId) {
                     this.setState({
                         loggedIn: true,
@@ -223,6 +222,7 @@ class Main extends Component {
                         messageVariant: 'success'
                     });
                 } else {
+                    // first login - generate the user data
                     const user = new User(googleId, response.displayName, email, picture);
                     const initialUserData = user.InitialUserData;
 
