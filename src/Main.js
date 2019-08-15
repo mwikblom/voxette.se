@@ -166,9 +166,9 @@ class Main extends Component {
                                 </Menu>
                                 
                                 <NavLink className={classes.titleLink} exact to="/"><img src="/images/KFUM-voxette.png" className={classes.logo} alt="KFUM Örebro Voxette, logga" /></NavLink>
-                                    <h2 className={classes.title}>
+                                <h1 className={classes.title}>
                                     <NavLink className={classes.titleLink} exact to="/">KFUM Voxette</NavLink>
-                                </h2>
+                                </h1>
                                 <Authentication onLoginSuccess={this.handleLoginSuccess}
                                     onLoginFailure={this.handleLoginFailure}
                                     onLogoutSuccess={this.handleLogoutSuccess}
@@ -221,6 +221,10 @@ class Main extends Component {
                         messageText: 'Du är nu inloggad!',
                         messageVariant: 'success'
                     });
+
+                    if (picture !== userData.pictureUrl) {
+                        FirebaseApp.voxette.saveUserData(userData.memberId, this.state.user.initialUserData, () => {});
+                    }
                 } else {
                     // first login - generate the user data
                     const user = new User(googleId, response.displayName, email, picture);

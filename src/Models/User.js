@@ -10,12 +10,14 @@ export default class User {
             this.email = email;    
             this.picture = picture;
             this.part = '';
+            this.tags = [];
         } else {
             this.firstName = displayNameOrUserData.firstName;
             this.lastName = displayNameOrUserData.lastName;
             this.email = displayNameOrUserData.email;
             this.picture = displayNameOrUserData.pictureUrl;
             this.part = displayNameOrUserData.part;
+            this.tags = displayNameOrUserData.tags;
         }
     }
 
@@ -36,6 +38,9 @@ export default class User {
     }
     get Part() {
         return this.part;
+    }
+    get Tags() {
+        return this.tags;
     }
     get InitialUserData() {
         return {

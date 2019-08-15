@@ -3,7 +3,12 @@ import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
 import CalendarEventForm from './CalendarEventForm';
 import CalendarItem from '../../components/CalendarItem';
-import { Button, Tooltip, Grid } from '@material-ui/core';
+import {
+    Button,
+    Tooltip,
+    Grid,
+    Divider
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import AttendanceCheck from '../../components/AttendanceCheck';
 import AttendanceList from '../../components/AttendanceList';
@@ -12,11 +17,6 @@ const styles = theme => ({
     buttonRight: {
         float: 'right',
         marginRight: '10px'    
-    },
-    eventGrid: {
-        [theme.breakpoints.down('xs')]: {
-            flexDirection: 'column-reverse'
-        }
     }
 });
 
@@ -95,23 +95,27 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                     : undefined }
                 <h2>Intern kalender</h2>
                 <p>Kommande evenemang. Innehåller även närvaro-koll.</p>
-                { showForm
-                    ? <CalendarEventForm closeFormEvent={(id, e) => this.handleToggleEventForm(false, id, e)} event={selectedEvent.event} eventId={selectedEvent.eventId} />
-                    : undefined }
-                
+                {
+                    showForm
+                        ? <CalendarEventForm closeFormEvent={(id, e) => this.handleToggleEventForm(false, id, e)} event={selectedEvent.event} eventId={selectedEvent.eventId} />
+                        : undefined
+                }
+
+                <Divider variant="middle" />
                 {Object.keys(events).map((eventId, i) => {
                     return (
                         <Fragment key={i}>
                             <Grid container spacing={24} className={classes.eventGrid}>
+                                <CalendarItem isInternalCalendar={true} event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
                                 <AttendanceCheck
                                     user={user}
                                     eventId={eventId}
                                     eventAttendance={events[eventId].attendance}
                                     onAttendanceChange={this.handleAttendanceChange}
                                 />
-                                <CalendarItem isInternalCalendar={true} event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
                                 <AttendanceList eventAttendance={events[eventId].attendance} />
                             </Grid>
+                            <Divider variant="middle" />
                         </Fragment>
                     );
                 })}

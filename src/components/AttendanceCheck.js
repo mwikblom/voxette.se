@@ -14,6 +14,7 @@ import { green, yellow } from '@material-ui/core/colors';
 const styles = theme => ({
     title: {
         marginTop: 0,
+        marginBottom: 0,
         [theme.breakpoints.up('md')]: {
             marginTop: '30px'
         }
@@ -68,8 +69,8 @@ class AttendanceCheck extends Component {
         }
 
         return (
-            <Grid item xs={12} sm={3}>
-                <h4 className={classes.title}>Närvaro</h4>
+            <Grid item xs={12} sm={4}>
+                <h4 className={classes.title}>Min närvaro</h4>
                 <Grid container spacing={8}>
                     <Grid item xs={4} sm={6} md={4}>
                         <FormControlLabel

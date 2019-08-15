@@ -66,7 +66,7 @@ class CalendarItem extends Component {
             eventDate += endDate + ' kl: ' + endTime;
         }
 
-        const previewLength = 500
+        const previewLength = 110
         const shouldExpand = description.length > previewLength;
         const previewDescription = shouldExpand
             ? description.substring(0, previewLength) + '...'
