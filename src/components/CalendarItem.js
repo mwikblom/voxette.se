@@ -14,7 +14,8 @@ import {
 
 const styles = theme => ({
     title: {
-        marginBottom: 0
+        marginBottom: 0,
+        color: theme.palette.primary.main
     },
     description: {
         marginBottom: 0
@@ -78,7 +79,7 @@ class CalendarItem extends Component {
                     {
                         isInternalCalendar
                             ? <Tooltip title="Redigera">
-                                <IconButton aria-label="Redigera" color="secondary" onClick={this.handleSelectEdit}>
+                                <IconButton aria-label="Redigera" color="primary" onClick={this.handleSelectEdit}>
                                     <EditIcon />
                                 </IconButton>
                             </Tooltip>

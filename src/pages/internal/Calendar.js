@@ -42,15 +42,21 @@ export default withStyles(styles)(class InternalCalendar extends Component {
     }
 
     handleToggleEventForm = (openForm, eventId = undefined, event = undefined) => {
-        var isShowing = openForm ? true : this.state.showForm;
-        this.setState({
-            showForm: !isShowing,
-            events: {
-                ...this.state.events,
+        const isShowing = openForm ? true : this.state.showForm;
+        let events = {
+            ...this.state.events
+        };
+        if (eventId && event) {
+            events = {
+                ...events,
                 [eventId]: {
                     eventData: event
                 }
-            }
+            };
+        }
+        this.setState({
+            events,
+            showForm: !isShowing
         });
     }
 
@@ -94,7 +100,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                     </Tooltip>
                     : undefined }
                 <h2>Intern kalender</h2>
-                <p>Kommande evenemang. Innehåller även närvaro-koll.</p>
+                <p>Kommande evenemang med närvaro-koll.</p>
                 {
                     showForm
                         ? <CalendarEventForm closeFormEvent={(id, e) => this.handleToggleEventForm(false, id, e)} event={selectedEvent.event} eventId={selectedEvent.eventId} />
@@ -103,8 +109,9 @@ export default withStyles(styles)(class InternalCalendar extends Component {
 
                 <Divider variant="middle" />
                 {Object.keys(events).map((eventId, i) => {
+                    console.error('LOOP EVENTS:', eventId, i, events);
                     return (
-                        <Fragment key={i}>
+                        <div key={i}>
                             <Grid container spacing={24} className={classes.eventGrid}>
                                 <CalendarItem isInternalCalendar={true} event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
                                 <AttendanceCheck
@@ -116,7 +123,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                                 <AttendanceList eventAttendance={events[eventId].attendance} />
                             </Grid>
                             <Divider variant="middle" />
-                        </Fragment>
+                        </div>
                     );
                 })}
             </div>

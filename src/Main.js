@@ -80,6 +80,7 @@ const styles = theme => ({
     },
     logo: {
         width: '104px',
+        height: 'auto',
         marginRight: theme.spacing.unit * 4,
         background: '#fff',
         padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit * 2}px`

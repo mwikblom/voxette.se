@@ -10,7 +10,8 @@ import {
     Tooltip,
     IconButton,
     ListItemAvatar,
-    Avatar
+    Avatar,
+    Button
 } from '@material-ui/core';
 import {
     ThumbUp as ThumbUpIcon,
@@ -48,13 +49,18 @@ const styles = theme => ({
     maybe: {
         color: yellow[600],
     },
+    unattendedButton: {
+        float: 'right',
+        marginBottom: theme.spacing.unit,
+        marginTop: theme.spacing.unit * 3
+    }
 });
 
 class AttendanceList extends Component {
     state = {
         members: [],
-        expanded: true,
-        showUnattended: true
+        expanded: false,
+        showUnattended: false
     }
     componentWillMount() {
         FirebaseApp.voxette.fetchMembers('', '', '', (members) => {
@@ -110,14 +116,25 @@ class AttendanceList extends Component {
             : [];
         return (
             <Grid item xs={12}>
-                <h4 className={classes.title} onClick={this.toggleExpand}>
-                    Närvaro
-                    <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
-                        <IconButton className={classes.expandButton} aria-label="Expandera" color="secondary" onClick={this.handleExpandClick}>
-                            { expanded ? <ExpandLessIcon /> : <ExpandMoreIcon /> }
-                        </IconButton>
-                    </Tooltip>
-                </h4>
+                <Grid container>
+                    <Grid item xs={6}>
+                        <h4 className={classes.title} onClick={this.toggleExpand}>
+                            Närvaro
+                            <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
+                                <IconButton className={classes.expandButton} aria-label="Expandera" color="secondary" onClick={this.handleExpandClick}>
+                                    { expanded ? <ExpandLessIcon /> : <ExpandMoreIcon /> }
+                                </IconButton>
+                            </Tooltip>
+                        </h4>
+                    </Grid>
+                    <Grid item xs={6}>
+                        {
+                            expanded
+                                ? <Button onClick={this.toggleUnattended} className={classes.unattendedButton}>{showUnattended ? 'Dölj' : 'Visa'} oanmälda</Button>
+                                : undefined
+                        }
+                    </Grid>
+                </Grid>
                 {
                     expanded
                     ? <Grid container spacing={8}>
