@@ -11,10 +11,17 @@ import {
     Select,
     Chip,
     InputLabel,
-    Input
+    Input,
+    Avatar,
+    IconButton,
+    Tooltip
 } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
+import {
+    Save as SaveIcon,
+    Cancel as CancelIcon,
+    Person as PersonIcon,
+    Delete as DeleteIcon
+} from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import Constants from '../../common/Constants';
 
@@ -49,6 +56,14 @@ const styles = theme => ({
     },
     buttonIcon: {
         marginRight: theme.spacing.unit
+    },
+    avatar: {
+        width: theme.spacing.unit * 7,
+        height: theme.spacing.unit * 7,
+        marginBottom: theme.spacing.unit
+    },
+    avatarContainer: {
+        display: 'flex'
     }
 });
 
@@ -76,6 +91,7 @@ class Member extends Component {
             address: '',
             part: '',
             tags: [],
+            pictureUrl: '',
             hasChanges: false
         };
     }
@@ -93,13 +109,55 @@ class Member extends Component {
         });
     }
 
+    handleChange = (event, name) => {
+        this.setState({
+            [name]: event.target.value,
+            hasChanges: true
+        });
+    }   
+    
+    saveChanges = (e = null) => {
+        if (e !== null) {
+            e.preventDefault();
+        }
+
+        const { memberId } = this.props;
+        FirebaseApp.voxette.saveUserData(memberId, this.state, () => {
+            this.setState({
+                hasChanges: false
+            });
+        });
+    }
+
+    deletePicture = () => {
+        this.setState({
+            pictureUrl: ''
+        }, () => {
+            this.saveChanges(null);
+        });
+    }
+
     render() {
         const { classes } = this.props;
-        const { firstName, lastName, email, phone, address, part, tags, hasChanges} = this.state;
+        const { firstName, lastName, email, phone, address, part, tags, pictureUrl, hasChanges} = this.state;
 
         return (            
             <div>
-                <form className={classes.container} noValidate autoComplete="off" onSubmit={(e) => this.saveChanges(e)}>
+                {
+                    pictureUrl
+                        ? <div className={classes.avatarContainer}>
+                            <Avatar className={classes.avatar} src={pictureUrl} alt={firstName} />
+                            <Tooltip title="Ta bort bild">
+                                <IconButton onClick={this.deletePicture} color="primary">
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                        : <Avatar className={classes.avatar}>
+                            <PersonIcon />
+                        </Avatar>
+                }
+                <form className={classes.container} noValidate autoComplete="off" onSubmit={this.saveChanges}>
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} lg={4}>
                             <TextField
@@ -129,7 +187,7 @@ class Member extends Component {
                                 value={email}
                                 onChange={(event) => this.handleChange(event, 'email')}
                                 margin="normal"
-                                keyboardType="email-address"
+                                type="email"
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} lg={4}>
@@ -140,7 +198,7 @@ class Member extends Component {
                                 value={phone}
                                 onChange={(event) => this.handleChange(event, 'phone')}
                                 margin="normal"
-                                keyboardType="phone-pad"
+                                type="tel"
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} lg={4}>
@@ -216,25 +274,6 @@ class Member extends Component {
                 </form>
             </div>
         );
-    }
-
-    handleChange(event, name) {
-        this.setState({
-            [name]: event.target.value,
-            hasChanges: true
-        });
-    }   
-    
-    saveChanges(e) {
-        const { memberId } = this.props;
-
-        e.preventDefault();
-
-        FirebaseApp.voxette.saveUserData(memberId, this.state, () => {
-            this.setState({
-                hasChanges: false
-            });
-        });
     }
 }
 

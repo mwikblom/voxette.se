@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseApp from '../../FirebaseApp';
-import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
-import EditIcon from '@material-ui/icons/Edit';
+import {
+    Add as AddIcon,
+    Search as SearchIcon,
+    Edit as EditIcon,
+    Person as PersonIcon
+} from '@material-ui/icons';
 import { 
     Grid,
     Table,
@@ -24,7 +27,8 @@ import {
     DialogTitle,
     Tooltip,
     Chip,
-    CircularProgress
+    CircularProgress,
+    Avatar
 } from '@material-ui/core';
 import Constants from '../../common/Constants';
 
@@ -47,9 +51,6 @@ const styles = theme => ({
     },
     textField: {
         width: '100%',
-    },
-    action: {
-        cursor: 'pointer'
     },
     chipRoot: {
         whiteSpace: 'nowrap',
@@ -75,6 +76,10 @@ const styles = theme => ({
     lessPadding: {
         paddingRight: theme.spacing.unit * 2,
         paddingLeft: theme.spacing.unit
+    },
+    nameCell: {
+        minWidth: 200,
+        paddingLeft: 0
     }
 });
 
@@ -272,8 +277,21 @@ class Members extends Component {
                                                     </Tooltip>
                                                 </Link>
                                             </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                {member.userData.firstName} {member.userData.lastName}
+                                            <TableCell component="th" scope="row" className={classes.nameCell}>
+                                                <Grid container spacing={8} alignItems="center">
+                                                    <Grid item>
+                                                        {
+                                                            member.userData.pictureUrl
+                                                            ? <Avatar src={member.userData.pictureUrl} alt={member.userData.firstName} />
+                                                            : <Avatar>
+                                                                <PersonIcon />
+                                                            </Avatar>
+                                                        }
+                                                    </Grid>
+                                                    <Grid item xs={12} sm>
+                                                        {member.userData.firstName} {member.userData.lastName}
+                                                    </Grid>
+                                                </Grid>
                                             </TableCell>
                                             <TableCell className={classes.chipRoot}>
                                                 {

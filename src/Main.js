@@ -12,15 +12,12 @@ import {
     Toolbar,
     IconButton,
     Menu,
-    MenuItem,
     Divider
 } from '@material-ui/core';
-
 import MenuIcon from '@material-ui/icons/Menu';
-
-// Components
 import Authentication from './components/Authentication';
 import User from './models/User';
+import MenuItemLink from './components/MenuItemLink';
 //import { Editor } from '@tinymce/tinymce-react';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -50,9 +47,6 @@ const theme = createMuiTheme({
 });
 
 const styles = theme => ({
-    root: {
-        flexGrow: 1,
-    },
     titleLink: {
         color: 'inherit',
         textDecoration: 'none',
@@ -79,11 +73,18 @@ const styles = theme => ({
         width: '250px'
     },
     logo: {
-        width: '104px',
+        background: '#fff',
+        padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit * 2}px`,
+        width: '100%',
+        minWidth: '65px'
+    },
+    logoContainer: {
+        maxWidth: '104px',
         height: 'auto',
         marginRight: theme.spacing.unit * 4,
-        background: '#fff',
-        padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit * 2}px`
+        [theme.breakpoints.down('xs')]: {
+            display: 'none'
+        }
     }
 });
 
@@ -114,9 +115,9 @@ class Main extends Component {
             ? (
                 <React.Fragment>
                     <Divider />
-                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/medlemmar">Medlemmar</NavLink></MenuItem>
-                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/kalender">Intern kalender</NavLink></MenuItem>
-                    <MenuItem onClick={this.handleClose}><NavLink className={classes.navLink} to="/inloggad/filer">Filer</NavLink></MenuItem>
+                    <MenuItemLink className={classes.navLink} to="/inloggad/medlemmar">Medlemmar</MenuItemLink>
+                    <MenuItemLink className={classes.navLink} to="/inloggad/kalender">Intern kalender</MenuItemLink>
+                    <MenuItemLink className={classes.navLink} to="/inloggad/filer">Filer</MenuItemLink>
                 </React.Fragment>
             )
             : undefined;
@@ -126,7 +127,7 @@ class Main extends Component {
                 <CssBaseline />
                 <Message text={messageText} variant={messageVariant} />                
                 <BrowserRouter>
-                    <div className={classes.root}>
+                    <div>
                         <AppBar position="static">
                             <Toolbar>
                                 <IconButton 
@@ -145,6 +146,7 @@ class Main extends Component {
                                     anchorEl={anchorEl}
                                     open={Boolean(anchorEl)}
                                     onClose={this.handleClose}
+                                    onClick={this.handleClose}
                                     anchorOrigin={{
                                         vertical: 'top',
                                         horizontal: 'right',
@@ -154,19 +156,15 @@ class Main extends Component {
                                         horizontal: 'right',
                                     }}
                                 >
-                                    <MenuItem onClick={this.handleClose}>
-                                        <NavLink className={classes.navLink} exact to="/">Hem</NavLink>
-                                    </MenuItem>
-                                    <MenuItem onClick={this.handleClose}>
-                                        <NavLink className={classes.navLink} exact to="/dirigent">Dirigent</NavLink>
-                                    </MenuItem>
-                                    <MenuItem onClick={this.handleClose}>
-                                        <NavLink className={classes.navLink} to="/kontakt">Kontakt</NavLink>
-                                    </MenuItem>
+                                    <MenuItemLink className={classes.navLink} exact to="/">Hem</MenuItemLink>
+                                    <MenuItemLink className={classes.navLink} to="/dirigent">Dirigent</MenuItemLink>
+                                    <MenuItemLink className={classes.navLink} to="/kontakt">Kontakt</MenuItemLink>
                                     {internalMenu}
                                 </Menu>
                                 
-                                <NavLink className={classes.titleLink} exact to="/"><img src="/images/KFUM-voxette.png" className={classes.logo} alt="KFUM Örebro Voxette, logga" /></NavLink>
+                                <NavLink className={`${classes.titleLink} ${classes.logoContainer}`} exact to="/">
+                                    <img src="/images/KFUM-voxette.png" className={classes.logo} alt="KFUM Örebro Voxette, logga" />
+                                </NavLink>
                                 <h1 className={classes.title}>
                                     <NavLink className={classes.titleLink} exact to="/">KFUM Voxette</NavLink>
                                 </h1>

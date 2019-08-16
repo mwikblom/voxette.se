@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
 import CalendarEventForm from './CalendarEventForm';
