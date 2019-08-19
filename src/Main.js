@@ -35,7 +35,11 @@ const theme = createMuiTheme({
             main: '#0069b2', // blue
             dark: '#0a1b3f',
             contrastText: '#fff',
-        },    
+        },
+        text: {
+            primary: '#0a1b3f',
+            secondary: '#0a1b3f'
+        }
     },
     overrides: {
         MuiTableCell: {
@@ -96,7 +100,8 @@ class Main extends Component {
             user: undefined,
             anchorEl: null,
             messageText: 'Den här sidan är under uppbyggnad!',
-            messageVariant: 'info'
+            messageVariant: 'info',
+            updatedPicture: undefined
         };        
 
         // Functions
@@ -172,7 +177,8 @@ class Main extends Component {
                                     onLoginFailure={this.handleLoginFailure}
                                     onLogoutSuccess={this.handleLogoutSuccess}
                                     loggedIn={this.state.loggedIn}
-                                    user={this.state.user} />
+                                    user={this.state.user}
+                                    updatedPicture={this.state.updatedPicture} />
                             </Toolbar>
                         </AppBar>
 
@@ -218,12 +224,9 @@ class Main extends Component {
                         loggedIn: true,
                         user: new User(googleId, userData, email, picture),
                         messageText: 'Du är nu inloggad!',
-                        messageVariant: 'success'
+                        messageVariant: 'success',
+                        updatedPicture: picture
                     });
-
-                    if (picture !== userData.pictureUrl) {
-                        FirebaseApp.voxette.saveUserData(userData.memberId, this.state.user.initialUserData, () => {});
-                    }
                 } else {
                     // first login - generate the user data
                     const user = new User(googleId, response.displayName, email, picture);

@@ -3,8 +3,12 @@ import firebase from 'firebase';
 import FirebaseApp from '../FirebaseApp';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import FaceIcon from '@material-ui/icons/Face';
-import PersonIcon from '@material-ui/icons/Person';
+import {
+    Person as PersonIcon,
+    Lock as LockIcon,
+    Delete as DeleteIcon,
+    Refresh as RefreshIcon
+} from '@material-ui/icons';
 import {
     Button,
     MenuItem,
@@ -16,7 +20,8 @@ import {
     ListItemAvatar,
     ListItemText,
     DialogTitle,
-    Dialog
+    Dialog,
+    ListItemIcon
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -53,11 +58,7 @@ class Authentication extends Component {
     }
     render() {
         const { anchorEl, loginOpen } = this.state;
-        const { classes, user, loggedIn } = this.props;
-
-        const avatar = function() {
-            return (user && user.Picture) ? (<Avatar src={user.Picture} />) : (<Avatar><FaceIcon /></Avatar>)
-        }
+        const { classes, user, loggedIn, updatedPicture } = this.props;
 
         return loggedIn ?
             <div className={ classes.content } >
@@ -68,7 +69,7 @@ class Authentication extends Component {
                     color="inherit"
                     >
                     <Chip
-                        avatar={avatar()} 
+                        avatar={user && user.Picture ? <Avatar src={user.Picture} /> : <Avatar><PersonIcon /></Avatar>} 
                         label={user.FirstName}
                         className={classes.chip}
                         color="primary" 
@@ -87,8 +88,33 @@ class Authentication extends Component {
                     }}
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
-                    >
-                    <MenuItem className={classes.menuItem} onClick={this.handleLogout}>Logga ut</MenuItem>
+                >
+                    { 
+                        updatedPicture != user.picture
+                        ? <MenuItem className={classes.menuItem} onClick={() => this.updatePicture(updatedPicture)}>
+                            <ListItemIcon>
+                                <RefreshIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Uppdatera bild" />
+                        </MenuItem>
+                        : undefined
+                    }
+                    {
+                        user && user.picture
+                        ? <MenuItem className={classes.menuItem} onClick={() => this.updatePicture('')}>
+                            <ListItemIcon>
+                                <DeleteIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Ta bort bild" />
+                        </MenuItem>
+                        : undefined
+                    }
+                    <MenuItem className={classes.menuItem} onClick={this.handleLogout}>
+                        <ListItemIcon>
+                            <LockIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Logga ut" />
+                    </MenuItem>
                 </Menu>
             </div>
             :
@@ -130,6 +156,13 @@ class Authentication extends Component {
 
     handleClickClose = () => {
         this.setState({ loginOpen: false });
+    }
+
+    updatePicture = (picture) => {
+        const { user } = this.props;
+        user.picture = picture;
+        FirebaseApp.voxette.saveUserData(user.memberId, user.AllUserData, () => {});
+        this.handleClose();
     }
 
     handleLogin(method) {

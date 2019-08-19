@@ -45,12 +45,13 @@ class AttendanceCheck extends Component {
         const choice = e.target.value;
 
         const { eventId, user, onAttendanceChange } = this.props;
-        const memberId = FirebaseApp.voxette.getValidDatabasePathItem(user.Email);
+        const memberId = user.memberId;
         let attendance = {
             choice,
             part: user.Part,
             updated: DateTimeHelper.getCurrentTimestamp(),
         };
+
         FirebaseApp.voxette.addEventAttendance(eventId, memberId, attendance, () => {
             onAttendanceChange(eventId, memberId, attendance);
         });
@@ -62,7 +63,7 @@ class AttendanceCheck extends Component {
             eventId,
             eventAttendance
         } = this.props;
-        const memberId = FirebaseApp.voxette.getValidDatabasePathItem(user.email);
+        const memberId = user.memberId;
         let currentAttendance = { choice: -1 };
         if (eventAttendance && eventAttendance[memberId]) {
             currentAttendance = eventAttendance[memberId];
@@ -75,7 +76,7 @@ class AttendanceCheck extends Component {
                     <Grid item xs={4} sm={6} md={4}>
                         <FormControlLabel
                             value="1"
-                            control={<GreenRadio />}
+                            control={<GreenRadio disabled={!user.part} />}
                             label="Ja"
                             checked={currentAttendance.choice == 1}
                             onChange={this.saveAttendance}
@@ -85,7 +86,7 @@ class AttendanceCheck extends Component {
                     <Grid item xs={4} sm={6} md={4}>
                         <FormControlLabel
                             value="0"
-                            control={<Radio color="primary" />}
+                            control={<Radio color="primary" disabled={!user.part} />}
                             label="Nej"
                             checked={currentAttendance.choice == 0}
                             onChange={this.saveAttendance}
@@ -95,7 +96,7 @@ class AttendanceCheck extends Component {
                     <Grid item xs={4} sm={6} md={4}>
                         <FormControlLabel
                             value="2"
-                            control={<YellowRadio />}
+                            control={<YellowRadio disabled={!user.part} />}
                             label="Kanske"
                             checked={currentAttendance.choice == 2}
                             onChange={this.saveAttendance}

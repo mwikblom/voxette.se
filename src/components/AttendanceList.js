@@ -24,7 +24,7 @@ import {
 } from '@material-ui/icons';
 import Constants from '../common/Constants';
 import FirebaseApp from '../FirebaseApp';
-import { green, yellow } from '@material-ui/core/colors';
+import { green, yellow, grey } from '@material-ui/core/colors';
 
 const styles = theme => ({
     title: {
@@ -33,11 +33,19 @@ const styles = theme => ({
     listText: {
         fontSize: 11
     },
+    listItem: {
+        borderLeft: `1px solid ${grey[300]}`
+    },
     unattendedListText: {
         fontStyle: 'italic'
     },
-    countBadge: {
-        paddingRight: theme.spacing.unit * 2,
+    firstBadge: {
+        display: 'block',
+        fontWeight: 'bold'
+    },
+    otherBadge: {
+        paddingRight: theme.spacing.unit * 3,
+        display: 'block',
         fontWeight: 'bold'
     },
     yes: {
@@ -55,6 +63,33 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3
     }
 });
+
+
+const NoBadge = withStyles((theme) => ({
+    badge: {
+        background: theme.palette.primary.main,
+        color: '#fff',
+        top: -2,
+        right: 0
+    },
+}))(props => <Badge {...props}>{props.children}</Badge>);
+
+const YesBadge = withStyles({
+    badge: {
+        background: green[400],
+        color: '#fff',
+        top: -2,
+        right: 0
+    },
+})(props => <Badge {...props}>{props.children}</Badge>);
+
+const MaybeBadge = withStyles((theme) => ({
+    badge: {
+        background: yellow[600],
+        top: -2,
+        right: 0
+    },
+}))(props => <Badge {...props}>{props.children}</Badge>);
 
 class AttendanceList extends Component {
     state = {
@@ -76,7 +111,7 @@ class AttendanceList extends Component {
         if (a.choice == b.choice) {
             return 0;
         }
-        if (a.choice == 1 || b.choice != 1) {
+        if (a.choice == 1 || (b.choice != 1 && a.choice == 2)) {
             return 1;
         }
         return -1;
@@ -144,16 +179,31 @@ class AttendanceList extends Component {
                                 const partAttendance = attendance
                                     .filter(x => x.part === part)
                                     .sort(this.orderAttendance);
+                                const yes = partAttendance.filter(x => x.choice == 1).length;
+                                const no = partAttendance.filter(x => x.choice == 0).length;
+                                const maybe = partAttendance.filter(x => x.choice == 2).length;
 
                                 return (
                                     <Grid item xs={12} sm={6} md={3} key={part}>
-                                        <Badge
-                                            className={classes.countBadge}
-                                            badgeContent={partAttendance.filter(x => x.choice == 1).length}
-                                            color="secondary"
+                                        <NoBadge
+                                            className={classes.otherBadge}
+                                            badgeContent={no}
+                                            invisible={no == 0}
                                         >
-                                            {part}
-                                        </Badge>
+                                            <MaybeBadge
+                                                className={classes.otherBadge}
+                                                badgeContent={maybe}
+                                                invisible={maybe == 0}
+                                            >
+                                                <YesBadge
+                                                    className={classes.firstBadge}
+                                                    badgeContent={yes}
+                                                    invisible={yes == 0}
+                                                >
+                                                    {part}
+                                                </YesBadge>
+                                            </MaybeBadge>
+                                        </NoBadge>
                                         <List dense>
                                             {
                                                 // Separate list items by each member attendance
@@ -168,7 +218,7 @@ class AttendanceList extends Component {
                                                         ? <ThumbsUpDownIcon className={classes.maybe}/>
                                                         : '';
                                                     return (userData
-                                                        ? <ListItem key={attend.memberId}>
+                                                        ? <ListItem className={classes.listItem} key={attend.memberId}>
                                                             <ListItemAvatar>
                                                                 {
                                                                     userData.pictureUrl
@@ -193,7 +243,7 @@ class AttendanceList extends Component {
                                                         unattended
                                                             .filter(x => x.userData.part == part)
                                                             .map(member => (
-                                                                <ListItem key={member.userData.memberId}>
+                                                                <ListItem className={classes.listItem} key={member.userData.memberId}>
                                                                     <ListItemAvatar>
                                                                         {
                                                                             member.userData.pictureUrl
