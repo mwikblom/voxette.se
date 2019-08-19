@@ -188,17 +188,14 @@ class AttendanceList extends Component {
                                         <NoBadge
                                             className={classes.otherBadge}
                                             badgeContent={no}
-                                            invisible={no == 0}
                                         >
                                             <MaybeBadge
                                                 className={classes.otherBadge}
                                                 badgeContent={maybe}
-                                                invisible={maybe == 0}
                                             >
                                                 <YesBadge
                                                     className={classes.firstBadge}
                                                     badgeContent={yes}
-                                                    invisible={yes == 0}
                                                 >
                                                     {part}
                                                 </YesBadge>

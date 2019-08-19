@@ -348,7 +348,7 @@ const voxette = {
                 .database()
                 .ref('events')
                 .push({ eventData: eventData }, () => {
-                    console.log('data added');        
+                    console.log('data added');
                     done(newEvent.key);
                 });
             
@@ -366,8 +366,8 @@ const voxette = {
 
             firebase
                 .database()
-                .ref('events/' + eventId)
-                .set({ eventData: eventData }, () => {
+                .ref('events/' + eventId + '/eventData')
+                .set(eventData, () => {
                     console.log('data saved');
                     done(eventId);
                 });
@@ -375,6 +375,21 @@ const voxette = {
             throw new Error('No id or data for event');
         }
     },
+
+    removeEvent: (eventId, done) => {
+        if (eventId) {
+            console.log('removing event ' + eventId);
+
+            firebase
+                .database()
+                .ref('events/' + eventId)
+                .remove(() => {
+                    console.log('removed');
+                    done();
+                });
+        }
+    },
+
     addEventAttendance: (eventId, memberId, attendance, done) => {
         if (eventId && memberId && attendance) {
 

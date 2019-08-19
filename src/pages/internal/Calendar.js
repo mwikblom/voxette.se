@@ -42,17 +42,23 @@ export default withStyles(styles)(class InternalCalendar extends Component {
     }
 
     handleToggleEventForm = (openForm, eventId = undefined, event = undefined) => {
-        const isShowing = openForm ? true : this.state.showForm;
+        const isShowing = openForm ? false : this.state.showForm;
         let events = {
             ...this.state.events
         };
         if (eventId && event) {
+            // Event has been updated
+            const attendance = events[eventId] ? events[eventId].attendance : undefined;
             events = {
                 ...events,
                 [eventId]: {
-                    eventData: event
+                    eventData: event,
+                    attendance
                 }
             };
+        } else if (eventId) {
+            // Event has been removed
+            delete events[eventId];
         }
         this.setState({
             events,
@@ -86,6 +92,12 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         });
     }
 
+    handleAddEventClick = () => {
+        this.setState({
+            selectedEvent: null
+        }, this.handleToggleEventForm(true));
+    }
+
     render() {
         const { classes, user } = this.props;
         const { events, showForm, selectedEvent } = this.state;
@@ -94,7 +106,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
             <div>
                 { !showForm
                     ? <Tooltip title="Lägg till evenemang">
-                        <Button variant="fab" color="secondary" onClick={() => this.handleToggleEventForm(true)} className={classes.buttonRight}>
+                        <Button variant="fab" color="secondary" onClick={this.handleAddEventClick} className={classes.buttonRight}>
                             <AddIcon />
                         </Button>
                     </Tooltip>
@@ -103,13 +115,12 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                 <p>Kommande evenemang med närvaro-koll.</p>
                 {
                     showForm
-                        ? <CalendarEventForm closeFormEvent={(id, e) => this.handleToggleEventForm(false, id, e)} event={selectedEvent.event} eventId={selectedEvent.eventId} />
+                        ? <CalendarEventForm closeFormEvent={(id, e) => this.handleToggleEventForm(false, id, e)} event={selectedEvent ? selectedEvent.event : undefined} eventId={selectedEvent ? selectedEvent.eventId : undefined} />
                         : undefined
                 }
 
                 <Divider variant="middle" />
                 {Object.keys(events).map((eventId, i) => {
-                    console.error('LOOP EVENTS:', eventId, i, events);
                     return (
                         <div key={i}>
                             <Grid container spacing={24} className={classes.eventGrid}>

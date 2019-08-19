@@ -263,7 +263,7 @@ class Member extends Component {
                         </Grid>
                     </Grid>
             
-                    <Button component={Link} className={classes.action} variant="contained" to="/inloggad/medlemmar">
+                    <Button component={Link} className={classes.action} variant="outlined" to="/inloggad/medlemmar">
                         <CancelIcon className={classes.buttonIcon} />
                         Stäng
                     </Button>

@@ -4,7 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Grid, Paper, TextField, FormControlLabel, Checkbox, Button } from '@material-ui/core';
 import {
     Save as SaveIcon, 
-    Cancel as CancelIcon
+    Cancel as CancelIcon,
+    Delete as DeleteIcon
  } from '@material-ui/icons';
 import DateTimeHelper from '../../common/DateTimeHelper';
 
@@ -21,6 +22,9 @@ const styles = {
     },
     buttonIcon: {
         marginRight: '5px'   
+    },
+    removeButton: {
+        float: 'right'
     }
 };
 
@@ -44,13 +48,12 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                     description: '',
                     location: '',
 
-                    meetupTime: DateTimeHelper.getTimeNextFullHour(),
+                    meetupTime: '',
                     startDate: DateTimeHelper.getDateToday(),
                     endDate: DateTimeHelper.getDateToday(),
                     startTime: DateTimeHelper.getTimeNextFullHour(),
                     endTime: DateTimeHelper.getTimeNextFullHour(1),
                     isPublic: false,
-                    attendance: {}
                 },
                 editMode: false,
                 hasChanges: false
@@ -110,6 +113,13 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
         }
     }
 
+    removeEvent = () => {
+        const { eventId } = this.state;
+        FirebaseApp.voxette.removeEvent(eventId, () => {
+            this.props.closeFormEvent(eventId, null);
+        });
+    }
+
     handleEventSaved = (key) => {
         this.setState({
             hasChanges: false
@@ -131,6 +141,14 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
         return (
             <div>
                 <Paper className={classes.paper}>
+                    {
+                        editMode
+                        ? <Button className={classes.removeButton} color="primary" onClick={this.removeEvent}>
+                            <DeleteIcon className={classes.buttonIcon} />
+                            Ta bort
+                        </Button>
+                        : undefined
+                    }
                     <h2>Kalender - {heading}</h2>
                     <form className={classes.root} autoComplete="off" onSubmit={(e) => this.saveEvent(e)}>
                         <Grid container spacing={24}>
@@ -236,7 +254,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                             <CancelIcon className={classes.buttonIcon} />
                             Stäng
                         </Button>
-                        <Button variant="outlined" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
+                        <Button variant="contained" color="primary" disabled={!hasChanges} className={classes.action} type="submit">
                             <SaveIcon className={classes.buttonIcon} />
                             Spara ändringar
                         </Button>

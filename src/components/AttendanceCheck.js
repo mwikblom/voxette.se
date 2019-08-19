@@ -60,7 +60,6 @@ class AttendanceCheck extends Component {
         const {
             classes,
             user,
-            eventId,
             eventAttendance
         } = this.props;
         const memberId = user.memberId;

@@ -17,9 +17,6 @@ const styles = theme => ({
         marginBottom: 0,
         color: theme.palette.primary.main
     },
-    description: {
-        marginBottom: 0
-    },
     meetupTime: {
         paddingLeft: theme.spacing.unit
     },
