@@ -33,7 +33,7 @@ const styles = theme => ({
     listText: {
         fontSize: 11
     },
-    listItem: {
+    list: {
         borderLeft: `1px solid ${grey[300]}`
     },
     unattendedListText: {
@@ -93,28 +93,17 @@ const MaybeBadge = withStyles((theme) => ({
 
 class AttendanceList extends Component {
     state = {
-        members: [],
         expanded: false,
         showUnattended: false
-    }
-    componentWillMount() {
-        FirebaseApp.voxette.fetchMembers('', '', '', (members) => {
-            if (members) {
-                // Store active members
-                this.setState({
-                    members: Object.values(members).filter(x => x.userData.tags === undefined || !x.userData.tags.includes(Constants.inactive))
-                });
-            }
-        });
     }
     orderAttendance(a, b) {
         if (a.choice == b.choice) {
             return 0;
         }
         if (a.choice == 1 || (b.choice != 1 && a.choice == 2)) {
-            return 1;
+            return -1;
         }
-        return -1;
+        return 1;
     }
     toggleExpand = () => {
         this.setState({
@@ -129,10 +118,10 @@ class AttendanceList extends Component {
     render() {
         const {
             classes,
+            members,
             eventAttendance
         } = this.props;
         const {
-            members,
             expanded,
             showUnattended
         } = this.state;
@@ -184,7 +173,7 @@ class AttendanceList extends Component {
                                 const maybe = partAttendance.filter(x => x.choice == 2).length;
 
                                 return (
-                                    <Grid item xs={12} sm={6} md={3} key={part}>
+                                    <Grid item xs={12} sm={6} md={3} key={part} className={classes.list}>
                                         <NoBadge
                                             className={classes.otherBadge}
                                             badgeContent={no}
@@ -215,7 +204,7 @@ class AttendanceList extends Component {
                                                         ? <ThumbsUpDownIcon className={classes.maybe}/>
                                                         : '';
                                                     return (userData
-                                                        ? <ListItem className={classes.listItem} key={attend.memberId}>
+                                                        ? <ListItem key={attend.memberId}>
                                                             <ListItemAvatar>
                                                                 {
                                                                     userData.pictureUrl

@@ -22,6 +22,9 @@ const styles = theme => ({
     },
     expandButton: {
         display: 'block'
+    },
+    editIcon: {
+        float: 'right'
     }
 });
 
@@ -72,16 +75,15 @@ class CalendarItem extends Component {
         return (
             <Grid item xs={true}>
                 <h3 className={classes.title}>
-                    {title}
                     {
-                        isInternalCalendar
-                            ? <Tooltip title="Redigera">
-                                <IconButton aria-label="Redigera" color="primary" onClick={this.handleSelectEdit}>
+                        isInternalCalendar &&
+                            <Tooltip title="Redigera">
+                                <IconButton aria-label="Redigera" className={classes.editIcon} color="primary" onClick={this.handleSelectEdit}>
                                     <EditIcon />
                                 </IconButton>
                             </Tooltip>
-                            : undefined
                     }
+                    {title}
                     <Typography variant="caption" component="p">
                         {eventDate}
                         { isInternalCalendar && meetupTime ? <span className={classes.meetupTime}>(Samling kl: {meetupTime})</span> : undefined }
@@ -93,13 +95,12 @@ class CalendarItem extends Component {
                         ? description
                         : previewDescription
                     }
-                    { shouldExpand
-                        ? <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
+                    { shouldExpand &&
+                        <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
                             <IconButton className={classes.expandButton} aria-label="Expandera" color="secondary" onClick={this.handleExpandClick}>
                                 { expanded ? <ExpandLessIcon /> : <ExpandMoreIcon /> }
                             </IconButton>
                         </Tooltip>
-                        : undefined
                     }
                 </p>
             </Grid>
