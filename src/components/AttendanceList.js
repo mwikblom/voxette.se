@@ -33,7 +33,7 @@ const styles = theme => ({
     listText: {
         fontSize: 11
     },
-    list: {
+    listItem: {
         borderLeft: `1px solid ${grey[300]}`
     },
     unattendedListText: {
@@ -173,7 +173,7 @@ class AttendanceList extends Component {
                                 const maybe = partAttendance.filter(x => x.choice == 2).length;
 
                                 return (
-                                    <Grid item xs={12} sm={6} md={3} key={part} className={classes.list}>
+                                    <Grid item xs={12} sm={6} md={3} key={part}>
                                         <NoBadge
                                             className={classes.otherBadge}
                                             badgeContent={no}
@@ -204,7 +204,7 @@ class AttendanceList extends Component {
                                                         ? <ThumbsUpDownIcon className={classes.maybe}/>
                                                         : '';
                                                     return (userData
-                                                        ? <ListItem key={attend.memberId}>
+                                                        ? <ListItem className={classes.listItem} key={attend.memberId}>
                                                             <ListItemAvatar>
                                                                 {
                                                                     userData.pictureUrl
