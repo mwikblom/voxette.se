@@ -84,7 +84,7 @@ class Member extends Component {
         super(props);
 
         this.state = {
-            firstName : '',
+            firstName: '',
             lastName : '',
             email: '',
             phone: '',
@@ -92,6 +92,8 @@ class Member extends Component {
             part: '',
             tags: [],
             pictureUrl: '',
+            startDate: '',
+            allergies: '',
             hasChanges: false
         };
     }
@@ -139,7 +141,19 @@ class Member extends Component {
 
     render() {
         const { classes } = this.props;
-        const { firstName, lastName, email, phone, address, part, tags, pictureUrl, hasChanges} = this.state;
+        const {
+            firstName,
+            lastName,
+            email,
+            phone,
+            address,
+            part,
+            tags,
+            pictureUrl,
+            hasChanges,
+            startDate,
+            allergies
+        } = this.state;
 
         return (            
             <div>
@@ -259,6 +273,32 @@ class Member extends Component {
                                 margin="normal"
                                 multiline
                                 rows="3"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} lg={4}>
+                            <TextField
+                                id="allergies"
+                                label="Allergier/matpreferenser"
+                                className={classes.textField}
+                                value={allergies}
+                                onChange={(event) => this.handleChange(event, 'allergies')}
+                                margin="normal"
+                                multiline
+                                rows="3"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} lg={4}>
+                            <TextField
+                                id="startDate"
+                                label="Medlem sedan"
+                                className={classes.textField}
+                                value={startDate}
+                                onChange={(event) => this.handleChange(event, 'startDate')}
+                                margin="normal"
+                                type="date"
+                                InputLabelProps={{
+                                    shrink: true
+                                }}
                             />
                         </Grid>
                     </Grid>

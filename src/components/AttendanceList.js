@@ -23,7 +23,6 @@ import {
     Person as PersonIcon
 } from '@material-ui/icons';
 import Constants from '../common/Constants';
-import FirebaseApp from '../FirebaseApp';
 import { green, yellow, grey } from '@material-ui/core/colors';
 
 const styles = theme => ({
