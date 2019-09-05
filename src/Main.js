@@ -197,6 +197,7 @@ class Main extends Component {
                                 <Route path="/inloggad/medlem/:memberId" render={this.pageController.MemberPage} />
                                 <Route path="/inloggad/kalender" render={this.pageController.InternalCalendarPage} />
                                 <Route path="/inloggad/filer" render={this.pageController.DocumentsPage} />
+                                <Route path="/inloggad/ladda-ned/:fullPath" render={this.pageController.DownloadFilePage} />
                                 <Route path="/inloggad/fil/:fullPath" render={this.pageController.FilePage} />
                         
                                 <Route component={NotFound} />

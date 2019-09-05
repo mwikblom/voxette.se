@@ -85,6 +85,10 @@ function fileUri(fullPath) {
     return '/inloggad/fil/' + fullPath;
 }
 
+function downloadFileUri(fullPath) {
+    return '/inloggad/ladda-ned/' + fullPath;
+}
+
 class Documents extends Component {
     constructor(props) {
         super(props);
@@ -267,7 +271,9 @@ class Documents extends Component {
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
                                         <TableCell>
                                             <Tooltip title="Öppna fil">
-                                                <CloudDownloadIcon className={classes.action} onClick={() => this.handleClickDownload(file.fullPath)}/>
+                                                <a href={downloadFileUri(file.fullPath)} target="_blank">
+                                                    <CloudDownloadIcon className={classes.action} />
+                                                </a>
                                             </Tooltip>    
                                             <Tooltip title="Ändra namn eller filens taggar">
                                                 <EditIcon className={classes.action} onClick={() => this.handleClickEdit(file.fullPath)}/>
@@ -289,20 +295,20 @@ class Documents extends Component {
         });
     }   
 
-    handleClickDownload = fullPath => {
-        FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {
-            window.open(url); // just open in new tab for now. Might be better to download due to bandwidth
+    // handleClickDownload = fullPath => {
+        // FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {
+        //     window.open(url); // just open in new tab for now. Might be better to download due to bandwidth
 
-            /*var xhr = new XMLHttpRequest();
-            xhr.responseType = 'blob';
-            xhr.onload = function(event) {
-                var blob = xhr.response;
+        //     /*var xhr = new XMLHttpRequest();
+        //     xhr.responseType = 'blob';
+        //     xhr.onload = function(event) {
+        //         var blob = xhr.response;
 
-            };
-            xhr.open('GET', url);
-            xhr.send();*/
-        });
-    }
+        //     };
+        //     xhr.open('GET', url);
+        //     xhr.send();*/
+        // });
+    // }
 
     handleClickEdit = fullPath => {
         this.setState({

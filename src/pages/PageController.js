@@ -13,6 +13,7 @@ import GDPR from './external/GDPR';
 import Information from './internal/Information';
 import InternalCalendar from './internal/Calendar';
 import Documents from './internal/Documents';
+import DownloadFile from './internal/DownloadFile';
 import File from './internal/File';
 import Members from './internal/Members';
 import Member from './internal/Member';
@@ -26,6 +27,7 @@ export default class PageController {
         this.InformationPage = this.InformationPage.bind(this);
         this.InternalCalendarPage = this.InternalCalendarPage.bind(this);
         this.DocumentsPage = this.DocumentsPage.bind(this);
+        this.DownloadFilePage = this.DownloadFilePage.bind(this);
         this.FilePage = this.FilePage.bind(this);
         this.MembersPage = this.MembersPage.bind(this);
         this.MemberPage = this.MemberPage.bind(this);
@@ -55,6 +57,11 @@ export default class PageController {
     DocumentsPage() {
         return this.loggedIn 
             ? (<Documents loggedIn={this.loggedIn} user={this.user} />)
+            : (<RequiresLogin />);
+    }
+    DownloadFilePage(options) {
+        return this.loggedIn 
+            ? (<DownloadFile loggedIn={this.loggedIn} user={this.user} fullPath={options.match.params.fullPath} />)
             : (<RequiresLogin />);
     }
     FilePage(options) {
