@@ -129,8 +129,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
     render() {
         const { classes, user } = this.props;
         const { events, showForm, selectedEvent, members, selectedUser } = this.state;
-        const isAdmin = user.Tags.some(x => x === Constants.admin);
-        console.log(selectedUser);
+        const isAdmin = user.Tags && user.Tags.some(x => x === Constants.admin);
         return (
             <div>
                 {

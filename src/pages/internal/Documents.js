@@ -36,6 +36,11 @@ const styles = theme => ({
     table: {
         minWidth: 700,
     },
+    buttonCell: {
+        width: '35px',
+        paddingRight: '0',
+        paddingLeft: '10px'
+    },
     button: {
         margin: theme.spacing.unit,
         float: 'right'
@@ -47,8 +52,7 @@ const styles = theme => ({
         width: '100%',
     },
     action: {
-        cursor: 'pointer',
-        marginRight: theme.spacing.unit * 3
+        cursor: 'pointer'
     },
     chipRoot: {
         whiteSpace: 'nowrap',
@@ -243,6 +247,7 @@ class Documents extends Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
+                                <TableCell className={classes.buttonCell}></TableCell>
                                 <TableCell>Namn</TableCell>
                                 <TableCell>Taggar</TableCell>
                                 <TableCell>Storlek</TableCell>
@@ -253,7 +258,13 @@ class Documents extends Component {
                             {files.map(file => {
                                 return (
                                     <TableRow hover key={file.fullPath}>
-
+                                        <TableCell className={classes.buttonCell}>
+                                            <Tooltip title="Öppna fil">
+                                                <a href={downloadFileUri(file.fullPath)} target="_blank">
+                                                    <CloudDownloadIcon className={classes.action} />
+                                                </a>
+                                            </Tooltip>
+                                        </TableCell>
                                         <TableCell component="th" scope="row">
                                             {nameField(file)}
                                         </TableCell>
@@ -269,12 +280,7 @@ class Documents extends Component {
                                             })}
                                         </TableCell>
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
-                                        <TableCell>
-                                            <Tooltip title="Öppna fil">
-                                                <a href={downloadFileUri(file.fullPath)} target="_blank">
-                                                    <CloudDownloadIcon className={classes.action} />
-                                                </a>
-                                            </Tooltip>    
+                                        <TableCell>  
                                             <Tooltip title="Ändra namn eller filens taggar">
                                                 <EditIcon className={classes.action} onClick={() => this.handleClickEdit(file.fullPath)}/>
                                             </Tooltip>
