@@ -112,6 +112,9 @@ class Documents extends Component {
 
         e.preventDefault();
 
+        if (!filterName && !filterTag) {
+            return;
+        }
         this.setState({
             loading: true,
             disabled: true
@@ -154,6 +157,8 @@ class Documents extends Component {
     render() {
         const { classes } = this.props;
         const { files, filterName, filterTag, editable, selectedFullPath, loading, disabled } = this.state;
+
+        const searchDisabled = disabled || (!filterName && !filterTag);
 
         const nameField = function(file) {
             return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name)
@@ -236,7 +241,7 @@ class Documents extends Component {
                                 </Grid>
                             </Grid>
                             <Tooltip title="Sök efter filer">              
-                                <Button type="submit" variant="contained" disabled={disabled} color="primary">
+                                <Button type="submit" variant="contained" disabled={searchDisabled} color="primary">
                                     <SearchIcon />
                                 </Button>
                             </Tooltip>
