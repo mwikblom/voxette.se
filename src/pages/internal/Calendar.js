@@ -45,7 +45,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
     }
 
     componentWillMount() {
-        FirebaseApp.voxette.fetchAllEvents((events) => {
+        FirebaseApp.voxette.fetchUpcomingEvents((events) => {
             if (events) {
                 this.setState({
                     events

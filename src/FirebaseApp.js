@@ -318,6 +318,32 @@ const voxette = {
         }
     },
 
+    fetchUpcomingEvents: (done) => {
+        console.log('fetching upcoming events');
+
+        const today = new Date();
+        const fetchFromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+
+        firebase
+            .database()
+            .ref('events')
+            .orderByChild('eventData/startDate')
+            .startAt(fetchFromDate.toLocaleDateString())
+            .once('value')
+            .then((snapshot) => {
+                const events = snapshot.val();
+
+                console.log('data: ' + JSON.stringify(events));
+
+                if (events) { // prefere the data in our database
+                    done(events);
+                } else {
+                    console.log('No data available');
+                    done();
+                }
+            });
+    },
+
     fetchAllEvents: (done) => {
         console.log('fetching all events');
 
