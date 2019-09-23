@@ -22,6 +22,7 @@ import {
     Chip,
     CircularProgress
 } from '@material-ui/core/';
+import Constants from './../../common/Constants';
 
 // TODO byt namn till Files.js
 
@@ -67,23 +68,13 @@ const styles = theme => ({
         left: '50%',
         marginTop: -83,
         marginLeft: 149,
-      },
+    },
 });
-
-// TODO duplicated in File.js
-const tagValues = [
-    'Noter',
-    'Bilder',
-    'Ljudfiler',
-    'Dokument',
-    'Aktuellt',
-    'Övrigt'
-];
 
 function humanFileSize(size) {
     var i = Math.floor( Math.log(size) / Math.log(1024) );
     return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-};
+}
 
 function fileUri(fullPath) {
     return '/inloggad/fil/' + fullPath;
@@ -118,7 +109,7 @@ class Documents extends Component {
         this.setState({
             loading: true,
             disabled: true
-        })
+        });
 
         FirebaseApp.voxette.fetchFiles(filterName, filterTag, (files) => {
             if (files) {
@@ -156,17 +147,13 @@ class Documents extends Component {
 
     render() {
         const { classes } = this.props;
-        const { files, filterName, filterTag, editable, selectedFullPath, loading, disabled } = this.state;
+        const { files, filterName, filterTag, editable, loading, disabled } = this.state;
 
         const searchDisabled = disabled || (!filterName && !filterTag);
 
         const nameField = function(file) {
-            return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name)
-        }
-
-        if (selectedFullPath) {
-            return <Redirect push to={fileUri(selectedFullPath)}/>;
-        }
+            return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name);
+        };
 
         return (
             <div>
@@ -232,7 +219,7 @@ class Documents extends Component {
                                         <MenuItem value="">
                                             <em>Alla</em>
                                         </MenuItem>
-                                        {tagValues.map(tag => (
+                                        {Constants.fileTags.map(tag => (
                                             <MenuItem key={tag} value={tag}>
                                                 {tag}
                                             </MenuItem>
@@ -287,7 +274,9 @@ class Documents extends Component {
                                         <TableCell>{humanFileSize(file.size)}</TableCell>
                                         <TableCell>  
                                             <Tooltip title="Ändra namn eller filens taggar">
-                                                <EditIcon className={classes.action} onClick={() => this.handleClickEdit(file.fullPath)}/>
+                                                <a href={fileUri(file.fullPath)}>
+                                                    <EditIcon className={classes.action} />
+                                                </a>
                                             </Tooltip>
                                         </TableCell>
                                     </TableRow>
@@ -307,25 +296,19 @@ class Documents extends Component {
     }   
 
     // handleClickDownload = fullPath => {
-        // FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {
-        //     window.open(url); // just open in new tab for now. Might be better to download due to bandwidth
+    // FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {
+    //     window.open(url); // just open in new tab for now. Might be better to download due to bandwidth
 
-        //     /*var xhr = new XMLHttpRequest();
-        //     xhr.responseType = 'blob';
-        //     xhr.onload = function(event) {
-        //         var blob = xhr.response;
+    //     /*var xhr = new XMLHttpRequest();
+    //     xhr.responseType = 'blob';
+    //     xhr.onload = function(event) {
+    //         var blob = xhr.response;
 
-        //     };
-        //     xhr.open('GET', url);
-        //     xhr.send();*/
-        // });
+    //     };
+    //     xhr.open('GET', url);
+    //     xhr.send();*/
+    // });
     // }
-
-    handleClickEdit = fullPath => {
-        this.setState({
-            selectedFullPath: fullPath
-        });
-    }
 }
 
 Documents.propTypes = {

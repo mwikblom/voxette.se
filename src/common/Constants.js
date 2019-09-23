@@ -7,7 +7,14 @@ const constants = {
     soprano2: 'Sopran 2',
     alto1: 'Alt 1',
     alto2: 'Alt 2',
-    conductor: 'Dirigent'
+    conductor: 'Dirigent',
+    notes: 'Noter',
+    images: 'Bilder',
+    audioFiles: 'Ljudfiler',
+    documents: 'Dokument',
+    current: 'Aktuellt',
+    currentAudioFiles: 'Aktuella ljudfiler',
+    other: 'Övrigt'
 };
 
 constants.tagValues = [
@@ -23,6 +30,16 @@ constants.partValues = [
     constants.alto1,
     constants.alto2,
     constants.conductor
+];
+
+constants.fileTags = [
+    constants.notes,
+    constants.images,
+    constants.audioFiles,
+    constants.documents,
+    constants.current,
+    constants.currentAudioFiles,
+    constants.other
 ];
 
 export default constants;

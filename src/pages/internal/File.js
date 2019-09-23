@@ -15,6 +15,7 @@ import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
+import Constants from './../../common/Constants';
 
 const styles = theme => ({
     paper: {
@@ -53,15 +54,6 @@ function humanFileSize(size) {
     var i = Math.floor( Math.log(size) / Math.log(1024) );
     return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
-
-const tagValues = [
-    'Noter',
-    'Bilder',
-    'Ljudfiler',
-    'Dokument',
-    'Aktuellt',
-    'Övrigt'
-];
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -140,7 +132,7 @@ class File extends Component {
                                         )}
                                         MenuProps={MenuProps}
                                     >
-                                        {tagValues.map(tag => (
+                                        {Constants.fileTags.map(tag => (
                                             <MenuItem
                                                 key={tag}
                                                 value={tag}
