@@ -104,11 +104,14 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
         } else {
             event.created = DateTimeHelper.getCurrentTimestamp();
             FirebaseApp.voxette.addEventData(event, (eventId) => {
-                this.setState({
-                    hasChanges: false,
-                    eventId
+                event.eventId = eventId;
+                FirebaseApp.voxette.updateEventData(eventId, event, () => {
+                    this.setState({
+                        hasChanges: false,
+                        eventId
+                    });
+                    this.props.closeFormEvent(eventId, event);
                 });
-                this.props.closeFormEvent(eventId, event);
             });
         }
     }

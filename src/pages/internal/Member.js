@@ -112,8 +112,12 @@ class Member extends Component {
     }
 
     handleChange = (event, name) => {
+        let value = event.target.value;
+        if (name === 'tags' && !value) {
+            value = null;
+        }
         this.setState({
-            [name]: event.target.value,
+            [name]: value,
             hasChanges: true
         });
     }   

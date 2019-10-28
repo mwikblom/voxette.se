@@ -331,7 +331,11 @@ const voxette = {
             .startAt(fetchFromDate.toLocaleDateString())
             .once('value')
             .then((snapshot) => {
-                const events = snapshot.val();
+                const events = [];
+                
+                snapshot.forEach((child) => {
+                    events.push(child.val());
+                });
 
                 console.log('data: ' + JSON.stringify(events));
 

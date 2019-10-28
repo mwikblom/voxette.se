@@ -23,7 +23,7 @@ import {
     Person as PersonIcon
 } from '@material-ui/icons';
 import Constants from '../common/Constants';
-import { green, yellow, grey } from '@material-ui/core/colors';
+import { green, grey } from '@material-ui/core/colors';
 
 const styles = theme => ({
     title: {
@@ -53,9 +53,6 @@ const styles = theme => ({
     no: {
         color: theme.palette.primary.main,
     },
-    maybe: {
-        color: yellow[600],
-    },
     unattendedButton: {
         float: 'right',
         marginBottom: theme.spacing.unit,
@@ -81,14 +78,6 @@ const YesBadge = withStyles({
         right: 0
     },
 })(props => <Badge {...props}>{props.children}</Badge>);
-
-const MaybeBadge = withStyles((theme) => ({
-    badge: {
-        background: yellow[600],
-        top: -2,
-        right: 0
-    },
-}))(props => <Badge {...props}>{props.children}</Badge>);
 
 class AttendanceList extends Component {
     state = {
@@ -169,7 +158,6 @@ class AttendanceList extends Component {
                                     .sort(this.orderAttendance);
                                 const yes = partAttendance.filter(x => x.choice == 1).length;
                                 const no = partAttendance.filter(x => x.choice == 0).length;
-                                const maybe = partAttendance.filter(x => x.choice == 2).length;
 
                                 return (
                                     <Grid item xs={12} sm={6} md={3} key={part}>
@@ -177,17 +165,12 @@ class AttendanceList extends Component {
                                             className={classes.otherBadge}
                                             badgeContent={no}
                                         >
-                                            <MaybeBadge
-                                                className={classes.otherBadge}
-                                                badgeContent={maybe}
+                                            <YesBadge
+                                                className={classes.firstBadge}
+                                                badgeContent={yes}
                                             >
-                                                <YesBadge
-                                                    className={classes.firstBadge}
-                                                    badgeContent={yes}
-                                                >
-                                                    {part}
-                                                </YesBadge>
-                                            </MaybeBadge>
+                                                {part}
+                                            </YesBadge>
                                         </NoBadge>
                                         <List dense>
                                             {
@@ -199,8 +182,6 @@ class AttendanceList extends Component {
                                                         ? <ThumbUpIcon className={classes.yes} />
                                                         : attend.choice == 0
                                                         ? <ThumbDownIcon className={classes.no}/>
-                                                        : attend.choice == 2
-                                                        ? <ThumbsUpDownIcon className={classes.maybe}/>
                                                         : '';
                                                     return (userData
                                                         ? <ListItem className={classes.listItem} key={attend.memberId}>

@@ -36,7 +36,7 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         super(props);
 
         this.state = {
-            events: {},
+            events: [],
             showForm: false,
             selectedEvent: null,
             members: [],
@@ -62,25 +62,53 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         });
     }
 
+    sortEvents = (a, b) => {
+        if (!b || !b.eventData) {
+            return 1;
+        }
+        if (!a || !a.eventData) {
+            return -1;
+        }
+        const aStartDate = a.eventData.startDate;
+        const bStartDate = b.eventData.startDate;
+        if (aStartDate === bStartDate) {
+            const aStartTime = a.eventData.startTime;
+            const bStartTime = b.eventData.startTime;
+            if (aStartTime < bStartTime) {
+                return -1;
+            } else if (aStartTime > bStartTime) {
+                return 1;
+            }
+            return 0;
+        }
+        if (aStartDate < bStartDate) {
+            return -1;
+        }
+        return 1;
+    }
+
     handleToggleEventForm = (openForm, eventId = undefined, event = undefined) => {
         const isShowing = openForm ? false : this.state.showForm;
-        let events = {
+        let events = [
             ...this.state.events
-        };
+        ];
         if (eventId && event) {
             // Event has been updated
-            const attendance = events[eventId] ? events[eventId].attendance : undefined;
-            events = {
-                ...events,
-                [eventId]: {
+            const oldEvent = events.find(x => x.eventData.eventId === eventId);
+            const attendance = oldEvent ? oldEvent.attendance : undefined;
+            events = [
+                ...events.filter(x => x.eventData.eventId !== eventId),
+                {
                     eventData: event,
                     attendance
                 }
-            };
+            ];
         } else if (eventId) {
             // Event has been removed
-            delete events[eventId];
+            events = events.filter(x => x.eventData.eventId !== eventId);
         }
+
+        events = events.sort(this.sortEvents);
         this.setState({
             events,
             showForm: !isShowing
@@ -98,18 +126,21 @@ export default withStyles(styles)(class InternalCalendar extends Component {
     }
 
     handleAttendanceChange = (eventId, memberId, attendance) => {
-        const event = this.state.events[eventId];
-        this.setState({
-            events: {
-                ...this.state.events,
-                [eventId]: {
-                    eventData: event.eventData,
-                    attendance: {
-                        ...event.attendance,
-                        [memberId]: attendance
-                    }
+        const event = this.state.events.find(x => x.eventData.eventId === eventId);
+        
+        const events = [
+            ...this.state.events.filter(x => x.eventData.eventId !== eventId),
+            {
+                eventData: event.eventData,
+                attendance: {
+                    ...event.attendance,
+                    [memberId]: attendance
                 }
             }
+        ].sort(this.sortEvents);
+
+        this.setState({
+            events
         });
     }
 
@@ -161,19 +192,21 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                     </div>
                 }
                 <Divider variant="middle" />
-                {Object.keys(events).map((eventId, i) => {
+                {events.map((event, i) => {
+                    console.log(event);
+                    const eventId = event.eventData.eventId;
                     return (
                         <div key={i}>
                             <Grid container spacing={24} className={classes.eventGrid}>
-                                <CalendarItem isInternalCalendar={true} event={events[eventId].eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
+                                <CalendarItem isInternalCalendar={true} event={event.eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
                                 <AttendanceCheck
                                     user={user}
                                     selectedUser={selectedUser}
                                     eventId={eventId}
-                                    eventAttendance={events[eventId].attendance}
+                                    eventAttendance={event.attendance}
                                     onAttendanceChange={this.handleAttendanceChange}
                                 />
-                                <AttendanceList members={members} eventAttendance={events[eventId].attendance} />
+                                <AttendanceList members={members} eventAttendance={event.attendance} />
                             </Grid>
                             <Divider variant="middle" />
                         </div>

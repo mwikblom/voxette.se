@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import FirebaseApp from '../FirebaseApp';
 import DateTimeHelper from '../common/DateTimeHelper';
-import { green, yellow } from '@material-ui/core/colors';
+import { green } from '@material-ui/core/colors';
 
 const styles = theme => ({
     title: {
@@ -28,16 +28,6 @@ const GreenRadio = withStyles({
     },
     checked: {},
 })(props => <Radio color="default" {...props} />);
-
-const YellowRadio = withStyles({
-    root: {
-        '&$checked': {
-            color: yellow[600],
-        },
-    },
-    checked: {},
-})(props => <Radio color="default" {...props} />);
-
 
 class AttendanceCheck extends Component {
     saveAttendance = (e) => {
@@ -78,7 +68,7 @@ class AttendanceCheck extends Component {
                     }
                 </h4>
                 <Grid container spacing={8}>
-                    <Grid item xs={4} sm={6} md={4}>
+                    <Grid item xs={6}>
                         <FormControlLabel
                             value="1"
                             control={<GreenRadio disabled={!selectedUser.part} />}
@@ -88,22 +78,12 @@ class AttendanceCheck extends Component {
                             name="attendance"
                         />
                     </Grid>
-                    <Grid item xs={4} sm={6} md={4}>
+                    <Grid item xs={6}>
                         <FormControlLabel
                             value="0"
                             control={<Radio color="primary" disabled={!selectedUser.part} />}
                             label="Nej"
                             checked={currentAttendance.choice == 0}
-                            onChange={this.saveAttendance}
-                            name="attendance"
-                        />
-                    </Grid>
-                    <Grid item xs={4} sm={6} md={4}>
-                        <FormControlLabel
-                            value="2"
-                            control={<YellowRadio disabled={!selectedUser.part} />}
-                            label="Kanske"
-                            checked={currentAttendance.choice == 2}
                             onChange={this.saveAttendance}
                             name="attendance"
                         />
