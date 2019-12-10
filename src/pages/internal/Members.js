@@ -61,7 +61,7 @@ const styles = theme => ({
     wrapper: {
         marginTop: theme.spacing.unit,
         position: 'relative',
-    },    
+    },
     buttonProgress: {
         color: theme.palette.secondary.main,
         position: 'absolute',
@@ -248,7 +248,7 @@ class Members extends Component {
                                 <Button type="submit" variant="contained" color="primary" disabled={disabled}>
                                     <SearchIcon />
                                 </Button>                                         
-                            </Tooltip>            
+                            </Tooltip>
                             {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
                         </div>
                     </form>

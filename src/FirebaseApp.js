@@ -318,18 +318,20 @@ const voxette = {
         }
     },
 
-    fetchUpcomingEvents: (done) => {
-        console.log('fetching upcoming events');
+    fetchUpcomingEvents: (fromDate, toDate, done) => {
+        console.log('Fetching upcoming events from: ' + fromDate + ', to: ' + toDate);
 
-        const today = new Date();
-        const fetchFromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
-
-        firebase
+        var ref = firebase
             .database()
             .ref('events')
             .orderByChild('eventData/startDate')
-            .startAt(fetchFromDate.toLocaleDateString())
-            .once('value')
+            .startAt(fromDate.toLocaleDateString());
+        
+        if (toDate) {
+            ref = ref.endAt(toDate.toLocaleDateString());
+        }
+
+        ref.once('value')
             .then((snapshot) => {
                 const events = [];
                 
