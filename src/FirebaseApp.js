@@ -165,6 +165,38 @@ const voxette = {
             });
     },
 
+    // loopThroughFiles: () => {
+
+    //     var filesRef = firebase
+    //         .database()
+    //         .ref('files')
+    //         .once('value')
+    //         .then((snapshot) => {
+    //             const value = snapshot.val();
+    //             const fileIds = Object.keys(value);
+    //             const files = value ? Object.values(value) : [];
+                
+    //             for (let i = 0; i < fileIds.length; i++) {
+    //                 const fileId = fileIds[i];
+    //                 const file = value[fileId];
+    //                 console.log(firebase
+    //                     .storage()
+    //                     .ref()
+    //                     .child(fileId));
+    //                 // firebase
+    //                 //     .storage()
+    //                 //     .ref()
+    //                 //     .child(fileId)
+    //                 //     .listAll()
+    //                 //     .then((res) => {
+    //                 //         console.log(res);
+    //                 //     });
+    //             }
+                
+    //         });
+    // },
+
+
     getDownloadUrl: (fullPath, done) => {
 
         console.log('downloading from ' + fullPath);

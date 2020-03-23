@@ -110,7 +110,6 @@ class Main extends Component {
         this.handleLogoutSuccess = this.handleLogoutSuccess.bind(this);
     }
     render() {
-        FirebaseApp.voxette.loopThroughFiles();
         this.pageController = new PageController(this.state.loggedIn, this.state.user);
 
         const { classes } = this.props;
