@@ -129,8 +129,7 @@ class Documents extends Component {
 
         for (var i = 0; i < files.length; i++) {
             const file = files[i];
-            const marker = FirebaseApp.voxette.getValidDatabasePathItem(file.name);
-            const fullPath = new Date().getTime() + '_' + marker;
+            const fullPath = new Date().getTime() + '_' + file.name;
 
             FirebaseApp.voxette.uploadFile(fullPath, file, (data) => { 
 

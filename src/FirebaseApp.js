@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import config from './config.json';
+import constants from './common/Constants';
 
 var firebaseConfig = {
     apiKey: config.firebase.apiKey,
@@ -14,20 +15,21 @@ var firebaseApp = firebase.initializeApp(firebaseConfig);
 firebaseApp.customSettings = config.customSettings;
 
 function createFilePointer(fullPath, file, done) {
-
     console.log('storing file pointer for ' + fullPath);
 
+    const dbPath = voxette.getValidDatabasePathItem(fullPath);
     const tags = [];
 
-    // TODO somewhat duplicated with File.js
     if (file.type.endsWith('pdf')) {
-        tags.push('Noter');
+        tags.push(constants.notes);
+        tags.push(constants.current);
     } else if (file.type.startsWith('audio')) {
-        tags.push('Ljudfiler');
+        tags.push(constants.audioFiles);
+        tags.push(constants.currentAudioFiles);
     } else if (file.type.startsWith('image')) {
-        tags.push('Bilder');
+        tags.push(constants.images);
     } else {
-        tags.push('Övrigt');
+        tags.push(constants.other);
     }
 
     const data = {
@@ -41,7 +43,7 @@ function createFilePointer(fullPath, file, done) {
 
     firebase
         .database()
-        .ref('files/' + fullPath)
+        .ref('files/' + dbPath)
         .set(data, () => {
             console.log('file pointer saved');
             done(data);

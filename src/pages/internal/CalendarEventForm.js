@@ -54,6 +54,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                     startTime: DateTimeHelper.getTimeNextFullHour(),
                     endTime: DateTimeHelper.getTimeNextFullHour(1),
                     isPublic: false,
+                    hasAttendanceCheck: true
                 },
                 editMode: false,
                 hasChanges: false
@@ -237,6 +238,18 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                                     value={event.meetupTime}
                                     onChange={this.handleChange('meetupTime')}
                                     InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={event.hasAttendanceCheck}
+                                            onChange={this.handleCheckedChange('hasAttendanceCheck')}
+                                            value="hasAttendanceCheck"
+                                        />
+                                    }
+                                    label="Närvarokoll"
                                 />
                             </Grid>
                             <Grid item xs={12}>

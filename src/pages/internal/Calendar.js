@@ -259,14 +259,19 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                                 <div key={i}>
                                     <Grid container spacing={24} className={classes.eventGrid}>
                                         <CalendarItem isInternalCalendar={true} event={event.eventData} eventId={eventId} key={i} handleSelectEditEvent={(e, id) => this.handleSelectEditEvent(e, id)} />
-                                        <AttendanceCheck
-                                            user={user}
-                                            selectedUser={selectedUser}
-                                            eventId={eventId}
-                                            eventAttendance={event.attendance}
-                                            onAttendanceChange={this.handleAttendanceChange}
-                                        />
-                                        <AttendanceList members={members} eventAttendance={event.attendance} />
+                                        {
+                                            (event.eventData.hasAttendanceCheck === undefined || event.eventData.hasAttendanceCheck === true) &&
+                                            <React.Fragment>
+                                                <AttendanceCheck
+                                                    user={user}
+                                                    selectedUser={selectedUser}
+                                                    eventId={eventId}
+                                                    eventAttendance={event.attendance}
+                                                    onAttendanceChange={this.handleAttendanceChange}
+                                                />
+                                                <AttendanceList members={members} eventAttendance={event.attendance} />
+                                            </React.Fragment>
+                                        }
                                     </Grid>
                                     <Divider variant="middle" />
                                 </div>
