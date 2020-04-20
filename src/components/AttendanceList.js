@@ -16,7 +16,6 @@ import {
 import {
     ThumbUp as ThumbUpIcon,
     ThumbDown as ThumbDownIcon,
-    ThumbsUpDown as ThumbsUpDownIcon,
     Remove as RemoveIcon,
     ExpandMore as ExpandMoreIcon,
     ExpandLess as ExpandLessIcon,

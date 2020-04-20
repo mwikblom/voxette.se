@@ -103,8 +103,12 @@ class Member extends Component {
 
         FirebaseApp.voxette.fetchUserData(memberId, (userData) => {
             if (userData) {
-                this.setState(userData);
+                // Default fallback on empty array when the value is being treated as a string.
+                if (userData.tags === null || userData.tags === '') {
+                    userData.tags = [];
+                }
                 this.setState({
+                    ...userData,
                     hasChanges: false
                 });
             }

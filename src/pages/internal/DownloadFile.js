@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FirebaseApp from '../../FirebaseApp';
 import PropTypes from 'prop-types';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class DownloadFile extends Component {
     state = {

@@ -6,7 +6,6 @@ import AddIcon from '@material-ui/icons/Add';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import EditIcon from '@material-ui/icons/Edit';
 import SearchIcon from '@material-ui/icons/Search';
-import { Redirect } from 'react-router-dom';
 import {
     Grid,
     Table,
@@ -160,7 +159,7 @@ class Documents extends Component {
                 <p>
                     Här kan du hitta noter, stämfiler och annat. Du kan söka genom att klicka på sökknappen; då listas samtliga filer.
                     Du kan även begränsa sökningen genom att ange första delen av filnamnet, exemelvis hittas
-                    DotterSion.pdf genom att ange 'do'. Det är också möjligt att begränsa sökningen genom att filtrera på en 'typ', exempelvis 
+                    DotterSion.pdf genom att ange "do". Det är också möjligt att begränsa sökningen genom att filtrera på en "typ", exempelvis 
                     noter och ljudfiler.
                 </p>
                 <p>
