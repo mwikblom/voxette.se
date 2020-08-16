@@ -18,8 +18,12 @@ import {
     MenuItem,
     Tooltip,
     Chip,
-    CircularProgress
+    CircularProgress,
+    FormControlLabel,
+    Checkbox
 } from '@material-ui/core/';
+import { Check as CheckIcon } from '@material-ui/icons';
+import { green } from '@material-ui/core/colors';
 import Constants from '../../common/Constants';
 
 const styles = theme => ({
@@ -42,6 +46,12 @@ const styles = theme => ({
     },
     textField: {
         width: '100%',
+    },
+    checkbox: {
+        marginBottom: theme.spacing.unit * 2
+    },
+    checkIcon: {
+        color: green[400]
     },
     action: {
         cursor: 'pointer'
@@ -90,20 +100,47 @@ class Files extends Component {
 
         this.state = {
             files: [],
-            filterName: '',
-            filterType: '',
             selectedFullPath: null,
             loading: false,
-            disabled: false
+            disabled: false,
+            filterName: '',
+            filterType: '',
+            filterIsCurrent: true,
+            filterTag: '',
+            filterCategory: '',
+            allCategories: [],
+            allTags: []
         };
+    }
+    
+    componentWillMount() {
+        // TODO: Get these from db
+        this.setState({
+            allCategories: [
+                'Fest',
+                'Jul',
+                'Lucia',
+                'Sommar',
+                'Valborg',
+                'Världens barn'
+            ],
+            allTags: [
+                'HT20 Världens barn',
+                'HT20 Lucia',
+                'HT20 Julpaket 1',
+                'HT20 Julpaket 2',
+                'VT21 Disco',
+                'VT21 Nationaldag'
+            ]
+        });
     }
 
     search(e) {
-        const { filterName, filterType } = this.state;
+        const { filterName, filterType, filterIsCurrent, filterTag, filterCategory } = this.state;
 
         e.preventDefault();
 
-        if (!filterName && !filterType) {
+        if (!filterName && !filterType && !filterIsCurrent && !filterTag && !filterCategory) {
             return;
         }
         this.setState({
@@ -111,7 +148,7 @@ class Files extends Component {
             disabled: true
         });
 
-        FirebaseApp.voxette.fetchFiles(filterName, filterType, (files) => {
+        FirebaseApp.voxette.fetchFiles(filterName, filterType, filterIsCurrent, filterTag, filterCategory, (files) => {
             if (files) {
                 this.setState({
                     files: files
@@ -146,9 +183,21 @@ class Files extends Component {
 
     render() {
         const { classes } = this.props;
-        const { files, filterName, filterType, editable, loading, disabled } = this.state;
+        const {
+            files,
+            filterName,
+            filterType,
+            filterIsCurrent,
+            filterTag,
+            filterCategory,
+            editable,
+            loading,
+            disabled,
+            allCategories,
+            allTags
+        } = this.state;
 
-        const searchDisabled = disabled || (!filterName && !filterType);
+        const searchDisabled = disabled || (!filterName && !filterType && !filterIsCurrent && !filterCategory && !filterTag);
 
         const nameField = function(file) {
             return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name);
@@ -158,19 +207,18 @@ class Files extends Component {
             <div>
                 <h1>Filer</h1>
                 <p>
-                    Här kan du hitta noter, stämfiler och annat. Du kan söka genom att klicka på sökknappen; då listas samtliga filer.
+                    Här kan du hitta noter, stämfiler och annat. Du kan söka genom att klicka på sökknappen; då listas samtliga filer som matchar sökkriterierna.
                     Du kan även begränsa sökningen genom att ange första delen av filnamnet, exemelvis hittas
                     DotterSion.pdf genom att ange "do". Det är också möjligt att begränsa sökningen genom att filtrera på en "typ", exempelvis 
-                    noter och ljudfiler.
+                    noter och ljudfiler, kategori eller tagg. Är valet "Visa endast aktuella" markerad så kommer resultaten endast innehålla filer som är markerade som aktuella just nu.
                 </p>
                 <p>
                     För att lägga till nya filer använder du den gröna knappen med plus. PDF-filer kommer automatiskt taggas som noter, audio-format 
-                    såsom MP3 taggas som ljudfiler och bild-format som bilder. Övriga filtyper taggas som övrigt. När filen är uppladdad kan du llicka 
-                    på pennan om du vill ändra filens namn eller byta tagg.
+                    såsom MP3 taggas som ljudfiler och bild-format som bilder. Övriga filtyper taggas som övrigt. När filen är uppladdad kan du klicka 
+                    på pennan om du vill ändra filens namn eller övrig info.
                 </p>
 
                 <Paper className={classes.root}>
-
                     <input
                         accept="*/*"
                         className={classes.input}
@@ -190,7 +238,7 @@ class Files extends Component {
                     <div>                     
                         <form onSubmit={(e) => this.search(e)}>
                             <Grid container spacing={24}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12} sm={6} md={3}>
                                     <TextField
                                         id="name"
                                         label="Namn"
@@ -200,7 +248,7 @@ class Files extends Component {
                                         margin="normal"
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12} sm={6} md={3}>
                                     <TextField
                                         id="type"
                                         select
@@ -224,6 +272,63 @@ class Files extends Component {
                                             </MenuItem>
                                         ))}
                                     </TextField>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <TextField
+                                        id="category"
+                                        select
+                                        label="Kategori"
+                                        className={classes.textField}
+                                        value={filterCategory}
+                                        onChange={(event) => this.handleChange(event, 'filterCategory')}
+                                        SelectProps={{
+                                            MenuProps: {
+                                                className: classes.menu,
+                                            },
+                                        }}
+                                        margin="normal"
+                                    >
+                                        <MenuItem value="">
+                                            <em>Alla</em>
+                                        </MenuItem>
+                                        {allCategories.map(category => (
+                                            <MenuItem key={category} value={category}>
+                                                {category}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <TextField
+                                        id="tag"
+                                        select
+                                        label="Tagg"
+                                        className={classes.textField}
+                                        value={filterTag}
+                                        onChange={(event) => this.handleChange(event, 'filterTag')}
+                                        SelectProps={{
+                                            MenuProps: {
+                                                className: classes.menu,
+                                            },
+                                        }}
+                                        margin="normal"
+                                    >
+                                        <MenuItem value="">
+                                            <em>Alla</em>
+                                        </MenuItem>
+                                        {allTags.map(tag => (
+                                            <MenuItem key={tag} value={tag}>
+                                                {tag}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControlLabel
+                                        control={<Checkbox checked={filterIsCurrent} onChange={(event) => this.handleCheckedChange(event, 'filterIsCurrent')} />}
+                                        label="Visa endast aktuella"
+                                        className={classes.checkbox}
+                                    />
                                 </Grid>
                             </Grid>
                             <Tooltip title="Sök efter filer">              
@@ -285,7 +390,7 @@ class Files extends Component {
                                             })}
                                         </TableCell>
                                         <TableCell className={classes.isCurrentCell}>
-                                            {file.isCurrent ? 'Ja' : ''}
+                                            {file.isCurrent ? <CheckIcon className={classes.checkIcon} /> : ''}
                                         </TableCell>
                                         <TableCell className={classes.sizeCell}>{humanFileSize(file.size)}</TableCell>
                                         <TableCell className={classes.editCell}>  
@@ -309,7 +414,13 @@ class Files extends Component {
         this.setState({
             [name]: event.target.value
         });
-    }   
+    }
+    
+    handleCheckedChange(event, name) {
+        this.setState({
+            [name]: event.target.checked
+        });
+    }
 
     // handleClickDownload = fullPath => {
     // FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {

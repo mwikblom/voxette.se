@@ -52,7 +52,7 @@ const voxette = {
         return name.replace(invalidChars, '_');
     },
 
-    fetchFiles: (filterName, filterTag, done) => {
+    fetchFiles: (filterName, filterType, filterIsCurrent, filterTag, filterCategory, done) => {
         var filesRef = firebase
             .database()
             .ref('files')
@@ -70,26 +70,30 @@ const voxette = {
 
                 const filteredFiles = files
                     .filter(file => {
-                        const { nameLowerCase, tags } = file;
-
-                        if (filterName && filterTag) {
-                            return nameLowerCase.startsWith(filterName.toLowerCase()) && tags && tags.includes(filterTag);
-                        }
+                        const { nameLowerCase, tags, categories } = file;
+                        let isMatch = true;
                         if (filterName) {
-                            return nameLowerCase.startsWith(filterName.toLowerCase());
+                            isMatch = isMatch && nameLowerCase.startsWith(filterName.toLowerCase());
+                        }
+                        if (filterType) {
+                            isMatch = isMatch && file.fileType  === filterType;
+                        }
+                        if (filterIsCurrent) {
+                            isMatch = isMatch && file.isCurrent;
+                        }
+                        if (filterCategory) {
+                            isMatch = isMatch && categories && categories.includes(filterCategory);
                         }
                         if (filterTag) {
-                            return tags && tags.includes(filterTag);
+                            isMatch = isMatch && tags && tags.includes(filterTag);
                         }
-                        return true;
+                        return isMatch;
                     })
                     .sort((a, b) => {
                         return (a.nameLowerCase === b.nameLowerCase) ? 0 : ((a.nameLowerCase < b.nameLowerCase) ? -1 : 1);
                     });                    
 
-                if (filteredFiles) { 
-                    done(filteredFiles);
-                } 
+                done(filteredFiles);
             });
     },
 
@@ -115,9 +119,10 @@ const voxette = {
 
     fetchFileData: (fullPath, done) => {
         if (fullPath) {
+            const dbPath = voxette.getValidDatabasePathItem(fullPath);
             firebase
                 .database()
-                .ref('files/' + fullPath)
+                .ref('files/' + dbPath)
                 .once('value')
                 .then((snapshot) => {
                     const data = snapshot.val();
@@ -134,12 +139,13 @@ const voxette = {
 
     saveFileData: (fullPath, name, fileType, isCurrent, tags, categories, done) => {
         if (fullPath) {
+            const dbPath = voxette.getValidDatabasePathItem(fullPath);
             var updates = {};
-            updates['/files/' + fullPath + '/name'] = name;
-            updates['/files/' + fullPath + '/fileType'] = fileType;
-            updates['/files/' + fullPath + '/isCurrent'] = isCurrent;
-            updates['/files/' + fullPath + '/tags'] = tags || [];
-            updates['/files/' + fullPath + '/categories'] = categories || [];
+            updates['/files/' + dbPath + '/name'] = name;
+            updates['/files/' + dbPath + '/fileType'] = fileType;
+            updates['/files/' + dbPath + '/isCurrent'] = isCurrent;
+            updates['/files/' + dbPath + '/tags'] = tags || [];
+            updates['/files/' + dbPath + '/categories'] = categories || [];
 
             firebase
                 .database()

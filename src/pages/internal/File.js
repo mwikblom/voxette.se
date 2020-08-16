@@ -48,6 +48,9 @@ const styles = theme => ({
     },
     buttonIcon: {
         marginRight: theme.spacing.unit
+    },
+    formDropdown: {
+        marginTop: theme.spacing.unit * 2
     }
 });
 
@@ -88,6 +91,7 @@ class File extends Component {
     }
 
     componentWillMount() {
+        console.log(this.props);
         const { fullPath } = this.props;
 
         FirebaseApp.voxette.fetchFileData(fullPath, (fileData) => {
@@ -99,18 +103,23 @@ class File extends Component {
             }
         });
 
+        // TODO: Get these from db
         this.setState({
             allCategories: [
+                'Fest',
+                'Jul',
+                'Lucia',
                 'Sommar',
                 'Valborg',
-                'Lucia',
-                'Jul'
+                'Världens barn'
             ],
             allTags: [
-                'VT20',
-                'HT20',
-                'VT21',
-                'Disco'
+                'HT20 Världens barn',
+                'HT20 Lucia',
+                'HT20 Julpaket 1',
+                'HT20 Julpaket 2',
+                'VT21 Disco',
+                'VT21 Nationaldag'
             ]
         });
     }
@@ -149,7 +158,7 @@ class File extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl className={classes.formControl}>
+                                <FormControl className={`${classes.formControl} ${classes.formDropdown}`}>
                                     <InputLabel htmlFor="file-type-chip">Typ</InputLabel>
                                     <Select
                                         value={fileType}
@@ -224,11 +233,10 @@ class File extends Component {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={3}>
-                            <FormControlLabel
-                                control={<Checkbox checked={isCurrent} onChange={(event) => this.handleCheckedChange(event, 'isCurrent')} />}
-                                label="Aktuell"
-                            />
-                                
+                                <FormControlLabel
+                                    control={<Checkbox checked={isCurrent} onChange={(event) => this.handleCheckedChange(event, 'isCurrent')} />}
+                                    label="Aktuell"
+                                />
                             </Grid>
                             <Grid item xs={12} sm={3}>
                                 <TextField
@@ -273,8 +281,7 @@ class File extends Component {
             hasChanges: true
         });
     }
-    
-    
+
     handleCheckedChange(event, name) {
         this.setState({
             [name]: event.target.checked,
