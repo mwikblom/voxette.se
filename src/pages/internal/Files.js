@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseApp from '../../FirebaseApp';
 import AddIcon from '@material-ui/icons/Add';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import EditIcon from '@material-ui/icons/Edit';
 import SearchIcon from '@material-ui/icons/Search';
 import {
@@ -21,9 +20,7 @@ import {
     Chip,
     CircularProgress
 } from '@material-ui/core/';
-import Constants from './../../common/Constants';
-
-// TODO byt namn till Files.js
+import Constants from '../../common/Constants';
 
 const styles = theme => ({
     root: {
@@ -35,11 +32,6 @@ const styles = theme => ({
     },
     table: {
         minWidth: 700,
-    },
-    buttonCell: {
-        width: '35px',
-        paddingRight: '0',
-        paddingLeft: '10px'
     },
     button: {
         margin: theme.spacing.unit,
@@ -56,10 +48,10 @@ const styles = theme => ({
     },
     chipRoot: {
         whiteSpace: 'nowrap',
-    },    
+    },
     chip: {
         margin: theme.spacing.unit / 2,
-    },      
+    },
     buttonProgress: {
         color: theme.palette.secondary.main,
         position: 'absolute',
@@ -68,6 +60,15 @@ const styles = theme => ({
         marginTop: -83,
         marginLeft: 149,
     },
+    isCurrentCell: {
+        width: '50px'
+    },
+    editCell: {
+        width: '72px'
+    },
+    sizeCell: {
+        width: '100px'
+    }
 });
 
 function humanFileSize(size) {
@@ -83,14 +84,14 @@ function downloadFileUri(fullPath) {
     return '/inloggad/ladda-ned/' + fullPath;
 }
 
-class Documents extends Component {
+class Files extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             files: [],
             filterName: '',
-            filterTag: '',
+            filterType: '',
             selectedFullPath: null,
             loading: false,
             disabled: false
@@ -98,11 +99,11 @@ class Documents extends Component {
     }
 
     search(e) {
-        const { filterName, filterTag } = this.state;
+        const { filterName, filterType } = this.state;
 
         e.preventDefault();
 
-        if (!filterName && !filterTag) {
+        if (!filterName && !filterType) {
             return;
         }
         this.setState({
@@ -110,7 +111,7 @@ class Documents extends Component {
             disabled: true
         });
 
-        FirebaseApp.voxette.fetchFiles(filterName, filterTag, (files) => {
+        FirebaseApp.voxette.fetchFiles(filterName, filterType, (files) => {
             if (files) {
                 this.setState({
                     files: files
@@ -145,9 +146,9 @@ class Documents extends Component {
 
     render() {
         const { classes } = this.props;
-        const { files, filterName, filterTag, editable, loading, disabled } = this.state;
+        const { files, filterName, filterType, editable, loading, disabled } = this.state;
 
-        const searchDisabled = disabled || (!filterName && !filterTag);
+        const searchDisabled = disabled || (!filterName && !filterType);
 
         const nameField = function(file) {
             return ((editable && editable === file.fullPath) ? <strong>{file.name}</strong> : file.name);
@@ -205,8 +206,8 @@ class Documents extends Component {
                                         select
                                         label="Typ"
                                         className={classes.textField}
-                                        value={filterTag}
-                                        onChange={(event) => this.handleChange(event, 'filterTag')}
+                                        value={filterType}
+                                        onChange={(event) => this.handleChange(event, 'filterType')}
                                         SelectProps={{
                                             MenuProps: {
                                                 className: classes.menu,
@@ -217,9 +218,9 @@ class Documents extends Component {
                                         <MenuItem value="">
                                             <em>Alla</em>
                                         </MenuItem>
-                                        {Constants.fileTags.map(tag => (
-                                            <MenuItem key={tag} value={tag}>
-                                                {tag}
+                                        {Constants.fileTypes.map(fileType => (
+                                            <MenuItem key={fileType} value={fileType}>
+                                                {fileType}
                                             </MenuItem>
                                         ))}
                                     </TextField>
@@ -237,9 +238,11 @@ class Documents extends Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.buttonCell}></TableCell>
                                 <TableCell>Namn</TableCell>
+                                <TableCell>Filtyp</TableCell>
+                                <TableCell>Kategorier</TableCell>
                                 <TableCell>Taggar</TableCell>
+                                <TableCell>Aktuell</TableCell>
                                 <TableCell>Storlek</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -248,15 +251,27 @@ class Documents extends Component {
                             {files.map(file => {
                                 return (
                                     <TableRow hover key={file.fullPath}>
-                                        <TableCell className={classes.buttonCell}>
+                                        <TableCell>
                                             <Tooltip title="Öppna fil">
                                                 <a href={downloadFileUri(file.fullPath)} target="_blank">
-                                                    <CloudDownloadIcon className={classes.action} />
+                                                    {nameField(file)}
                                                 </a>
                                             </Tooltip>
+                                            
                                         </TableCell>
-                                        <TableCell component="th" scope="row">
-                                            {nameField(file)}
+                                        <TableCell>
+                                            {file.fileType}
+                                        </TableCell>
+                                        <TableCell className={classes.chipRoot}>
+                                            {file.categories && file.categories.map(category => {
+                                                return (
+                                                    <Chip
+                                                        key={category}
+                                                        label={category}
+                                                        className={classes.chip}
+                                                    />
+                                                );        
+                                            })}
                                         </TableCell>
                                         <TableCell className={classes.chipRoot}>
                                             {file.tags && file.tags.map(tag => {
@@ -269,9 +284,12 @@ class Documents extends Component {
                                                 );        
                                             })}
                                         </TableCell>
-                                        <TableCell>{humanFileSize(file.size)}</TableCell>
-                                        <TableCell>  
-                                            <Tooltip title="Ändra namn eller filens taggar">
+                                        <TableCell className={classes.isCurrentCell}>
+                                            {file.isCurrent ? 'Ja' : ''}
+                                        </TableCell>
+                                        <TableCell className={classes.sizeCell}>{humanFileSize(file.size)}</TableCell>
+                                        <TableCell className={classes.editCell}>  
+                                            <Tooltip title="Ändra filens namn eller taggar">
                                                 <a href={fileUri(file.fullPath)}>
                                                     <EditIcon className={classes.action} />
                                                 </a>
@@ -309,8 +327,8 @@ class Documents extends Component {
     // }
 }
 
-Documents.propTypes = {
+Files.propTypes = {
     classes: PropTypes.object.isRequired,
 };
   
-export default withStyles(styles)(Documents);
+export default withStyles(styles)(Files);

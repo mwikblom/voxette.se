@@ -15,6 +15,8 @@ import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import Constants from './../../common/Constants';
 
 const styles = theme => ({
@@ -49,7 +51,7 @@ const styles = theme => ({
     }
 });
 
-// TODO duplicated in Documents.js
+// TODO duplicated in Files.js
 function humanFileSize(size) {
     var i = Math.floor( Math.log(size) / Math.log(1024) );
     return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
@@ -76,7 +78,12 @@ class File extends Component {
             name: '',
             size: '',
             type: '',
-            tags: []
+            fileType: '',
+            isCurrent: false,
+            tags: [],
+            categories: [],
+            allCategories: [],
+            allTags: []
         };
     }
 
@@ -91,11 +98,37 @@ class File extends Component {
                 });
             }
         });
+
+        this.setState({
+            allCategories: [
+                'Sommar',
+                'Valborg',
+                'Lucia',
+                'Jul'
+            ],
+            allTags: [
+                'VT20',
+                'HT20',
+                'VT21',
+                'Disco'
+            ]
+        });
     }
 
     render() {
         const { classes } = this.props;
-        const { name, size, type, tags, hasChanges } = this.state;
+        const {
+            name,
+            size,
+            type,
+            fileType, 
+            isCurrent,
+            tags,
+            categories,
+            hasChanges,
+            allCategories,
+            allTags
+        } = this.state;
 
         return (            
             <div>
@@ -117,12 +150,31 @@ class File extends Component {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="select-multiple-chip">Taggar</InputLabel>
+                                    <InputLabel htmlFor="file-type-chip">Typ</InputLabel>
+                                    <Select
+                                        value={fileType}
+                                        onChange={(event) => this.handleChange(event, 'fileType')}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {Constants.fileTypes.map(fileType => (
+                                            <MenuItem
+                                                key={fileType}
+                                                value={fileType}
+                                            >
+                                                {fileType}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="categories-chip">Kategorier</InputLabel>
                                     <Select
                                         multiple
-                                        value={tags}
-                                        onChange={(event) => this.handleChange(event, 'tags')}
-                                        input={<Input id="select-multiple-chip" />}
+                                        value={categories}
+                                        onChange={(event) => this.handleChange(event, 'categories')}
+                                        input={<Input id="categories-chip" />}
                                         renderValue={selected => (
                                             <div className={classes.chips}>
                                                 {selected.map(value => (
@@ -132,18 +184,53 @@ class File extends Component {
                                         )}
                                         MenuProps={MenuProps}
                                     >
-                                        {Constants.fileTags.map(tag => (
+                                        {allCategories.map(category => (
                                             <MenuItem
-                                                key={tag}
-                                                value={tag}
+                                                key={category}
+                                                value={category}
                                             >
-                                                {tag}
+                                                {category}
                                             </MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="tags-chip">Taggar</InputLabel>
+                                    <Select
+                                        multiple
+                                        value={tags}
+                                        onChange={(event) => this.handleChange(event, 'tags')}
+                                        input={<Input id="tags-chip" />}
+                                        renderValue={selected => (
+                                            <div className={classes.chips}>
+                                                {selected.map(value => (
+                                                    <Chip key={value} label={value} className={classes.chip} />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {allTags.map(tags => (
+                                            <MenuItem
+                                                key={tags}
+                                                value={tags}
+                                            >
+                                                {tags}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
+                            <FormControlLabel
+                                control={<Checkbox checked={isCurrent} onChange={(event) => this.handleCheckedChange(event, 'isCurrent')} />}
+                                label="Aktuell"
+                            />
+                                
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
                                 <TextField
                                     id="size"
                                     label="Storlek"
@@ -185,16 +272,24 @@ class File extends Component {
             [name]: event.target.value,
             hasChanges: true
         });
-    }   
+    }
+    
+    
+    handleCheckedChange(event, name) {
+        this.setState({
+            [name]: event.target.checked,
+            hasChanges: true
+        });
+    }
 
     saveChanges(e) {
         const { fullPath } = this.props;
-        const { name, tags } = this.state;
+        const { name, fileType, isCurrent, tags, categories } = this.state;
 
         e.preventDefault();
 
         if (name) {
-            FirebaseApp.voxette.saveFileData(fullPath, name, tags, () => {
+            FirebaseApp.voxette.saveFileData(fullPath, name, fileType, isCurrent, tags, categories, () => {
                 this.setState({
                     hasChanges: false
                 });

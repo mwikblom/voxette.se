@@ -32,13 +32,11 @@ constants.partValues = [
     constants.conductor
 ];
 
-constants.fileTags = [
+constants.fileTypes = [
     constants.notes,
     constants.images,
     constants.audioFiles,
     constants.documents,
-    constants.current,
-    constants.currentAudioFiles,
     constants.other
 ];
 

@@ -15,37 +15,31 @@ var firebaseApp = firebase.initializeApp(firebaseConfig);
 firebaseApp.customSettings = config.customSettings;
 
 function createFilePointer(fullPath, file, done) {
-    console.log('storing file pointer for ' + fullPath);
-
     const dbPath = voxette.getValidDatabasePathItem(fullPath);
-    const tags = [];
-
-    if (file.type.endsWith('pdf')) {
-        tags.push(constants.notes);
-        tags.push(constants.current);
-    } else if (file.type.startsWith('audio')) {
-        tags.push(constants.audioFiles);
-        tags.push(constants.currentAudioFiles);
-    } else if (file.type.startsWith('image')) {
-        tags.push(constants.images);
-    } else {
-        tags.push(constants.other);
-    }
+    const fileType = file.type.endsWith('pdf')
+        ? constants.notes
+        : file.type.startsWith('audio')
+            ? constants.audioFiles
+            : file.type.startsWith('image')
+                ? constants.images
+                : constants.other;
 
     const data = {
-        tags,
+        fileType,
         fullPath: fullPath,
         name: file.name,
         nameLowerCase: file.name.toLowerCase(),
         size: file.size,
-        type: file.type
+        type: file.type,
+        isCurrent: true,
+        tags: [],
+        categories: []
     };
 
     firebase
         .database()
         .ref('files/' + dbPath)
         .set(data, () => {
-            console.log('file pointer saved');
             done(data);
         });
 }
@@ -59,9 +53,6 @@ const voxette = {
     },
 
     fetchFiles: (filterName, filterTag, done) => {
-
-        console.log('fetching files with filter: ' + filterName + ' ' + filterTag);
-
         var filesRef = firebase
             .database()
             .ref('files')
@@ -102,24 +93,37 @@ const voxette = {
             });
     },
 
+    // loopAllFileRefs: () => {
+    //     var filesRef = firebase
+    //         .database()
+    //         .ref('files')
+    //         // .orderByChild('fullPath')
+    //         // .startAt('1583228601633')
+    //         .once('value')
+    //         .then((snapshot) => {
+    //             const value = snapshot.val();
+    //             const files = value ? Object.values(value) : [];
+    //             for (let i = 0; i < files.length; i++) {
+    //                 const file = files[i];
+    //                 const isCurrent = file.tags.some(x => x === constants.current || x === constants.currentAudioFiles);
+    //                 const fileType = file.tags.find(x => x !== constants.current && x !== constants.currentAudioFiles);
+    //                 console.log(file, fileType, isCurrent);
+    //                 voxette.saveFileData(file.fullPath.replace('.', '_'), file.name, fileType, isCurrent, [], [], () => {});
+    //             }
+    //         });
+    // },
+
     fetchFileData: (fullPath, done) => {
         if (fullPath) {
-
-            console.log('fetching data for ' + fullPath);
-
             firebase
                 .database()
                 .ref('files/' + fullPath)
                 .once('value')
                 .then((snapshot) => {
                     const data = snapshot.val();
-    
-                    console.log('data: ' + JSON.stringify(data));
-
                     if (data) {
                         done(data);
                     } else {
-                        console.log('No data available for ' + fullPath);
                         done();
                     }
                 });
@@ -128,20 +132,19 @@ const voxette = {
         }
     },
 
-    saveFileData: (fullPath, name, tags, done) => {
+    saveFileData: (fullPath, name, fileType, isCurrent, tags, categories, done) => {
         if (fullPath) {
-
-            console.log('saving file name and tags for ' + fullPath + ' name: ' + name + ' tags: ' + tags);
-
             var updates = {};
             updates['/files/' + fullPath + '/name'] = name;
-            updates['/files/' + fullPath + '/tags'] = tags;
+            updates['/files/' + fullPath + '/fileType'] = fileType;
+            updates['/files/' + fullPath + '/isCurrent'] = isCurrent;
+            updates['/files/' + fullPath + '/tags'] = tags || [];
+            updates['/files/' + fullPath + '/categories'] = categories || [];
 
             firebase
                 .database()
                 .ref()
                 .update(updates, () => {
-                    console.log('data saved');
                     done();
                 });
         } else {
@@ -150,17 +153,12 @@ const voxette = {
     },
 
     uploadFile: (fullPath, file, done) => {
-
-        console.log('uploading file to ' + fullPath);
-
         firebase
             .storage()
             .ref()
             .child(fullPath)
             .put(file)
             .then((snapshot) => {
-                console.log('uploaded a file to ' + fullPath + ' snapshot: ' + snapshot);
-
                 createFilePointer(fullPath, file, done);
             });
     },
@@ -198,41 +196,27 @@ const voxette = {
 
 
     getDownloadUrl: (fullPath, done) => {
-
-        console.log('downloading from ' + fullPath);
-
         firebase
             .storage()
             .ref(fullPath)
             .getDownloadURL()
             .then((url) => {
-
-                console.log('URL is' + url);
-
                 done(url);
             });
     },
     
     fetchUserData: (email, done) => {
         if (email) {
-
             const memberId = voxette.getValidDatabasePathItem(email);
-
-            console.log('fetching data for ' + email + ' memberId ' + memberId);
-
             firebase
                 .database()
                 .ref('members/' + memberId)
                 .once('value')
                 .then((snapshot) => {
                     const data = snapshot.val();
-    
-                    console.log('data: ' + JSON.stringify(data));
-
                     if (data) {
                         done(data.userData);
                     } else {
-                        console.log('No data available for ' + email);
                         done();
                     }
                 });
@@ -242,9 +226,6 @@ const voxette = {
     },
 
     fetchMembers: (filterName, filterTag, filterPart, done) => {
-
-        console.log('fetching members with filter: ' + filterName + ' ' + filterTag);
-
         var membersRef = firebase
             .database()
             .ref('members')
@@ -309,16 +290,12 @@ const voxette = {
 
     saveUserData: (memberId, userData, done) => {
         if (memberId && userData) {
-
-            console.log('saving user data for ' + memberId + ' data: ' + JSON.stringify(userData));
-
             userData.memberId = memberId;
 
             firebase
                 .database()
                 .ref('members/' + memberId)
                 .set({ userData: userData }, () => {
-                    console.log('data saved');
                     done();
                 });
         } else {
@@ -328,22 +305,15 @@ const voxette = {
     
     fetchEventData: (eventId, done) => {
         if (eventId) {
-
-            console.log('fetching data for ' + eventId);
-
             firebase
                 .database()
                 .ref('events/' + eventId)
                 .once('value')
                 .then((snapshot) => {
                     const eventData = snapshot.val() && snapshot.val().eventData;
-    
-                    console.log('data: ' + JSON.stringify(eventData));
-
                     if (eventData) { // prefere the data in our database
                         done(eventData);
                     } else {
-                        console.log('No data available for ' + eventId);
                         done();
                     }
                 });
@@ -353,8 +323,6 @@ const voxette = {
     },
 
     fetchUpcomingEvents: (fromDate, toDate, done) => {
-        console.log('Fetching upcoming events from: ' + fromDate + ', to: ' + toDate);
-
         var ref = firebase
             .database()
             .ref('events')
@@ -373,33 +341,24 @@ const voxette = {
                     events.push(child.val());
                 });
 
-                console.log('data: ' + JSON.stringify(events));
-
                 if (events) { // prefere the data in our database
                     done(events);
                 } else {
-                    console.log('No data available');
                     done();
                 }
             });
     },
 
     fetchAllEvents: (done) => {
-        console.log('fetching all events');
-
         firebase
             .database()
             .ref('events')
             .once('value')
             .then((snapshot) => {
                 const events = snapshot.val();
-
-                console.log('data: ' + JSON.stringify(events));
-
                 if (events) { // prefere the data in our database
                     done(events);
                 } else {
-                    console.log('No data available');
                     done();
                 }
             });
@@ -407,14 +366,10 @@ const voxette = {
 
     addEventData: (eventData, done) => {
         if (eventData) {
-
-            console.log('adding event, data: ' + JSON.stringify(eventData));
-
             var newEvent = firebase
                 .database()
                 .ref('events')
                 .push({ eventData: eventData }, () => {
-                    console.log('data added');
                     done(newEvent.key);
                 });
             
@@ -425,16 +380,12 @@ const voxette = {
 
     updateEventData: (eventId, eventData, done) => {
         if (eventId && eventData) {
-
-            console.log('saving event data for ' + eventId + ' data: ' + JSON.stringify(eventData));
-
             eventData.eventId = eventId;
 
             firebase
                 .database()
                 .ref('events/' + eventId + '/eventData')
                 .set(eventData, () => {
-                    console.log('data saved');
                     done(eventId);
                 });
         } else {
@@ -444,13 +395,10 @@ const voxette = {
 
     removeEvent: (eventId, done) => {
         if (eventId) {
-            console.log('removing event ' + eventId);
-
             firebase
                 .database()
                 .ref('events/' + eventId)
                 .remove(() => {
-                    console.log('removed');
                     done();
                 });
         }
@@ -458,14 +406,10 @@ const voxette = {
 
     addEventAttendance: (eventId, memberId, attendance, done) => {
         if (eventId && memberId && attendance) {
-
-            console.log('saving event attendance for event ' + eventId + ' and member ' + memberId + ', attendance: ' + JSON.stringify(attendance));
-
             firebase
                 .database()
                 .ref('events/' + eventId + '/attendance/' + memberId)
                 .update(attendance, () => {
-                    console.log('attendance saved');
                     done(eventId);
                 });
         } else {
