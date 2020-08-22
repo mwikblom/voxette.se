@@ -142,6 +142,7 @@ const voxette = {
             const dbPath = voxette.getValidDatabasePathItem(fullPath);
             var updates = {};
             updates['/files/' + dbPath + '/name'] = name;
+            updates['/files/' + dbPath + '/nameLowerCase'] = name.toLowerCase();
             updates['/files/' + dbPath + '/fileType'] = fileType;
             updates['/files/' + dbPath + '/isCurrent'] = isCurrent;
             updates['/files/' + dbPath + '/tags'] = tags || [];
@@ -169,6 +170,33 @@ const voxette = {
             });
     },
 
+    deleteFile: (fullPath, done) => {
+        firebase
+            .storage()
+            .ref()
+            .child(fullPath)
+            .delete()
+            .then(() => {
+                voxette.deleteFileReference(fullPath, done);
+            })
+            .catch((reason) => {
+                console.error(reason);
+                voxette.deleteFileReference(fullPath, done);
+            });
+    },
+
+    deleteFileReference: (fullPath, done) => {
+        const dbPath = voxette.getValidDatabasePathItem(fullPath);
+        // Remove the file reference in the db
+        firebase
+            .database()
+            .ref('files/' + dbPath)
+            .remove()
+            .then(() => {
+                done();
+            })
+    },
+        
     // loopThroughFiles: () => {
 
     //     var filesRef = firebase

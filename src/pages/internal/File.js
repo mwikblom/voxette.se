@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
@@ -18,6 +19,7 @@ import Input from '@material-ui/core/Input';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Constants from './../../common/Constants';
+import { Modal } from '@material-ui/core';
 
 const styles = theme => ({
     paper: {
@@ -36,6 +38,9 @@ const styles = theme => ({
     action: {
         marginRight: theme.spacing.unit * 3,
     },
+    delete: {
+        float: 'right'
+    },
     formControl: {
         width: '100%'
     },
@@ -51,6 +56,16 @@ const styles = theme => ({
     },
     formDropdown: {
         marginTop: theme.spacing.unit * 2
+    },
+    deleteModal: {
+        position: 'absolute',
+        top: 'calc(50% - 50px)',
+        left: 'calc(50% - 150px)',
+        width: '300px',
+        maxWidth: '100%',
+        background: 'white',
+        boxShadow: '0 0 10px #555',
+        padding: theme.spacing.unit * 2
     }
 });
 
@@ -86,12 +101,12 @@ class File extends Component {
             tags: [],
             categories: [],
             allCategories: [],
-            allTags: []
+            allTags: [],
+            deleteModalIsOpen: false
         };
     }
 
     componentWillMount() {
-        console.log(this.props);
         const { fullPath } = this.props;
 
         FirebaseApp.voxette.fetchFileData(fullPath, (fileData) => {
@@ -137,7 +152,8 @@ class File extends Component {
             categories,
             hasChanges,
             allCategories,
-            allTags
+            allTags,
+            deleteModalIsOpen
         } = this.state;
 
         return (            
@@ -268,10 +284,27 @@ class File extends Component {
                                     <SaveIcon className={classes.buttonIcon} />
                                     Spara ändringar
                                 </Button>
+                                <Button className={classes.delete} onClick={() => this.toggleDeleteModal()} color="secondary">
+                                    Ta bort
+                                </Button>
                             </Grid>
                         </Grid>
                     </form>
                 </Paper>
+                <Modal
+                    open={deleteModalIsOpen}
+                    onClose={() => this.toggleDeleteModal}
+                >
+                    <div className={classes.deleteModal}>
+                        <p>Är du säker på att du vill ta bort filen?</p>
+                        <Button className={classes.action} color="secondary" onClick={() => this.toggleDeleteModal()}>
+                            Avbryt
+                        </Button>
+                        <Button className={classes.action} color="primary" onClick={() => this.deleteFile()}>
+                            Ta bort
+                        </Button>
+                    </div>
+                </Modal>
             </div>
         );
     }
@@ -304,6 +337,16 @@ class File extends Component {
             });
         }
     }
+
+    toggleDeleteModal() {
+        const { deleteModalIsOpen } = this.state;
+        this.setState({ deleteModalIsOpen: !deleteModalIsOpen });
+    }
+
+    deleteFile() {
+        const { fullPath } = this.props;
+        FirebaseApp.voxette.deleteFile(fullPath, () => this.props.history.push('/inloggad/filer'));
+    }
 }
 
 File.propTypes = {
@@ -312,4 +355,4 @@ File.propTypes = {
     fullPath: PropTypes.string.isRequired
 };
   
-export default withStyles(styles)(File);
+export default withRouter(withStyles(styles)(File));
