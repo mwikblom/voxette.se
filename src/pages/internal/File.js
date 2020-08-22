@@ -118,6 +118,7 @@ class File extends Component {
                 'HT20 Lucia',
                 'HT20 Julpaket 1',
                 'HT20 Julpaket 2',
+                'Valborg',
                 'VT21 Disco',
                 'VT21 Nationaldag'
             ]
