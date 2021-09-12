@@ -33,6 +33,7 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
     
     getInitalState() {
         const { event, eventId } = this.props;
+        const today = DateTimeHelper.getFormattedDate(new Date());
 
         return event 
             ? {
@@ -49,8 +50,8 @@ export default withStyles(styles)(class CalendarEventForm extends Component {
                     location: '',
 
                     meetupTime: '',
-                    startDate: DateTimeHelper.getDateToday(),
-                    endDate: DateTimeHelper.getDateToday(),
+                    startDate: today,
+                    endDate: today,
                     startTime: DateTimeHelper.getTimeNextFullHour(),
                     endTime: DateTimeHelper.getTimeNextFullHour(1),
                     isPublic: false,

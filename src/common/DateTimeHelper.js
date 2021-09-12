@@ -25,13 +25,11 @@ export default {
     
         return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes;
     },
-    getDateToday: () => {
-        // Today
-        var today = new Date();
-        var day = today.getDate();
-        var month = today.getMonth() + 1;
+    getFormattedDate: (date) => {
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
     
-        var year = today.getFullYear();
+        var year = date.getFullYear();
     
         if (day < 10) {
             day = '0' + day;

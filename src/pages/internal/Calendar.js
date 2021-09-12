@@ -19,6 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AttendanceCheck from '../../components/AttendanceCheck';
 import AttendanceList from '../../components/AttendanceList';
 import Constants from './../../common/Constants';
+import DateTimeHelper from '../../common/DateTimeHelper';
 
 const styles = theme => ({
     buttonRight: {
@@ -189,7 +190,8 @@ export default withStyles(styles)(class InternalCalendar extends Component {
     }
 
     handleSelectUser = (e) => {
-        const selectedUser = e.target.value;
+        const memberId = e.target.value;
+        const selectedUser = this.state.members.find(x => x.userData.memberId === memberId).userData;
         this.setState({
             selectedUser
         });
@@ -199,8 +201,8 @@ export default withStyles(styles)(class InternalCalendar extends Component {
         const { classes, user } = this.props;
         const { events, showForm, selectedEvent, members, selectedUser, fromDate, toDate, loading } = this.state;
         const isAdmin = user.Tags && user.Tags.some(x => x === Constants.admin);
-        const fromDateFormatted = fromDate && typeof fromDate === 'object' ? fromDate.toLocaleDateString() : '';
-        const toDateFormatted = toDate && typeof toDate === 'object' ? toDate.toLocaleDateString() : '';
+        const fromDateFormatted = fromDate && typeof fromDate === 'object' ? DateTimeHelper.getFormattedDate(fromDate) : '';
+        const toDateFormatted = toDate && typeof toDate === 'object' ? DateTimeHelper.getFormattedDate(toDate) : '';
         return (
             <div>
                 {
@@ -240,10 +242,10 @@ export default withStyles(styles)(class InternalCalendar extends Component {
                         isAdmin && selectedUser &&
                             <FormControl className={classes.userSelect}>
                                 <InputLabel htmlFor="select-user">Ange närvaro för</InputLabel>
-                                <Select value={selectedUser} inputProps={{id: 'select-user'}} onChange={this.handleSelectUser}>
-                                    <MenuItem value={user} selected>{user.firstName} {user.lastName}</MenuItem>
+                                <Select value={selectedUser.memberId} inputProps={{id: 'select-user'}} onChange={this.handleSelectUser}>
+                                    <MenuItem value={user.memberId} selected>{user.firstName} {user.lastName}</MenuItem>
                                     {
-                                        members.filter(x => x.userData.memberId !== user.memberId).map(({ userData }) => <MenuItem key={userData.memberId} value={userData}>{userData.firstName} {userData.lastName}</MenuItem>)
+                                        members.filter(x => x.userData.memberId !== user.memberId).map(({ userData }) => <MenuItem key={userData.memberId} value={userData.memberId}>{userData.firstName} {userData.lastName}</MenuItem>)
                                     }
                                 </Select>
                             </FormControl>

@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import config from './config.json';
 import constants from './common/Constants';
+import DateTimeHelper from './common/DateTimeHelper';
 
 var firebaseConfig = {
     apiKey: config.firebase.apiKey,
@@ -194,7 +195,7 @@ const voxette = {
             .remove()
             .then(() => {
                 done();
-            })
+            });
     },
         
     // loopThroughFiles: () => {
@@ -361,10 +362,10 @@ const voxette = {
             .database()
             .ref('events')
             .orderByChild('eventData/startDate')
-            .startAt(fromDate.toLocaleDateString());
+            .startAt(DateTimeHelper.getFormattedDate(fromDate));
         
         if (toDate) {
-            ref = ref.endAt(toDate.toLocaleDateString());
+            ref = ref.endAt(DateTimeHelper.getFormattedDate(toDate));
         }
 
         ref.once('value')
