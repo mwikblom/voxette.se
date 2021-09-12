@@ -61,6 +61,9 @@ const styles = theme => ({
     wrapper: {
         marginTop: theme.spacing.unit,
         position: 'relative',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     buttonProgress: {
         color: theme.palette.secondary.main,
@@ -97,6 +100,7 @@ class Members extends Component {
             filterTag: '',
             filterPart: '',
             addOpen: false,
+            allergiesOpen: false,
             newMemberEmail: '',
             loading: false,
             disabled: false
@@ -128,7 +132,8 @@ class Members extends Component {
 
     render() {
         const { classes } = this.props;
-        const { members, filterName, filterTag, filterPart, addOpen, loading, disabled } = this.state;
+        const { members, filterName, filterTag, filterPart, addOpen, allergiesOpen, loading, disabled } = this.state;
+        const allergiesDisabled = members === undefined || members.length <= 0;
 
         return ( 
             <div>
@@ -149,7 +154,7 @@ class Members extends Component {
                 
                 <Paper className={classes.root}>
                     <Tooltip title="Lägg till ny medlem">
-                        <Button variant="fab" component="span" color="secondary" aria-label="add" className={classes.button} onClick={this.handleClickOpen}>
+                        <Button variant="fab" component="span" color="secondary" aria-label="add" className={classes.button} onClick={this.handleAddClickOpen}>
                             <AddIcon/>
                         </Button>
                     </Tooltip>
@@ -158,7 +163,7 @@ class Members extends Component {
                         open={addOpen}
                         onClose={this.handleClose}
                         aria-labelledby="form-dialog-title"
-                        >
+                    >
                         <DialogTitle id="form-dialog-title">Ny medlem</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -181,6 +186,28 @@ class Members extends Component {
                             </Button>
                             <Button onClick={() => this.handleClose(true)} color="primary">
                                 Lägg till
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                   
+                    <Dialog
+                        open={allergiesOpen && !allergiesDisabled}
+                        onClose={this.handleClose}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <DialogTitle id="form-dialog-title">Allergier och matpreferenser</DialogTitle>
+                        <DialogContent>
+                            {
+                                members.map(member => member.userData.allergies
+                                    && <DialogContentText>
+                                        <b>{member.userData.firstName} {member.userData.lastName}</b> - {member.userData.allergies}
+                                    </DialogContentText>
+                                )
+                            }
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => this.handleClose(false)}>
+                                Stäng
                             </Button>
                         </DialogActions>
                     </Dialog>
@@ -250,6 +277,9 @@ class Members extends Component {
                                 </Button>                                         
                             </Tooltip>
                             {loading && <CircularProgress size={40} className={classes.buttonProgress} />}
+                            <Button type="button" variant="outlined" color="secondary" disabled={allergiesDisabled} onClick={this.handleAllergiesClickOpen}>
+                                Visa allergier för framsökta
+                            </Button>
                         </div>
                     </form>
 
@@ -330,8 +360,12 @@ class Members extends Component {
         );
     }
 
-    handleClickOpen = () => {
+    handleAddClickOpen = () => {
         this.setState({ addOpen: true });
+    }
+
+    handleAllergiesClickOpen = () => {
+        this.setState({ allergiesOpen: true });
     }
     
     handleClose = (save) => {
@@ -344,16 +378,10 @@ class Members extends Component {
 
         if (save) {
             FirebaseApp.voxette.addMember(newMemberEmail, () => {
-                this.setState({ 
-                    addOpen: false,
-                    newMemberEmail: ''
-                });
+                this.resetNewMember();
             });
         } else {
-            this.setState({ 
-                addOpen: false,
-                newMemberEmail: ''
-            });
+            this.resetNewMember();
         }
     }
 
@@ -361,7 +389,15 @@ class Members extends Component {
         this.setState({
             [name]: event.target.value
         });
-    }   
+    }
+
+    resetNewMember() {
+        this.setState({ 
+            addOpen: false,
+            allergiesOpen: false,
+            newMemberEmail: ''
+        });
+    }
 }
 
 Members.propTypes = {
