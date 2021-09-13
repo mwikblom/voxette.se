@@ -34,8 +34,7 @@ class Home extends Component {
                     med inhyrd solist, grupp eller musiker. Vi har bl a gjort konserter med Norrköpingsbandet 
                     Liverpool för att tillsammans med dem frossa i Beatlessånger och vi har sjungit 
                     Vivaldis Gloria med stråkensemble.</p>
-                <p><strong>Vill du vara med?</strong> Just nu tar vi inte in nya medlemmar, 
-                    men kontakta vår körledare <a href="mailto:anna@wikblom.se">Anna Wikblom</a> om du vill anmäla ditt intresse eller har andra frågor.</p>
+                <p><strong>Vill du vara med?</strong> Just nu tar vi inte in nya medlemmar.</p>
                 <p>Vill du boka oss finns mer information på vår <Link className={classes.navLink} to="/kontakt">Kontaktsida</Link></p>
                 <div className={classes.imgContainer}>
                     <img alt="Voxette" src="/images/IMG_3373.jpg" className={classes.img} />
