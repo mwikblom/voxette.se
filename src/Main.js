@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Authentication from './components/Authentication';
-import User from './models/User';
+import User from './Models/User';
 import MenuItemLink from './components/MenuItemLink';
 //import { Editor } from '@tinymce/tinymce-react';
 
@@ -99,7 +99,7 @@ class Main extends Component {
             loggedIn: false,
             user: undefined,
             anchorEl: null,
-            messageText: 'Den här sidan är under uppbyggnad!',
+            //messageText: 'Den här sidan är under uppbyggnad!',
             messageVariant: 'info',
             updatedPicture: undefined
         };        

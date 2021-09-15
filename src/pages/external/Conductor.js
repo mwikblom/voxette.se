@@ -43,7 +43,7 @@ class Conductor extends Component {
                     på. Gillar vardagslyx, att läsa, ensammil samt att vara med familjen.
                     Egentid har de senaste åren emellertid mest spenderats åt tjocka böcker, då livet
                     gjort en 180-graderssväng med läkarstudier. Sedan 2017 jobbar 
-                    Anna som läkare på Universitetssjukhuset Örebro.</p>            
+                    Anna som läkare i Örebro.</p>
             </div>
         );
     }
