@@ -3,21 +3,24 @@ import PropTypes from 'prop-types';
 import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import { Link } from 'react-router-dom';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Chip from '@material-ui/core/Chip';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { 
+    ListSubheader,
+    TextField,
+    Button,
+    Grid,
+    Paper,
+    MenuItem,
+    FormControl,
+    Select,
+    Chip,
+    InputLabel,
+    Input,
+    FormControlLabel,
+    Checkbox
+} from '@material-ui/core';
 import Constants from './../../common/Constants';
 import { Modal } from '@material-ui/core';
 
@@ -66,6 +69,11 @@ const styles = theme => ({
         background: 'white',
         boxShadow: '0 0 10px #555',
         padding: theme.spacing.unit * 2
+    },
+    optGroup: {
+        background: '#fff',
+        paddingRight: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit,
     }
 });
 
@@ -118,25 +126,9 @@ class File extends Component {
             }
         });
 
-        // TODO: Get these from db
         this.setState({
-            allCategories: [
-                'Fest',
-                'Jul',
-                'Lucia',
-                'Sommar',
-                'Valborg',
-                'Världens barn'
-            ],
-            allTags: [
-                'HT20 Världens barn',
-                'HT20 Lucia',
-                'HT20 Julpaket 1',
-                'HT20 Julpaket 2',
-                'Valborg',
-                'VT21 Disco',
-                'VT21 Nationaldag'
-            ]
+            allCategories: Constants.fileCategories,
+            allTags: Constants.fileTags
         });
     }
 
@@ -152,9 +144,21 @@ class File extends Component {
             categories,
             hasChanges,
             allCategories,
-            allTags,
             deleteModalIsOpen
         } = this.state;
+
+        // Rebuild the tag group structure to one flat array containing both the groups and values,
+        // since Selects require the MenuItems to be direct children...
+        const flattenedTags = this.state.allTags.flatMap(tagGroup => ([
+            { 
+                isGroup: true,
+                label: tagGroup.name
+            },
+            ...tagGroup.tags.map(tag => ({
+                isGroup: false,
+                label: tag
+            }))
+        ]));
 
         return (            
             <div>
@@ -238,12 +242,13 @@ class File extends Component {
                                         )}
                                         MenuProps={MenuProps}
                                     >
-                                        {allTags.map(tags => (
-                                            <MenuItem
-                                                key={tags}
-                                                value={tags}
+                                        {flattenedTags.map(tag => (tag.isGroup
+                                            ? <ListSubheader className={classes.optGroup}>{tag.label}</ListSubheader>
+                                            : <MenuItem
+                                                key={tag.label}
+                                                value={tag.label}
                                             >
-                                                {tags}
+                                                {tag.label}
                                             </MenuItem>
                                         ))}
                                     </Select>

@@ -15,7 +15,6 @@ import {
     Paper,
     Button,
     TextField,
-    MenuItem,
     Tooltip,
     Chip,
     CircularProgress,
@@ -104,7 +103,7 @@ class Files extends Component {
             loading: false,
             disabled: false,
             filterName: '',
-            filterType: '',
+            filterType: Constants.notes,
             filterIsCurrent: true,
             filterTag: '',
             filterCategory: '',
@@ -114,25 +113,9 @@ class Files extends Component {
     }
     
     componentWillMount() {
-        // TODO: Get these from db
         this.setState({
-            allCategories: [
-                'Fest',
-                'Jul',
-                'Lucia',
-                'Sommar',
-                'Valborg',
-                'Världens barn'
-            ],
-            allTags: [
-                'HT20 Världens barn',
-                'HT20 Lucia',
-                'HT20 Julpaket 1',
-                'HT20 Julpaket 2',
-                'Valborg',
-                'VT21 Disco',
-                'VT21 Nationaldag'
-            ]
+            allCategories: Constants.fileCategories,
+            allTags: Constants.fileTags
         });
     }
 
@@ -258,19 +241,15 @@ class Files extends Component {
                                         value={filterType}
                                         onChange={(event) => this.handleChange(event, 'filterType')}
                                         SelectProps={{
-                                            MenuProps: {
-                                                className: classes.menu,
-                                            },
+                                            native: true
                                         }}
                                         margin="normal"
                                     >
-                                        <MenuItem value="">
-                                            <em>Alla</em>
-                                        </MenuItem>
+                                        <option value=""></option>
                                         {Constants.fileTypes.map(fileType => (
-                                            <MenuItem key={fileType} value={fileType}>
+                                            <option key={fileType} value={fileType}>
                                                 {fileType}
-                                            </MenuItem>
+                                            </option>
                                         ))}
                                     </TextField>
                                 </Grid>
@@ -283,19 +262,15 @@ class Files extends Component {
                                         value={filterCategory}
                                         onChange={(event) => this.handleChange(event, 'filterCategory')}
                                         SelectProps={{
-                                            MenuProps: {
-                                                className: classes.menu,
-                                            },
+                                            native: true
                                         }}
                                         margin="normal"
                                     >
-                                        <MenuItem value="">
-                                            <em>Alla</em>
-                                        </MenuItem>
+                                        <option value=""></option>
                                         {allCategories.map(category => (
-                                            <MenuItem key={category} value={category}>
+                                            <option key={category} value={category}>
                                                 {category}
-                                            </MenuItem>
+                                            </option>
                                         ))}
                                     </TextField>
                                 </Grid>
@@ -308,19 +283,19 @@ class Files extends Component {
                                         value={filterTag}
                                         onChange={(event) => this.handleChange(event, 'filterTag')}
                                         SelectProps={{
-                                            MenuProps: {
-                                                className: classes.menu,
-                                            },
+                                            native: true
                                         }}
                                         margin="normal"
                                     >
-                                        <MenuItem value="">
-                                            <em>Alla</em>
-                                        </MenuItem>
-                                        {allTags.map(tag => (
-                                            <MenuItem key={tag} value={tag}>
-                                                {tag}
-                                            </MenuItem>
+                                        <option value=""></option>
+                                        {allTags.map(tagGroup => (
+                                            <optgroup label={tagGroup.name} key={tagGroup.name}>
+                                                {tagGroup.tags.map(tag => (
+                                                    <option key={tag} value={tag}>
+                                                        {tag}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
                                         ))}
                                     </TextField>
                                 </Grid>

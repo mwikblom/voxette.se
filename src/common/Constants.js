@@ -40,4 +40,49 @@ constants.fileTypes = [
     constants.other
 ];
 
+constants.fileCategories = [
+    'Fest',
+    'Jul',
+    'Lucia',
+    'Sommar',
+    'Valborg',
+    'Världens barn'
+];
+
+constants.fileTags = [
+    {
+        name: 'Allmänna',
+        tags: [
+            'Valborg',
+            'Lucia'
+        ]
+    },
+    {
+        name: 'HT21',
+        tags: [
+            'HT21 Världens barn',
+            'HT21 Jul1',
+            'HT21 Lucia',
+            'HT21 Gig',
+            'HT21 Övrigt',
+        ]
+    },
+    {
+        name: 'VT21',
+        tags: [
+            'VT21 Disco',
+            'VT21 Nationaldag',
+        ]
+    },
+    {
+        name: 'HT20',
+        tags: [
+            'HT20 Världens barn',
+            'HT20 Lucia',
+            'HT20 Julpaket 1',
+            'HT20 Julpaket 2',
+        ]
+    },
+];
+
 export default constants;

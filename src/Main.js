@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Authentication from './components/Authentication';
-import User from './Models/User';
+import User from './models/User';
 import MenuItemLink from './components/MenuItemLink';
 //import { Editor } from '@tinymce/tinymce-react';
 
