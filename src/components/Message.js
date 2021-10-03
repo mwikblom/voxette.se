@@ -9,111 +9,111 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import classNames from 'classnames';
+//import classNames from 'classnames';
 import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 
 const variantIcon = {
-    success: CheckCircleIcon,
-    warning: WarningIcon,
-    error: ErrorIcon,
-    info: InfoIcon,
+  success: CheckCircleIcon,
+  warning: WarningIcon,
+  error: ErrorIcon,
+  info: InfoIcon,
 };
 
-const styles = theme => ({
-    close: {
-        width: theme.spacing.unit * 4,
-        height: theme.spacing.unit * 4,
-    },
-    success: {
-        backgroundColor: green[600],
-      },
-    error: {
-        backgroundColor: theme.palette.error.dark,
-    },
-    info: {
-        backgroundColor: theme.palette.primary.dark,
-    },
-    warning: {
-        backgroundColor: amber[700],
-    },
-    icon: {
-        fontSize: 20,
-    },
-    iconVariant: {
-        opacity: 0.9,
-        marginRight: theme.spacing.unit,
-    },
-    message: {
-        display: 'flex',
-        alignItems: 'center',
-    },    
+const styles = (theme) => ({
+  close: {
+    width: theme.spacing.unit * 4,
+    height: theme.spacing.unit * 4,
+  },
+  success: {
+    backgroundColor: green[600],
+  },
+  error: {
+    backgroundColor: theme.palette.error.dark,
+  },
+  info: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  warning: {
+    backgroundColor: amber[700],
+  },
+  icon: {
+    fontSize: 20,
+  },
+  iconVariant: {
+    opacity: 0.9,
+    marginRight: theme.spacing.unit,
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 });
 
 class Message extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props) {
-        super(props);
-		
-        this.state = {
-            open: true
-        };
-    }
-    
-    handleClose = () => {
-        this.setState({ open: false });
-    }
+    this.state = {
+      open: true,
+    };
+  }
 
-    render() {
-        const { classes, variant, text } = this.props;
-        const Icon = variantIcon[variant];
-        const { open } = this.state;
-        const hideDuration = variant === 'warning' || variant === 'error' ? null : 7000;
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
-        return (open && text !== undefined) ? (
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={open}
-                autoHideDuration={hideDuration}
-                onClose={this.handleClose}
-                ContentProps={{
-                    'aria-describedby': 'message-id',
-                }}
+  render() {
+    const { classes, variant, text } = this.props;
+    const Icon = variantIcon[variant];
+    const { open } = this.state;
+    const hideDuration =
+      variant === 'warning' || variant === 'error' ? null : 7000;
+
+    return open && text !== undefined ? (
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={open}
+        autoHideDuration={hideDuration}
+        onClose={this.handleClose}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+      >
+        <SnackbarContent
+          //className={classNames(classes[variant])}
+          aria-describedby="client-snackbar"
+          message={
+            <span id="client-snackbar" className={classes.message}>
+              <Icon /*className={classNames(classes.icon, classes.iconVariant)}*/
+              />
+              {text}
+            </span>
+          }
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={this.handleClose}
             >
-                <SnackbarContent
-                    className={classNames(classes[variant])}
-                    aria-describedby="client-snackbar"
-                    message={
-                        <span id="client-snackbar" className={classes.message}>
-                            <Icon className={classNames(classes.icon, classes.iconVariant)} />
-                            {text}
-                        </span>                    
-                    }
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
-            </Snackbar>                
-            )
-            : null;
-    }
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </Snackbar>
+    ) : null;
+  }
 }
 
 Message.propTypes = {
-    classes: PropTypes.object.isRequired,
-    variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
-    text: PropTypes.string,
+  classes: PropTypes.object.isRequired,
+  variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
+  text: PropTypes.string,
 };
 
 export default withStyles(styles)(Message);

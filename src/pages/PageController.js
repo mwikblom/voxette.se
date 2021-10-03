@@ -19,96 +19,102 @@ import Members from './internal/Members';
 import Member from './internal/Member';
 
 export default class PageController {
-    constructor(loggedIn, user) {
-        this.loggedIn = loggedIn;
-        this.user = user;
+  constructor(loggedIn, user) {
+    this.loggedIn = loggedIn;
+    this.user = user;
 
-        // Internal Pages
-        this.InformationPage = this.InformationPage.bind(this);
-        this.InternalCalendarPage = this.InternalCalendarPage.bind(this);
-        this.FilesPage = this.FilesPage.bind(this);
-        this.DownloadFilePage = this.DownloadFilePage.bind(this);
-        this.FilePage = this.FilePage.bind(this);
-        this.MembersPage = this.MembersPage.bind(this);
-        this.MemberPage = this.MemberPage.bind(this);
-        this.Conductor = this.Conductor.bind(this);
-        // External Pages
-        this.HomePage = this.HomePage.bind(this);
-        this.CalendarPage = this.CalendarPage.bind(this);
-        this.ContactPage = this.ContactPage.bind(this);
-        this.ApplyForMembershipPage = this.ApplyForMembershipPage.bind(this);
-        this.GDPR = this.GDPR.bind(this);
-    }
+    // Internal Pages
+    this.InformationPage = this.InformationPage.bind(this);
+    this.InternalCalendarPage = this.InternalCalendarPage.bind(this);
+    this.FilesPage = this.FilesPage.bind(this);
+    this.DownloadFilePage = this.DownloadFilePage.bind(this);
+    this.FilePage = this.FilePage.bind(this);
+    this.MembersPage = this.MembersPage.bind(this);
+    this.MemberPage = this.MemberPage.bind(this);
+    this.Conductor = this.Conductor.bind(this);
+    // External Pages
+    this.HomePage = this.HomePage.bind(this);
+    this.CalendarPage = this.CalendarPage.bind(this);
+    this.ContactPage = this.ContactPage.bind(this);
+    this.ApplyForMembershipPage = this.ApplyForMembershipPage.bind(this);
+    this.GDPR = this.GDPR.bind(this);
+  }
 
-    loggedIn = false;
-    user = null;
+  loggedIn = false;
+  user = null;
 
-    // Internal pages
-    InformationPage() {
-        return this.loggedIn 
-            ? (<Information loggedIn={this.loggedIn} user={this.user} />)
-            : (<RequiresLogin />);
-    }
-    InternalCalendarPage() {
-        return this.loggedIn 
-            ? (<InternalCalendar loggedIn={this.loggedIn} user={this.user} />)
-            : (<RequiresLogin />);
-    }
-    FilesPage() {
-        return this.loggedIn 
-            ? (<Files loggedIn={this.loggedIn} user={this.user} />)
-            : (<RequiresLogin />);
-    }
-    DownloadFilePage(options) {
-        return this.loggedIn 
-            ? (<DownloadFile loggedIn={this.loggedIn} user={this.user} fullPath={options.match.params.fullPath} />)
-            : (<RequiresLogin />);
-    }
-    FilePage(options) {
-        return this.loggedIn 
-            ? (<File user={this.user} fullPath={options.match.params.fullPath} />)
-            : (<RequiresLogin />);
-    }
-    MembersPage() {
-        return this.loggedIn 
-            ? (<Members loggedIn={this.loggedIn} user={this.user} />)
-            : (<RequiresLogin />);
-    }
-    MemberPage(options) {
-        return this.loggedIn 
-            ? (<Member user={this.user} memberId={options.match.params.memberId} />)
-            : (<RequiresLogin />);
-    }
+  // Internal pages
+  InformationPage() {
+    return this.loggedIn ? (
+      <Information loggedIn={this.loggedIn} user={this.user} />
+    ) : (
+      <RequiresLogin />
+    );
+  }
+  InternalCalendarPage() {
+    return this.loggedIn ? (
+      <InternalCalendar loggedIn={this.loggedIn} user={this.user} />
+    ) : (
+      <RequiresLogin />
+    );
+  }
+  FilesPage() {
+    return this.loggedIn ? (
+      <Files loggedIn={this.loggedIn} user={this.user} />
+    ) : (
+      <RequiresLogin />
+    );
+  }
+  DownloadFilePage(options) {
+    return this.loggedIn ? (
+      <DownloadFile
+        loggedIn={this.loggedIn}
+        user={this.user}
+        fullPath={options.match.params.fullPath}
+      />
+    ) : (
+      <RequiresLogin />
+    );
+  }
+  FilePage(options) {
+    return this.loggedIn ? (
+      <File user={this.user} fullPath={options.match.params.fullPath} />
+    ) : (
+      <RequiresLogin />
+    );
+  }
+  MembersPage() {
+    return this.loggedIn ? (
+      <Members loggedIn={this.loggedIn} user={this.user} />
+    ) : (
+      <RequiresLogin />
+    );
+  }
+  MemberPage(options) {
+    return this.loggedIn ? (
+      <Member user={this.user} memberId={options.match.params.memberId} />
+    ) : (
+      <RequiresLogin />
+    );
+  }
 
-    // External pages
-    HomePage() {
-        return (
-            <Home />
-        );
-    }
-    CalendarPage() {
-        return (
-            <Calendar />
-        );
-    }
-    ContactPage() {
-        return (
-            <Contact />
-        );
-    }
-    ApplyForMembershipPage() {
-        return (
-            <ApplyForMembership />
-        );
-    }
-    Conductor() {
-        return (
-            <Conductor />
-        );
-    }
-    GDPR() {
-        return (
-            <GDPR />
-        )
-    }
+  // External pages
+  HomePage() {
+    return <Home />;
+  }
+  CalendarPage() {
+    return <Calendar />;
+  }
+  ContactPage() {
+    return <Contact />;
+  }
+  ApplyForMembershipPage() {
+    return <ApplyForMembership />;
+  }
+  Conductor() {
+    return <Conductor />;
+  }
+  GDPR() {
+    return <GDPR />;
+  }
 }
