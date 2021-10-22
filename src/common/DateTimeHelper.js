@@ -1,4 +1,4 @@
-export default {
+const dateTimeHelper = {
   getCurrentTimestamp: () => {
     var today = new Date();
 
@@ -54,3 +54,4 @@ export default {
     return hour + ':00';
   },
 };
+export default dateTimeHelper;

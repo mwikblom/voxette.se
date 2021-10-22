@@ -60,6 +60,7 @@ constants.fileTags = [
       'HT21 Världens barn',
       'HT21 Jul1',
       'HT21 Lucia',
+      'HT21 Nikolai',
       'HT21 Gig',
       'HT21 Övrigt',
     ],
