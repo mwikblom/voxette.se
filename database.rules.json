@@ -1,6 +1,19 @@
 {
   "rules": {
-    ".read": "auth.uid != null",
-    ".write": "auth.uid != null"
+    "events": {
+      ".read": "auth.uid != null",
+      ".write": "auth.uid != null",
+      ".indexOn": "eventData/startDate"
+    },
+    "files": {
+      ".read": "auth.uid != null",
+      ".write": "auth.uid != null",
+      ".indexOn": "nameLowerCase"
+    },
+    "members": {
+      ".read": "auth.uid != null",
+      ".write": "auth.uid != null",
+      ".indexOn": "userData/firstName"
+    }
   }
 }
