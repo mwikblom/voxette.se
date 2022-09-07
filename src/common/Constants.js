@@ -55,6 +55,16 @@ constants.fileTags = [
     tags: ['Valborg', 'Lucia'],
   },
   {
+    name: 'HT22',
+    tags: [
+      'HT22 Världens barn',
+      'HT22 Lucia',
+      'HT22 Jul',
+      'HT22 Gig',
+      'HT22 Övrigt',
+    ],
+  },
+  {
     name: 'VT22',
     tags: [
       'VT22 Konsert',
