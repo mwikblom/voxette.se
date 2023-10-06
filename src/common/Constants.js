@@ -55,6 +55,15 @@ constants.fileTags = [
     tags: ['Valborg', 'Lucia'],
   },
   {
+    name: 'HT23',
+    tags: [
+      'HT23 Jul',
+      'HT23 Lucia',
+      'HT23 Gig',
+      'HT23 Övrigt',
+    ],
+  },
+  {
     name: 'VT23',
     tags: [
       'VT23 Valborg',

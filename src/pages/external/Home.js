@@ -10,7 +10,6 @@ const styles = (theme) => ({
   },
   img: {
     maxWidth: '100%',
-    maxHeight: '300px',
   },
 });
 
@@ -61,8 +60,8 @@ class Home extends Component {
         </p>
         <div className={classes.imgContainer}>
           <img
-            alt="Voxette"
-            src="/images/IMG_3373.jpg"
+            alt="Voxette. En damkör klädd i olika nyanser av blått och vitt som står på en trappa och ser glada ut"
+            src="/images/Voxette_i_berlin_2023.jpg"
             className={classes.img}
           />
         </div>
