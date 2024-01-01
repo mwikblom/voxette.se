@@ -20,9 +20,9 @@ import User from './models/User';
 import MenuItemLink from './components/MenuItemLink';
 //import { Editor } from '@tinymce/tinymce-react';
 
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       light: '#ff9f99',
