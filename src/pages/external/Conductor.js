@@ -21,29 +21,24 @@ class Conductor extends Component {
         </div>
         <p>
           Anna Wikblom är utbildad i sång och kördirigering vid Musikhögskolan i
-          Örebro, där hon studerat för Solvieg Ågren och barocksångerskan
-          Susanne Rydén (Stockholm). I den musikpedagogiska kappsäcken har hon
-          flera års sång- och körlärarskap på musikskolan och det estetiska
-          programmet i Köping. Utöver det lustfyllda uppdraget som körledare för
-          damkören Voxette frilansjobbar Anna även som sångerska och körpedagog.
-          Som körsopran sjunger hon i Mats Bertilssons vokalensemble Olaus Petri
-          Vocalis sedan flera år tillbaka, och har under Solvieg Ågren tidigare
-          även sjungit i kammarkören Stella. Annas repertoar är rik och består
-          av allt från äldre till nyskriven musik, där huvudintresset dock är
-          interpretation av barocksång, den tyska Liederrepertoaren, nordisk
-          nationalromantisk sånglyrik samt nutida musik. Som barocksångerska har
-          hon nått framgång hos både kritiker och publik såväl i Sverige som
-          utomlands för sin ljusa koloratur.
+          Örebro, där hon studerat för Solvieg Ågren och barocksångerskan 
+          Susanne Rydén (Stockholm). Hon har många års musikpedagogisk erfarenhet 
+          som sång-, kör- och musikteorilärare.
         </p>
-
         <p>
-          Anna privat är smålandstjejen som hittat tillbaka till födelsestaden
-          Örebro. Hon lever med man (Mikael) och tre ljuvliga råttungar till
-          barn (Mira, Elia och Jonatan) i ett rosa hus som hon gärna snickrar
-          på. Gillar vardagslyx, att läsa, ensammil samt att vara med familjen.
-          Egentid har de senaste åren emellertid mest spenderats åt tjocka
-          böcker, då livet gjort en 180-graderssväng med läkarstudier. Sedan
-          2017 jobbar Anna som läkare i Örebro.
+          Utöver det lustfyllda uppdraget som körledare för damkören Voxette 
+          frilansar Anna som sångerska och körpedagog. Som körsopran sjunger 
+          hon i Mats Bertilssons vokalensemble Olaus Petri Vocalis, och har 
+          under Solvieg Ågren tidigare även sjungit i kammarkören Stella. 
+          Annas repertoar är rik och består av allt från äldre till nyskriven 
+          musik, med ett hjärta som klappar extra för barockens tonsättare, 
+          den tyska Liederrepertoaren, nordisk nationalromantisk sånglyrik samt 
+          nutida musik.
+        </p>
+        <p>
+          Anna är körens ledare sedan 2001, trots att arbetslivet gjort ett par 
+          rejäla 180-gradssvängar. Sedan 2017 jobbar Anna som läkare, inom kort 
+          färdig specialist i allmänmedicin.
         </p>
       </div>
     );

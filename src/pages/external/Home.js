@@ -20,37 +20,14 @@ class Home extends Component {
     return (
       <div>
         <h1>Välkommen till KFUM Voxette!</h1>
-        <p>Vi är en kör bestående av enbart skönsjungande damer. </p>
         <p>
-          Leder oss med läderpiska och ett sjuhelsikes engagemang gör sång-,
-          kör- och musikteoripedagogen Anna Wikblom utbildad vid musikhögskolan
-          i Örebro.
+          KFUM Voxette grundades i januari 1997 av en handfull sångentusiaster ur en av Medborgarskolans körkurser och har utvecklats till en 45 kvinnor kompetent ensemble. Sedan millennieskiftet leds vi med kärlek och piska av sång-, kör- och musikteoripedagogen Anna Wikblom, utbildad vid musikhögskolan i Örebro. Vår repertoar är bred, vår målsättning är att beröra i ton och närvaro och musicera på hög nivå, oavsett klassiskt, visa eller pop. Och där livet får plats.
         </p>
         <p>
-          KFUM Voxette, Örebro grundades i januari 1997 av en handfull
-          sångentusiaster ur en av Medborgarskolans körkurser. Kören sökte
-          medlemskap i KFUM för att få en officiell föreningstillhörighet. Vi
-          repeterar i Betaniakyrkan på Venavägen 21 på norr i Örebro.
+          Bland våra mest uppskattade produktioner kan bland annat nämnas Hennes Röst, med musik av kvinnliga diktare, tonsättare och artister som framfördes på Örebro slott samt Live at heart 2024. Vi ser också fram emot ett samarbete med vokalgruppen Solala på Örebro konserthus 24:e november 2024 - <a href="https://www.ticketmaster.se/event/i-langtan-efter-julen-konsert-med-solala-och-koren-voxette-tickets/663061" target="_blank">&quot;I längtan efter julen&quot;</a>.
         </p>
         <p>
-          Vi har en bred repertoar med allt från psalmer, klassiskt, visor och
-          pop till lättsammare sånger för festliga tillfällen. Voxette
-          framträder både i offentliga och privata sammanhang och har med tiden
-          blivit mer &quot;kända&quot; vilket innebär förfrågningar av de mest
-          skiftande slag. Det kan variera med allt från sångarting, luciatåg,
-          personalfester till gästspel i kyrkor. Vi har även gjort en direktsänd
-          radiokonsert i P4.
-        </p>
-        <p>
-          Varje vår avslutar vi med en stor konsert i varierande tema, ofta
-          tillsammans med inhyrd solist, grupp eller musiker. Vi har bl a gjort
-          konserter med Norrköpingsbandet Liverpool för att tillsammans med dem
-          frossa i Beatlessånger och vi har sjungit Vivaldis Gloria med
-          stråkensemble.
-        </p>
-        <p>
-          <strong>Vill du vara med?</strong> Just nu tar vi inte in nya
-          medlemmar.
+          <strong>Vill du vara med?</strong> Just nu är kören fulltalig och vi tar inte in fler medlemmar.
         </p>
         <p>
           Vill du boka oss finns mer information på vår{' '}
@@ -60,8 +37,8 @@ class Home extends Component {
         </p>
         <div className={classes.imgContainer}>
           <img
-            alt="Voxette. En damkör klädd i olika nyanser av blått och vitt som står på en trappa och ser glada ut"
-            src="/images/Voxette_i_berlin_2023.jpg"
+            alt="Voxette. En damkör klädd i orange, rosa och rött"
+            src="/images/Voxette-hennes-rost-2024.jpg"
             className={classes.img}
           />
         </div>

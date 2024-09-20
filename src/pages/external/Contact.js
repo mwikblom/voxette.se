@@ -27,6 +27,10 @@ class Contact extends Component {
           Kontakta <a href="mailto:kfumvoxette@gmail.com">Voxette</a> för mer
           information.{' '}
         </p>
+
+        <p>
+          <a href="https://www.facebook.com/KFUMVoxette" target="_blank">KFUM Voxette på facebook</a>
+        </p>
       </div>
     );
   }
