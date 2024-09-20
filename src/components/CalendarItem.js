@@ -40,7 +40,7 @@ class CalendarItem extends Component {
   render() {
     if (this.props.event === undefined) return null;
 
-    const {
+    let {
       classes,
       event: {
         startDate,
@@ -55,6 +55,10 @@ class CalendarItem extends Component {
       isInternalCalendar,
     } = this.props;
     const { expanded } = this.state;
+
+    if (!isInternalCalendar) {
+      description = this.props.event.publicDescription ?? '';
+    }
 
     var eventDate = startDate + ' kl: ' + startTime + ' - ';
     if (startDate === endDate) {

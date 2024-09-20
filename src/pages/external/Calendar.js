@@ -1,19 +1,85 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import CalendarItem from '../../components/CalendarItem';
+import FirebaseApp from '../../FirebaseApp';
+import { withStyles } from '@material-ui/core/styles';
+import {
+  Grid,
+  Divider,
+  CircularProgress,
+} from '@material-ui/core';
 
-class Calendar extends Component {
-  render() {
-    return (
-      <div>
-        <h2>Kalender</h2>
-        <p>Här kan du höra oss</p>
-      </div>
-    );
+const styles = (theme) => ({
+  progress: {
+    color: theme.palette.secondary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
+});
+
+export default withStyles(styles)(
+  class Calendar extends Component {
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        loading: true,
+        events: [],
+      };
+    }
+    
+    componentWillMount() {
+      this.fetchEvents();
+    }
+    
+    fetchEvents = () => {
+      FirebaseApp.voxette.fetchUpcomingEvents(
+        false,
+        new Date(),
+        undefined,
+        (events) => {
+          if (events) {
+            this.setState({
+              loading: false,
+              events,
+            });
+          }
+        }
+      );
+    };
+
+    render() {
+      const { classes } = this.props;
+      const { loading, events } = this.state;
+
+      return (
+        <div>
+          <h2>Kalender</h2>
+          <p>Här kan du höra oss</p>
+          {loading ? (
+              <CircularProgress size={40} className={classes.progress} />
+            ) : (
+              events.map((event, i) => {
+                const eventId = event.eventData.eventId;
+                return (
+                  <div key={i}>
+                    <Grid container spacing={24} className={classes.eventGrid}>
+                      <CalendarItem
+                        isInternalCalendar={false}
+                        event={event.eventData}
+                        eventId={eventId}
+                        key={i}
+                      />
+                    </Grid>
+                    <Divider variant="middle" />
+                  </div>
+                );
+              })
+            )}
+        </div>
+      );
+    }
   }
-}
-
-Calendar.propTypes = {
-  loggedIn: PropTypes.bool.isRequired,
-};
-
-export default Calendar;
+);

@@ -84,6 +84,7 @@ export default withStyles(styles)(
 
     fetchEvents = () => {
       FirebaseApp.voxette.fetchUpcomingEvents(
+        true,
         this.state.fromDate,
         this.state.toDate,
         (events) => {

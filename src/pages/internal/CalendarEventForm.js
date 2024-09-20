@@ -33,6 +33,9 @@ const styles = {
   removeButton: {
     float: 'right',
   },
+  publicDescription: {
+    width: '100%',
+  },
 };
 
 export default withStyles(styles)(
@@ -55,6 +58,7 @@ export default withStyles(styles)(
             event: {
               title: '',
               description: '',
+              publicDescription: '',
               location: '',
 
               meetupTime: '',
@@ -263,7 +267,7 @@ export default withStyles(styles)(
                     label="Närvarokoll"
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={4} md={3}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -275,6 +279,18 @@ export default withStyles(styles)(
                     label="Publikt evenemang"
                   />
                 </Grid>
+                {event.isPublic &&
+                  <Grid item xs={12} sm={8} md={9}>
+                    <TextField
+                      id="publicDescription"
+                      label="Publik beskrivning (visas externt på hemsidan)"
+                      multiline={true}
+                      className={classes.publicDescription}
+                      value={event.publicDescription}
+                      onChange={this.handleChange('publicDescription')}
+                    />
+                  </Grid>
+                }
               </Grid>
 
               <Button

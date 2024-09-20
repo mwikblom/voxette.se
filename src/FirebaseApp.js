@@ -380,7 +380,7 @@ const voxette = {
     }
   },
 
-  fetchUpcomingEvents: (fromDate, toDate, done) => {
+  fetchUpcomingEvents: (isInternal, fromDate, toDate, done) => {
     onValue(
       query(
         ref(getDatabase(), 'events'),
@@ -392,7 +392,10 @@ const voxette = {
         const events = [];
 
         snapshot.forEach((child) => {
-          events.push(child.val());
+          const event = child.val();
+          if (isInternal || event.eventData.isPublic) {
+            events.push(event);
+          }
         });
 
         if (events) {
@@ -404,7 +407,7 @@ const voxette = {
       }
     );
   },
-
+  
   fetchAllEvents: (done) => {
     onValue(ref(getDatabase(), 'events'), (snapshot) => {
       const events = snapshot.val();
