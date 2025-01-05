@@ -55,6 +55,15 @@ constants.fileTags = [
     tags: ['Valborg', 'Lucia'],
   },
   {
+    name: 'VT25',
+    tags: [
+      'VT25 Hennes röst',
+      'VT25 Valborg',
+      'VT25 Nationaldag',
+      'VT25 Junikonsert',
+    ],
+  },
+  {
     name: 'HT24',
     tags: [
       'HT24 Live at heart',
