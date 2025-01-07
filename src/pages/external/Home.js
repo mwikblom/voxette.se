@@ -24,7 +24,7 @@ class Home extends Component {
           KFUM Voxette grundades i januari 1997 av en handfull sångentusiaster ur en av Medborgarskolans körkurser och har utvecklats till en 45 kvinnor kompetent ensemble. Sedan millennieskiftet leds vi med kärlek och piska av sång-, kör- och musikteoripedagogen Anna Wikblom, utbildad vid musikhögskolan i Örebro. Vår repertoar är bred, vår målsättning är att beröra i ton och närvaro och musicera på hög nivå, oavsett klassiskt, visa eller pop. Och där livet får plats.
         </p>
         <p>
-          Bland våra mest uppskattade produktioner kan bland annat nämnas Hennes Röst, med musik av kvinnliga diktare, tonsättare och artister som framfördes på Örebro slott samt Live at heart 2024. Vi ser också fram emot ett samarbete med vokalgruppen Solala på Örebro konserthus 24:e november 2024 - <a href="https://www.ticketmaster.se/event/i-langtan-efter-julen-konsert-med-solala-och-koren-voxette-tickets/663061" target="_blank">&quot;I längtan efter julen&quot;</a>.
+          Bland våra mest uppskattade produktioner kan bland annat nämnas Hennes Röst, med musik av kvinnliga diktare, tonsättare och artister som framfördes på Örebro slott samt Live at heart 2024 och vårt samarbete med vokalgruppen Solala på Örebro konserthus; I längtan efter julen. Under 2025 bjuder vi in till ett ännu ett livsnära och färgsprakande år. Följ oss gärna på <a href="https://facebook.com/KFUMVoxette" target="_blank">facebook</a> för att hålla dig uppdaterad om våra konserter.
         </p>
         <p>
           <strong>Vill du vara med?</strong> Just nu är kören fulltalig och vi tar inte in fler medlemmar.

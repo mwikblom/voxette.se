@@ -24,12 +24,13 @@ class Contact extends Component {
         </p>
 
         <p>
-          Kontakta <a href="mailto:kfumvoxette@gmail.com">Voxette</a> för mer
-          information.{' '}
+          Kontakta <a href="mailto:kfumvoxette@gmail.com">Voxette</a> för mer information.
         </p>
 
         <p>
           <a href="https://www.facebook.com/KFUMVoxette" target="_blank">KFUM Voxette på facebook</a>
+          <br/>
+          <a href="https://www.youtube.com/@kfumvoxette" target="_blank">KFUM Voxette på youtube</a>
         </p>
       </div>
     );
