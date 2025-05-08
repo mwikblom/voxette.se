@@ -7,6 +7,7 @@ import {
   ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons/';
 import { withStyles, Typography, Tooltip } from '@material-ui/core';
+import { replaceLinebreaks, sanitizeHTML } from "../common/StringHelper";
 
 const styles = (theme) => ({
   title: {
@@ -72,6 +73,7 @@ class CalendarItem extends Component {
     const previewDescription = shouldExpand
       ? description.substring(0, previewLength) + '...'
       : description;
+    
     return (
       <Grid item xs={true}>
         <h3 className={classes.title}>
@@ -101,7 +103,7 @@ class CalendarItem extends Component {
           Plats: {location}
         </Typography>
         <p className={classes.description}>
-          {expanded ? description : previewDescription}
+          <span dangerouslySetInnerHTML={{ __html: sanitizeHTML(replaceLinebreaks(expanded ? description : previewDescription))}}></span>
           {shouldExpand && (
             <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
               <IconButton
