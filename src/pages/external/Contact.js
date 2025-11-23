@@ -28,9 +28,9 @@ class Contact extends Component {
         </p>
 
         <p>
-          <a href="https://www.facebook.com/KFUMVoxette" target="_blank">KFUM Voxette på facebook</a>
+          <a href="https://www.facebook.com/ChoirVoxette" target="_blank">Voxette på facebook</a>
           <br/>
-          <a href="https://www.youtube.com/@kfumvoxette" target="_blank">KFUM Voxette på youtube</a>
+          <a href="https://www.youtube.com/@kfumvoxette" target="_blank">Voxette på youtube</a>
         </p>
       </div>
     );

@@ -25,21 +25,24 @@ import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      light: '#ff9f99',
-      main: '#e5263e', // red
-      dark: '#450702',
+      light: '#EA9AC3',
+      main: '#22222A',
+      dark: '#6A1046',
       contrastText: '#fff',
     },
     secondary: {
       light: '#00afde',
-      main: '#0069b2', // blue
+      main: '#0069b2',
       dark: '#0a1b3f',
       contrastText: '#fff',
     },
     text: {
-      primary: '#0a1b3f',
-      secondary: '#0a1b3f',
+      primary: '#22222A',
+      secondary: '#22222A',
     },
+    background: {
+      default: '#FFF6F3',
+    }
   },
   overrides: {
     MuiTableCell: {
@@ -77,7 +80,6 @@ const styles = (theme) => ({
     width: '250px',
   },
   logo: {
-    background: '#fff',
     padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit * 2}px`,
     width: '100%',
     minWidth: '65px',
@@ -186,14 +188,14 @@ class Main extends Component {
                   to="/"
                 >
                   <img
-                    src="/images/KFUM-voxette.png"
+                    src="/images/voxette.png"
                     className={classes.logo}
-                    alt="KFUM Örebro Voxette, logga"
+                    alt=""
                   />
                 </NavLink>
                 <h1 className={classes.title}>
                   <NavLink className={classes.titleLink} exact to="/">
-                    KFUM Voxette
+                    Voxette
                   </NavLink>
                 </h1>
                 <Authentication
