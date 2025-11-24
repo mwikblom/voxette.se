@@ -102,6 +102,9 @@ const styles = (theme) => ({
   },
   avatar: {
     flexShrink: 0,
+  },
+  newMemberHeading: {
+    margin: 0,
   }
 });
 
@@ -207,9 +210,13 @@ class Members extends Component {
           <Dialog
             open={addOpen}
             onClose={() => this.handleClose(false)}
-            aria-labelledby="form-dialog-title"
+            aria-labelledby="new-member-title"
           >
-            <DialogTitle id="form-dialog-title">Ny medlem</DialogTitle>
+            <DialogTitle id="new-member-title" disableTypography>
+              <h2 className={classes.newMemberHeading}>
+                Ny medlem
+              </h2>
+            </DialogTitle>
             <DialogContent>
               <DialogContentText>
                 Lägg till epost till den nya medlemmen. Gmail eller epost och
@@ -248,9 +255,9 @@ class Members extends Component {
           <Dialog
             open={allergiesOpen && !allergiesDisabled}
             onClose={this.handleCloseAlergies}
-            aria-labelledby="form-dialog-title"
+            aria-labelledby="allergy-title"
           >
-            <DialogTitle id="form-dialog-title">
+            <DialogTitle id="allergy-title">
               Allergier och matpreferenser
             </DialogTitle>
             <DialogContent>

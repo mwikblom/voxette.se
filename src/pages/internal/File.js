@@ -257,7 +257,7 @@ class File extends Component {
                   >
                     {flattenedTags.map((tag) =>
                       tag.isGroup ? (
-                        <ListSubheader className={classes.optGroup}>
+                        <ListSubheader className={classes.optGroup} key={tag.label}>
                           {tag.label}
                         </ListSubheader>
                       ) : (

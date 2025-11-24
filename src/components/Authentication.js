@@ -32,7 +32,6 @@ import {
   TextField,
   FormGroup,
   DialogContent,
-  DialogContentText,
   Typography,
 } from '@material-ui/core';
 
@@ -46,6 +45,16 @@ const styles = (theme) => ({
   menuItem: {
     maxWidth: '100%',
     width: theme.spacing(31.25),
+  },
+  dialogContent: {
+    marginBottom: theme.spacing(2)
+  },
+  loginHeading: {
+    margin: 0,
+  },
+  gmailHeading: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(2),
   },
 });
 
@@ -155,49 +164,47 @@ class Authentication extends Component {
         <Dialog
           open={this.state.changePasswordOpen}
           onClose={this.handleClickClose}
-          aria-labelledby="simple-dialog-title"
+          aria-labelledby="change-password-title"
         >
-          <DialogTitle id="simple-dialog-title">
+          <DialogTitle id="change-password-title">
             Ändra lösenord för {getAuth().currentUser.email}
           </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  this.handleChangePassword(this.state.password);
-                }}
-              >
-                <FormGroup>
-                  <TextField
-                    variant="outlined"
-                    name="password"
-                    type="password"
-                    label="Nytt lösenord"
-                    value={this.state.password}
-                    onChange={(e) =>
-                      this.setState({
-                        password: e.target.value,
-                        error: '',
-                      })
-                    }
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Button
-                    name="logon"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Ändra lösenord
-                  </Button>
-                  {this.state.error ? (
-                    <Typography>{this.state.error}</Typography>
-                  ) : null}
-                </FormGroup>
-              </form>
-            </DialogContentText>
+          <DialogContent className={classes.dialogContent}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                this.handleChangePassword(this.state.password);
+              }}
+            >
+              <FormGroup>
+                <TextField
+                  variant="outlined"
+                  name="password"
+                  type="password"
+                  label="Nytt lösenord"
+                  value={this.state.password}
+                  onChange={(e) =>
+                    this.setState({
+                      password: e.target.value,
+                      error: '',
+                    })
+                  }
+                />
+              </FormGroup>
+              <FormGroup>
+                <Button
+                  name="logon"
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Ändra lösenord
+                </Button>
+                {this.state.error ? (
+                  <Typography>{this.state.error}</Typography>
+                ) : null}
+              </FormGroup>
+            </form>
           </DialogContent>
         </Dialog>
       </div>
@@ -209,73 +216,73 @@ class Authentication extends Component {
         <Dialog
           open={loginOpen}
           onClose={this.handleClickClose}
-          aria-labelledby="simple-dialog-title"
+          aria-labelledby="login-title"
         >
-          <DialogTitle id="simple-dialog-title">
-            Logga in med email och lösenord
+          <DialogTitle id="login-title" disableTypography>
+            <h2 className={classes.loginHeading}>
+              Logga in med email och lösenord
+            </h2>
           </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  this.handlePasswordLogin(
-                    this.state.email,
-                    this.state.password
-                  );
-                }}
-              >
-                <FormGroup>
-                  <TextField
-                    name="email"
-                    type="email"
-                    label="Email"
-                    variant="outlined"
-                    value={this.state.email}
-                    onChange={(e) =>
-                      this.setState({ email: e.target.value, error: '' })
-                    }
-                  />
-                  <TextField
-                    name="password"
-                    type="password"
-                    label="Lösenord"
-                    variant="outlined"
-                    value={this.state.password}
-                    onChange={(e) =>
-                      this.setState({
-                        password: e.target.value,
-                        error: '',
-                      })
-                    }
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Button
-                    name="logon"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Login
-                  </Button>
-                  {this.state.error ? (
-                    <Typography>{this.state.error}</Typography>
-                  ) : null}
-                </FormGroup>
-              </form>
-              <Typography variant="h6">
-                Eller använd ditt gmail-konto
-              </Typography>
-              <ListItem button onClick={() => this.handleLogin('gmail')}>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Gmail" />
-              </ListItem>
-            </DialogContentText>
+          <DialogContent className={classes.dialogContent}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                this.handlePasswordLogin(
+                  this.state.email,
+                  this.state.password
+                );
+              }}
+            >
+              <FormGroup>
+                <TextField
+                  name="email"
+                  type="email"
+                  label="Email"
+                  variant="outlined"
+                  value={this.state.email}
+                  onChange={(e) =>
+                    this.setState({ email: e.target.value, error: '' })
+                  }
+                />
+                <TextField
+                  name="password"
+                  type="password"
+                  label="Lösenord"
+                  variant="outlined"
+                  value={this.state.password}
+                  onChange={(e) =>
+                    this.setState({
+                      password: e.target.value,
+                      error: '',
+                    })
+                  }
+                />
+              </FormGroup>
+              <FormGroup>
+                <Button
+                  name="logon"
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Login
+                </Button>
+                {this.state.error ? (
+                  <Typography>{this.state.error}</Typography>
+                ) : null}
+              </FormGroup>
+            </form>
+            <Typography variant="h3" className={classes.gmailHeading}>
+              Eller använd ditt gmail-konto
+            </Typography>
+            <ListItem button onClick={() => this.handleLogin('gmail')}>
+              <ListItemAvatar>
+                <Avatar>
+                  <PersonIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Gmail" />
+            </ListItem>
           </DialogContent>
         </Dialog>
       </div>

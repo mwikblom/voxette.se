@@ -48,6 +48,41 @@ const theme = createTheme({
       white: '#FFF6F3',
     }
   },
+  typography: {
+    allVariants: {
+      fontFamily: '"Poppins", sans-serif',
+    },
+    h1: {
+      fontFamily: '"Noto Serif", serif',
+      fontSize: '2rem',
+      fontWeight: 700,
+    },
+    h2: {
+      fontFamily: '"Noto Serif", serif',
+      fontSize: '1.5rem',
+      fontWeight: 700,
+    },
+    h3: {
+      fontFamily: '"Noto Serif", serif',
+      fontSize: '1.17rem',
+      fontWeight: 700,
+    },
+    h4: {
+      fontFamily: '"Noto Serif", serif',
+      fontSize: '1rem',
+      fontWeight: 700,
+    },
+    h5: {
+      fontFamily: '"Noto Serif", serif',
+      fontSize: '0.83rem',
+      fontWeight: 700,
+    },
+    h6: {
+      fontFamily: '"Noto Serif", serif',
+      fontSize: '0.67rem',
+      fontWeight: 700,
+    },
+  },
   overrides: {
     MuiTableCell: {
       root: {

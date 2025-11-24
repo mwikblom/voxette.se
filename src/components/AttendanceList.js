@@ -173,8 +173,9 @@ class AttendanceList extends Component {
 
                 return (
                   <Grid item xs={12} sm={6} md={3} key={part}>
-                    <NoBadge className={classes.otherBadge} badgeContent={no}>
+                    <NoBadge overlap="rectangular" className={classes.otherBadge} badgeContent={no}>
                       <YesBadge
+                        overlap="rectangular"
                         className={classes.firstBadge}
                         badgeContent={yes}
                       >
