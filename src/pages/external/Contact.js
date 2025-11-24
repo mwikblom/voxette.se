@@ -24,7 +24,7 @@ class Contact extends Component {
         </p>
 
         <p>
-          Kontakta <a href="mailto:kfumvoxette@gmail.com">Voxette</a> för mer information.
+          <a href="mailto:kfumvoxette@gmail.com">Mejla Voxette</a> för mer information.
         </p>
 
         <h2>Sociala medier</h2>
