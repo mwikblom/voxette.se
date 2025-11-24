@@ -8,7 +8,7 @@ import {
   ListItemText,
   Badge,
   Tooltip,
-  IconButton,
+  Icon,
   ListItemAvatar,
   Avatar,
   Button,
@@ -22,11 +22,19 @@ import {
   Person as PersonIcon,
 } from '@material-ui/icons';
 import Constants from '../common/Constants';
-import { green, grey } from '@material-ui/core/colors';
+import { green, grey, red } from '@material-ui/core/colors';
 
 const styles = (theme) => ({
+  titleButton: {
+    marginBottom: theme.spacing(2),
+  },
   title: {
-    cursor: 'pointer',
+    textTransform: 'none',
+    display: 'flex',
+    gap: theme.spacing(),
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 0,
   },
   listText: {
     fontSize: 11,
@@ -42,7 +50,7 @@ const styles = (theme) => ({
     fontWeight: 'bold',
   },
   otherBadge: {
-    paddingRight: theme.spacing.unit * 3,
+    paddingRight: theme.spacing(3),
     display: 'block',
     fontWeight: 'bold',
   },
@@ -50,18 +58,18 @@ const styles = (theme) => ({
     color: green[400],
   },
   no: {
-    color: theme.palette.primary.main,
+    color: red[600],
   },
   unattendedButton: {
     float: 'right',
-    marginBottom: theme.spacing.unit,
-    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(3),
   },
 });
 
 const NoBadge = withStyles((theme) => ({
   badge: {
-    background: theme.palette.primary.main,
+    background: red[600],
     color: '#fff',
     top: -2,
     right: 0,
@@ -126,19 +134,20 @@ class AttendanceList extends Component {
       <Grid item xs={12}>
         <Grid container>
           <Grid item xs={6}>
-            <h4 className={classes.title} onClick={this.toggleExpand}>
-              Närvaro
-              <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
-                <IconButton
-                  className={classes.expandButton}
-                  aria-label="Expandera"
-                  color="secondary"
-                  onClick={this.handleExpandClick}
-                >
-                  {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </IconButton>
-              </Tooltip>
-            </h4>
+            <Tooltip title={expanded ? 'Visa mindre' : 'Visa mer'}>
+              <Button variant="text" className={classes.titleButton} onClick={this.toggleExpand}>
+                <h3 className={classes.title}>
+                  Närvaro
+                  <Icon
+                    className={classes.expandIcon}
+                    aria-label="Expandera"
+                    color="secondary"
+                  >
+                    {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  </Icon>
+                </h3>
+              </Button>
+            </Tooltip>
           </Grid>
           <Grid item xs={6}>
             {expanded ? (
@@ -152,7 +161,7 @@ class AttendanceList extends Component {
           </Grid>
         </Grid>
         {expanded ? (
-          <Grid container spacing={8}>
+          <Grid container spacing={4}>
             {
               // Separate grid item by each part
               Constants.partValues.map((part) => {

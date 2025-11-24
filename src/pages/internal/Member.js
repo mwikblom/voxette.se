@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseApp from '../../FirebaseApp';
 import { withStyles } from '@material-ui/core/styles';
@@ -28,7 +28,7 @@ import Constants from '../../common/Constants';
 const styles = (theme) => ({
   paper: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: 'auto',
   },
   container: {
@@ -39,12 +39,12 @@ const styles = (theme) => ({
     width: '100%',
   },
   action: {
-    marginRight: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 1.5,
-    marginTop: theme.spacing.unit * 1.5,
+    marginRight: theme.spacing(3),
+    marginBottom: theme.spacing(1.5),
+    marginTop: theme.spacing(1.5),
   },
   formControl: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(),
     width: '100%',
   },
   chips: {
@@ -52,15 +52,15 @@ const styles = (theme) => ({
     flexWrap: 'wrap',
   },
   chip: {
-    margin: theme.spacing.unit / 4,
+    margin: theme.spacing(0.25),
   },
   buttonIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(),
   },
   avatar: {
-    width: theme.spacing.unit * 7,
-    height: theme.spacing.unit * 7,
-    marginBottom: theme.spacing.unit,
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    marginBottom: theme.spacing(),
   },
   avatarContainer: {
     display: 'flex',
@@ -97,7 +97,7 @@ class Member extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { memberId } = this.props;
 
     FirebaseApp.voxette.fetchUserData(memberId, (userData) => {
@@ -167,6 +167,7 @@ class Member extends Component {
 
     return (
       <div>
+        <h1>Medlem</h1>
         {pictureUrl ? (
           <div className={classes.avatarContainer}>
             <Avatar
@@ -191,7 +192,7 @@ class Member extends Component {
           autoComplete="off"
           onSubmit={this.saveChanges}
         >
-          <Grid container spacing={24}>
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={6} lg={4}>
               <TextField
                 id="firstName"
@@ -292,7 +293,7 @@ class Member extends Component {
                 onChange={(event) => this.handleChange(event, 'address')}
                 margin="normal"
                 multiline
-                rows="3"
+                minRows="3"
               />
             </Grid>
             <Grid item xs={12} sm={6} lg={4}>
@@ -304,7 +305,7 @@ class Member extends Component {
                 onChange={(event) => this.handleChange(event, 'allergies')}
                 margin="normal"
                 multiline
-                rows="3"
+                minRows="3"
               />
             </Grid>
             <Grid item xs={12} sm={6} lg={4}>

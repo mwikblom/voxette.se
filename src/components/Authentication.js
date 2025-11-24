@@ -38,14 +38,14 @@ import {
 
 const styles = (theme) => ({
   content: {
-    paddingRight: theme.spacing.unit * 3,
+    paddingRight: theme.spacing(3),
   },
   chip: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
   },
   menuItem: {
     maxWidth: '100%',
-    width: '250px',
+    width: theme.spacing(31.25),
   },
 });
 

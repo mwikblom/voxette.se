@@ -30,7 +30,7 @@ export default withStyles(styles)(
       };
     }
     
-    componentWillMount() {
+    componentDidMount() {
       this.fetchEvents();
     }
     
@@ -56,7 +56,7 @@ export default withStyles(styles)(
 
       return (
         <div>
-          <h2>Kalender</h2>
+          <h1>Kalender</h1>
           <p>Här kan du höra oss</p>
           {loading ? (
               <CircularProgress size={40} className={classes.progress} />
@@ -65,7 +65,7 @@ export default withStyles(styles)(
                 const eventId = event.eventData.eventId;
                 return (
                   <div key={i}>
-                    <Grid container spacing={24} className={classes.eventGrid}>
+                    <Grid container>
                       <CalendarItem
                         isInternalCalendar={false}
                         event={event.eventData}
@@ -73,7 +73,7 @@ export default withStyles(styles)(
                         key={i}
                       />
                     </Grid>
-                    <Divider variant="middle" />
+                    <Divider variant="fullWidth" />
                   </div>
                 );
               })

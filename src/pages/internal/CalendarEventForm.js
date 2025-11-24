@@ -16,19 +16,24 @@ import {
 } from '@material-ui/icons';
 import DateTimeHelper from '../../common/DateTimeHelper';
 
-const styles = {
+const styles = (theme) => ({
   paper: {
-    padding: 10,
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  heading: {
+    marginTop: 0,
   },
   textField: {
     width: '100%',
-    marginTop: '10px',
+    marginTop: theme.spacing(),
   },
   action: {
-    margin: '10px 10px 10px 0',
+    margin: theme.spacing(),
+    marginLeft: 0,
   },
   buttonIcon: {
-    marginRight: '5px',
+    marginRight: theme.spacing(),
   },
   removeButton: {
     float: 'right',
@@ -36,7 +41,7 @@ const styles = {
   publicDescription: {
     width: '100%',
   },
-};
+});
 
 export default withStyles(styles)(
   class CalendarEventForm extends Component {
@@ -162,13 +167,13 @@ export default withStyles(styles)(
                 Ta bort
               </Button>
             ) : undefined}
-            <h2>Kalender - {heading}</h2>
+            <h2 className={classes.heading}>Kalender - {heading}</h2>
             <form
               className={classes.root}
               autoComplete="off"
               onSubmit={(e) => this.saveEvent(e)}
             >
-              <Grid container spacing={24}>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
                     id="title"

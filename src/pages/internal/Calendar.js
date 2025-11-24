@@ -14,6 +14,7 @@ import {
   InputLabel,
   TextField,
   CircularProgress,
+  Fab,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import AttendanceCheck from '../../components/AttendanceCheck';
@@ -24,7 +25,6 @@ import DateTimeHelper from '../../common/DateTimeHelper';
 const styles = (theme) => ({
   buttonRight: {
     float: 'right',
-    marginRight: '10px',
   },
   userSelect: {
     float: 'right',
@@ -66,7 +66,7 @@ export default withStyles(styles)(
       };
     }
 
-    componentWillMount() {
+    componentDidMount() {
       this.fetchEvents();
       FirebaseApp.voxette.fetchMembers('', '', '', (members) => {
         if (members) {
@@ -248,17 +248,16 @@ export default withStyles(styles)(
         <div>
           {!showForm && (
             <Tooltip title="Lägg till evenemang">
-              <Button
-                variant="fab"
+              <Fab
                 color="secondary"
                 onClick={this.handleAddEventClick}
                 className={classes.buttonRight}
               >
                 <AddIcon />
-              </Button>
+              </Fab>
             </Tooltip>
           )}
-          <h2>Intern kalender</h2>
+          <h1>Intern kalender</h1>
           <p>Kommande evenemang med närvaro-koll.</p>
           {showForm && (
             <CalendarEventForm
@@ -313,7 +312,7 @@ export default withStyles(styles)(
               </FormControl>
             )}
           </div>
-          <Divider variant="middle" />
+          <Divider variant="fullWidth" />
           {loading ? (
             <CircularProgress size={40} className={classes.progress} />
           ) : (
@@ -321,7 +320,7 @@ export default withStyles(styles)(
               const eventId = event.eventData.eventId;
               return (
                 <div key={i}>
-                  <Grid container spacing={24} className={classes.eventGrid}>
+                  <Grid container spacing={2}>
                     <CalendarItem
                       isInternalCalendar={true}
                       event={event.eventData}
@@ -348,7 +347,7 @@ export default withStyles(styles)(
                       </React.Fragment>
                     )}
                   </Grid>
-                  <Divider variant="middle" />
+                  <Divider variant="fullWidth" />
                 </div>
               );
             })

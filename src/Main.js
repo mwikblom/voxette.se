@@ -13,12 +13,12 @@ import {
   IconButton,
   Menu,
   Divider,
+  Box,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Authentication from './components/Authentication';
 import User from './models/User';
 import MenuItemLink from './components/MenuItemLink';
-//import { Editor } from '@tinymce/tinymce-react';
 
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
@@ -42,12 +42,16 @@ const theme = createTheme({
     },
     background: {
       default: '#FFF6F3',
+    },
+    common: {
+      black: '#22222A',
+      white: '#FFF6F3',
     }
   },
   overrides: {
     MuiTableCell: {
       root: {
-        padding: '4px 24px',
+        padding: '0.25rem 1.5rem',
       },
     },
   },
@@ -61,15 +65,21 @@ const styles = (theme) => ({
   },
   title: {
     flex: 1,
-    fontSize: '20px',
+    fontSize: '1.5rem',
   },
   menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+    marginLeft: theme.spacing(-1.5),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+    },
   },
   content: {
-    padding: theme.spacing.unit,
-    margin: `${theme.spacing.unit}px auto`,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
+    margin: '0 auto',
     maxWidth: '1200px',
   },
   navLink: {
@@ -77,17 +87,21 @@ const styles = (theme) => ({
     color: theme.palette.text.primary,
     display: 'block',
     maxWidth: '100%',
-    width: '250px',
+    width: '16rem',
   },
   logo: {
-    padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit * 2}px`,
     width: '100%',
-    minWidth: '65px',
+    aspectRatio: '1 / 1',
   },
   logoContainer: {
-    maxWidth: '104px',
-    height: 'auto',
-    marginRight: theme.spacing.unit * 4,
+    padding: theme.spacing(1),
+    maxHeight: theme.spacing(10),
+    maxWidth: theme.spacing(10),
+    marginRight: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      maxHeight: theme.spacing(8),
+      maxWidth: theme.spacing(8),
+    },
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
@@ -101,7 +115,6 @@ class Main extends Component {
       loggedIn: false,
       user: undefined,
       anchorEl: null,
-      //messageText: 'Den här sidan är under uppbyggnad!',
       messageVariant: 'info',
       updatedPicture: undefined,
     };
@@ -122,7 +135,7 @@ class Main extends Component {
 
     // Init internal routing
     const internalMenu = this.state.loggedIn ? (
-      <React.Fragment>
+      <Box>
         <Divider />
         <MenuItemLink className={classes.navLink} to="/inloggad/medlemmar">
           Medlemmar
@@ -133,7 +146,7 @@ class Main extends Component {
         <MenuItemLink className={classes.navLink} to="/inloggad/filer">
           Filer
         </MenuItemLink>
-      </React.Fragment>
+      </Box>
     ) : undefined;
 
     return (
@@ -148,7 +161,7 @@ class Main extends Component {
                   className={classes.menuButton}
                   color="inherit"
                   aria-label="Menu"
-                  aria-owns={anchorEl ? 'simple-menu' : null}
+                  aria-owns={anchorEl ? 'main-menu' : null}
                   aria-haspopup="true"
                   onClick={this.handleClick}
                 >
@@ -156,7 +169,7 @@ class Main extends Component {
                 </IconButton>
 
                 <Menu
-                  id="simple-menu"
+                  id="main-menu"
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={this.handleClose}
@@ -193,11 +206,11 @@ class Main extends Component {
                     alt=""
                   />
                 </NavLink>
-                <h1 className={classes.title}>
+                <div className={classes.title}>
                   <NavLink className={classes.titleLink} exact to="/">
                     Voxette
                   </NavLink>
-                </h1>
+                </div>
                 <Authentication
                   onLoginSuccess={this.handleLoginSuccess}
                   onLoginFailure={this.handleLoginFailure}

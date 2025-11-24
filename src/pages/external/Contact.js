@@ -8,8 +8,8 @@ class Contact extends Component {
   render() {
     return (
       <div>
-        <h1>Boka oss!</h1>
-
+        <h1>Kontakt</h1>
+        <h2>Boka oss</h2>
         <p>
           Vi kommer gärna och sjunger på ert företag när ni ska ha kick-off,
           avtackning, julfest el. dyl. eller på privata tillställningar eller
@@ -26,6 +26,8 @@ class Contact extends Component {
         <p>
           Kontakta <a href="mailto:kfumvoxette@gmail.com">Voxette</a> för mer information.
         </p>
+
+        <h2>Sociala medier</h2>
 
         <p>
           <a href="https://www.facebook.com/ChoirVoxette" target="_blank">Voxette på facebook</a>

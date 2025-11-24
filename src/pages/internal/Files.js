@@ -20,6 +20,7 @@ import {
   CircularProgress,
   FormControlLabel,
   Checkbox,
+  Fab,
 } from '@material-ui/core/';
 import { Check as CheckIcon } from '@material-ui/icons';
 import { green } from '@material-ui/core/colors';
@@ -28,16 +29,17 @@ import Constants from '../../common/Constants';
 const styles = (theme) => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: 'auto',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     flexGrow: 1,
   },
   table: {
     minWidth: 700,
+    marginTop: theme.spacing(2),
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
     float: 'right',
   },
   input: {
@@ -47,7 +49,7 @@ const styles = (theme) => ({
     width: '100%',
   },
   checkbox: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
   checkIcon: {
     color: green[400],
@@ -59,7 +61,7 @@ const styles = (theme) => ({
     whiteSpace: 'nowrap',
   },
   chip: {
-    margin: theme.spacing.unit / 2,
+    margin: theme.spacing(0.5),
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
@@ -70,13 +72,13 @@ const styles = (theme) => ({
     marginLeft: 149,
   },
   isCurrentCell: {
-    width: '50px',
+    width: theme.spacing(6.25),
   },
   editCell: {
-    width: '72px',
+    width: theme.spacing(9),
   },
   sizeCell: {
-    width: '100px',
+    width: theme.spacing(12.5),
   },
 });
 
@@ -116,7 +118,7 @@ class Files extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
       allCategories: Constants.fileCategories,
       allTags: Constants.fileTags,
@@ -251,21 +253,20 @@ class Files extends Component {
           />
           <label htmlFor="upload-input">
             <Tooltip title="Lägg till nya filer">
-              <Button
-                variant="fab"
+              <Fab
                 component="span"
                 color="secondary"
                 aria-label="add"
                 className={classes.button}
               >
                 <AddIcon />
-              </Button>
+              </Fab>
             </Tooltip>
           </label>
 
           <div>
             <form onSubmit={(e) => this.search(e)}>
-              <Grid container spacing={24}>
+              <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
                     id="name"

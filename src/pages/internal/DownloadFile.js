@@ -8,7 +8,7 @@ class DownloadFile extends Component {
     fileUrl: undefined,
     error: undefined,
   };
-  componentWillMount() {
+  componentDidMount() {
     const { fullPath } = this.props;
     if (fullPath) {
       FirebaseApp.voxette.getDownloadUrl(fullPath, (url) => {

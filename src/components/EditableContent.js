@@ -19,7 +19,7 @@ class EditableContent extends Component {
     this.saveContent = this.saveContent.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     try {
       firebase
         .database()

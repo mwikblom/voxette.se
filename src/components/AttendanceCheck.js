@@ -9,13 +9,13 @@ import {
 } from '@material-ui/core';
 import FirebaseApp from '../FirebaseApp';
 import DateTimeHelper from '../common/DateTimeHelper';
-import { green } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 
 const styles = (theme) => ({
   title: {
     marginBottom: 0,
     [theme.breakpoints.up('md')]: {
-      marginTop: '30px',
+      marginTop: theme.spacing(3.75),
     },
   },
 });
@@ -24,6 +24,15 @@ const GreenRadio = withStyles({
   root: {
     '&$checked': {
       color: green[400],
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
+const RedRadio = withStyles({
+  root: {
+    '&$checked': {
+      color: red[600],
     },
   },
   checked: {},
@@ -59,12 +68,12 @@ class AttendanceCheck extends Component {
     }
     return (
       <Grid item xs={12} sm={4}>
-        <h4 className={classes.title}>
+        <h3 className={classes.title}>
           {user.memberId === selectedUser.memberId
             ? 'Min närvaro'
             : `Närvaro för ${selectedUser.firstName} ${selectedUser.lastName}`}
-        </h4>
-        <Grid container spacing={8}>
+        </h3>
+        <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormControlLabel
               value="1"
@@ -78,7 +87,7 @@ class AttendanceCheck extends Component {
           <Grid item xs={6}>
             <FormControlLabel
               value="0"
-              control={<Radio color="primary" disabled={!selectedUser.part} />}
+              control={<RedRadio disabled={!selectedUser.part} />}
               label="Nej"
               checked={currentAttendance.choice == 0}
               onChange={this.saveAttendance}

@@ -27,9 +27,9 @@ import { Modal } from '@material-ui/core';
 const styles = (theme) => ({
   paper: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: 'auto',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
   },
   container: {
     display: 'flex',
@@ -39,7 +39,7 @@ const styles = (theme) => ({
     width: '100%',
   },
   action: {
-    marginRight: theme.spacing.unit * 3,
+    marginRight: theme.spacing(3),
   },
   delete: {
     float: 'right',
@@ -52,13 +52,13 @@ const styles = (theme) => ({
     flexWrap: 'wrap',
   },
   chip: {
-    margin: theme.spacing.unit / 4,
+    margin: theme.spacing(0.25),
   },
   buttonIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(),
   },
   formDropdown: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
   deleteModal: {
     position: 'absolute',
@@ -68,12 +68,12 @@ const styles = (theme) => ({
     maxWidth: '100%',
     background: 'white',
     boxShadow: '0 0 10px #555',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
   },
   optGroup: {
     background: '#fff',
-    paddingRight: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit,
+    paddingRight: theme.spacing(),
+    paddingLeft: theme.spacing(),
   },
 });
 
@@ -117,7 +117,7 @@ class File extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { fullPath } = this.props;
 
     FirebaseApp.voxette.fetchFileData(fullPath, (fileData) => {
@@ -165,6 +165,7 @@ class File extends Component {
 
     return (
       <div>
+        <h1>Fil</h1>
         <Paper className={classes.paper}>
           <form
             className={classes.container}
@@ -172,7 +173,7 @@ class File extends Component {
             autoComplete="off"
             onSubmit={(e) => this.saveChanges(e)}
           >
-            <Grid container spacing={24}>
+            <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   id="name"

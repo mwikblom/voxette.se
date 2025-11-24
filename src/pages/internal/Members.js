@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import {
   Person as PersonIcon,
 } from '@material-ui/icons';
 import {
+  Fab,
   Grid,
   Table,
   TableBody,
@@ -35,15 +36,15 @@ import Constants from '../../common/Constants';
 const styles = (theme) => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflow: 'hidden',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
   },
   table: {
     minWidth: 700,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
     float: 'right',
   },
   input: {
@@ -56,14 +57,15 @@ const styles = (theme) => ({
     whiteSpace: 'nowrap',
   },
   chip: {
-    margin: theme.spacing.unit / 2,
+    margin: theme.spacing(0.5),
   },
   wrapper: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(),
     position: 'relative',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: theme.spacing(),
   },
   buttonProgress: {
     color: theme.palette.secondary.main,
@@ -75,15 +77,32 @@ const styles = (theme) => ({
   },
   tableContainer: {
     overflowX: 'auto',
+    marginTop: theme.spacing(2),
   },
   lessPadding: {
-    paddingRight: theme.spacing.unit * 2,
-    paddingLeft: theme.spacing.unit,
+    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(),
   },
   nameCell: {
     minWidth: 200,
     paddingLeft: 0,
   },
+  nameContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      gap: theme.spacing(0.5),
+      alignItems: 'flex-start',
+    }
+  },
+  name: {
+    flexGrow: 1,
+  },
+  avatar: {
+    flexShrink: 0,
+  }
 });
 
 function memberUri(memberId) {
@@ -161,7 +180,7 @@ class Members extends Component {
           möjligt att begränsa sökningen genom att filtrera på en 'tagg' eller
           stämtillhörighet.
         </p>
-        <h3>GDPR</h3>
+        <h2>GDPR</h2>
         <p>
           Uppgifterna kommer endast användas som kontaktinformation för Voxette
           och dess medlemmar. Informationen kommer aldrig säljas eller skickas
@@ -174,8 +193,7 @@ class Members extends Component {
 
         <Paper className={classes.root}>
           <Tooltip title="Lägg till ny medlem">
-            <Button
-              variant="fab"
+            <Fab
               component="span"
               color="secondary"
               aria-label="add"
@@ -183,7 +201,7 @@ class Members extends Component {
               onClick={this.handleAddClickOpen}
             >
               <AddIcon />
-            </Button>
+            </Fab>
           </Tooltip>
 
           <Dialog
@@ -239,7 +257,7 @@ class Members extends Component {
               {members.map(
                 (member) =>
                   member.userData.allergies && (
-                    <DialogContentText>
+                    <DialogContentText key={member.userData.memberId}>
                       <b>
                         {member.userData.firstName} {member.userData.lastName}
                       </b>{' '}
@@ -254,7 +272,7 @@ class Members extends Component {
           </Dialog>
 
           <form onSubmit={(e) => this.search(e)}>
-            <Grid container spacing={24}>
+            <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   id="name"
@@ -369,24 +387,21 @@ class Members extends Component {
                         scope="row"
                         className={classes.nameCell}
                       >
-                        <Grid container spacing={8} alignItems="center">
-                          <Grid item xs={12} sm={6}>
-                            {member.userData.pictureUrl ? (
-                              <Avatar
-                                src={member.userData.pictureUrl}
-                                alt={member.userData.firstName}
-                              />
+                        <div className={classes.nameContainer}>
+                          {member.userData.pictureUrl ? (
+                            <Avatar
+                              className={classes.avatar}
+                              src={member.userData.pictureUrl}
+                              alt={member.userData.firstName}
+                            />
                             ) : (
-                              <Avatar>
+                              <Avatar className={classes.avatar}>
                                 <PersonIcon />
                               </Avatar>
-                            )}
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            {member.userData.firstName}{' '}
-                            {member.userData.lastName}
-                          </Grid>
-                        </Grid>
+                            )
+                          }
+                          <span className={classes.name}>{`${member.userData.firstName} ${member.userData.lastName}`}</span>
+                        </div>
                       </TableCell>
                       <TableCell className={classes.chipRoot}>
                         {member.userData.part ? (

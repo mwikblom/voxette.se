@@ -15,7 +15,7 @@ const styles = (theme) => ({
     color: theme.palette.primary.main,
   },
   meetupTime: {
-    paddingLeft: theme.spacing.unit,
+    paddingLeft: theme.spacing(),
   },
   expandButton: {
     display: 'block',
@@ -76,7 +76,7 @@ class CalendarItem extends Component {
     
     return (
       <Grid item xs={true}>
-        <h3 className={classes.title}>
+        <h2 className={classes.title}>
           {isInternalCalendar && (
             <Tooltip title="Redigera">
               <IconButton
@@ -98,7 +98,7 @@ class CalendarItem extends Component {
               </span>
             ) : undefined}
           </Typography>
-        </h3>
+        </h2>
         <Typography variant="caption" component="p">
           Plats: {location}
         </Typography>

@@ -4,7 +4,7 @@ export default class Information extends Component {
   render() {
     return (
       <div>
-        <h2>Intern information</h2>
+        <h1>Intern information</h1>
         <p>Information för en inloggad medlem.</p>
       </div>
     );

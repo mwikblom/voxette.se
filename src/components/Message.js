@@ -22,8 +22,8 @@ const variantIcon = {
 
 const styles = (theme) => ({
   close: {
-    width: theme.spacing.unit * 4,
-    height: theme.spacing.unit * 4,
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
   success: {
     backgroundColor: green[600],
@@ -42,7 +42,7 @@ const styles = (theme) => ({
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(),
   },
   message: {
     display: 'flex',
