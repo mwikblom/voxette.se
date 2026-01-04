@@ -264,7 +264,6 @@ const voxette = {
     onValue(
       query(
         ref(getDatabase(), 'members'),
-        startAt(filterName),
         orderByChild('userData/firstName')
       ),
       (snapshot) => {

@@ -266,7 +266,7 @@ class Members extends Component {
                   member.userData.allergies && (
                     <DialogContentText key={member.userData.memberId}>
                       <b>
-                        {member.userData.firstName} {member.userData.lastName}
+                        {member.userData.firstName || ''} {member.userData.lastName || ''}
                       </b>{' '}
                       - {member.userData.allergies}
                     </DialogContentText>
@@ -407,7 +407,7 @@ class Members extends Component {
                               </Avatar>
                             )
                           }
-                          <span className={classes.name}>{`${member.userData.firstName} ${member.userData.lastName}`}</span>
+                          <span className={classes.name}>{`${member.userData.firstName || '-'} ${member.userData.lastName || ''}`}</span>
                         </div>
                       </TableCell>
                       <TableCell className={classes.chipRoot}>
