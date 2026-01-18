@@ -1,11 +1,15 @@
 import { createApp } from "vue";
-import { registerPlugins } from "@/plugins";
+import { createPinia } from "pinia";
 import App from "./App.vue";
+import router from "./router";
 
-import "unfonts.css";
+import "./styles/bootstrap-settings.scss";
+import "bootstrap/scss/bootstrap.scss";
+import "bootstrap";
 
 const app = createApp(App);
 
-registerPlugins(app);
+app.use(createPinia());
+app.use(router);
 
 app.mount("#app");

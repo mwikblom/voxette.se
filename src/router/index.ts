@@ -1,36 +1,109 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
+import { createRouter, createWebHistory } from "vue-router";
 
-// Composables
-import { createRouter, createWebHistory } from 'vue-router'
-import { setupLayouts } from 'virtual:generated-layouts'
-import { routes } from 'vue-router/auto-routes'
+export enum RouteName {
+  Home = "home",
+  Calendar = "calendar",
+  Conductor = "conductor",
+  Contact = "contact",
+  DownloadFile = "download-file",
+  Files = "files",
+  File = "file",
+  InternalCalendar = "internal-calendar",
+  LoggedIn = "logged-in",
+  Members = "members",
+  Member = "member",
+  NotFound = "not-found",
+  GDPR = "gdpr",
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
-})
+  scrollBehavior(to, _from, savedPosition) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (to.hash) {
+          resolve({ el: to.hash });
+          return;
+        }
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
-router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (localStorage.getItem('vuetify:dynamic-reload')) {
-      console.error('Dynamic import error, reloading page did not fix it', err)
-    } else {
-      console.log('Reloading page to fix dynamic import error')
-      localStorage.setItem('vuetify:dynamic-reload', 'true')
-      location.assign(to.fullPath)
-    }
-  } else {
-    console.error(err)
-  }
-})
+        if (savedPosition) {
+          resolve(savedPosition);
+          return;
+        }
 
-router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload')
-})
+        resolve({ top: 0 });
+      }, 200);
+    });
+  },
+  routes: [
+    {
+      path: "/",
+      name: RouteName.Home,
+      component: () => import("../views/HomeView.vue"),
+    },
+    {
+      path: "/gdpr",
+      name: RouteName.GDPR,
+      component: () => import("../views/GDPR.vue"),
+    },
+    {
+      path: "/kalender",
+      name: RouteName.Calendar,
+      component: () => import("../views/CalendarView.vue"),
+    },
+    {
+      path: "/dirigent",
+      name: RouteName.Conductor,
+      component: () => import("../views/ConductorView.vue"),
+    },
+    {
+      path: "/kontakt",
+      name: RouteName.Contact,
+      component: () => import("../views/ContactView.vue"),
+    },
+    {
+      path: "/inloggad",
+      name: RouteName.LoggedIn,
+      component: () => import("../views/LoggedInView.vue"),
+      children: [
+        {
+          path: "kalender",
+          name: RouteName.InternalCalendar,
+          component: () => import("../views/InternalCalendarView.vue"),
+        },
+        {
+          path: "ladda-ned",
+          name: RouteName.DownloadFile,
+          component: () => import("../views/DownloadFileView.vue"),
+        },
+        {
+          path: "filer",
+          name: RouteName.Files,
+          component: () => import("../views/FilesView.vue"),
+        },
+        {
+          path: "fil",
+          name: RouteName.File,
+          component: () => import("../views/FileView.vue"),
+        },
+        {
+          path: "medlemmar",
+          name: RouteName.Members,
+          component: () => import("../views/MembersView.vue"),
+        },
+        {
+          path: "medlem",
+          name: RouteName.Member,
+          component: () => import("../views/MemberView.vue"),
+        },
+      ],
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: RouteName.NotFound,
+      component: () => import("../views/NotFoundView.vue"),
+    },
+  ],
+});
 
-export default router
+export default router;

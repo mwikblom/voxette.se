@@ -1,0 +1,17 @@
+@use "sass:map";
+@use "variables";
+
+:root {
+  --bs-body-color: #{map.get(variables.$voxette-colors, "Coal")};
+  --bs-body-bg: #{map.get(variables.$voxette-colors, "Sand")};
+
+  --bs-primary: #{map.get(variables.$voxette-colors, "Cerise")};
+  --bs-primary-bg-subtle: #{map.get(variables.$voxette-colors, "Orange")};
+  --bs-primary-text-emphasis: #{map.get(variables.$voxette-colors, "Cerise")};
+  --bs-success: #{map.get(variables.$voxette-colors, "Success")};
+  --bs-warning: #{map.get(variables.$voxette-colors, "Warning")};
+  --bs-danger: #{map.get(variables.$voxette-colors, "Error")};
+  --bs-info: #{map.get(variables.$voxette-colors, "Info")};
+  --bs-light: #{map.get(variables.$voxette-colors, "Light")};
+  --bs-dark: #{map.get(variables.$voxette-colors, "Coal")};
+}
