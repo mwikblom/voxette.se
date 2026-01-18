@@ -1,38 +1,43 @@
 {
-  "name": "voxette.se",
-  "version": "0.1.0",
+  "name": "voxette",
   "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
-    "dompurify": "^3.2.5",
-    "firebase": "^11.1.0",
-    "prop-types": "^15.7.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.3.0",
-    "react-scripts": "^5.0.1"
-  },
+  "type": "module",
+  "version": "0.0.0",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "deploy": "firebase deploy",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
+    "lint": "eslint . --fix",
+    "deploy": "firebase deploy"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@fontsource/source-sans-3": "^5.2.9",
+    "@mdi/font": "7.4.47",
+    "firebase": "^12.8.0",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.21",
+    "vue-router": "^4.5.1",
+    "vuetify": "^3.10.1"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.9.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "eslint": "^9.35.0",
+    "eslint-config-vuetify": "^4.2.0",
+    "npm-run-all2": "^8.0.4",
+    "sass-embedded": "^1.92.1",
+    "typescript": "~5.9.2",
+    "unplugin-auto-import": "^20.1.0",
+    "unplugin-fonts": "^1.4.0",
+    "unplugin-vue-components": "^29.0.0",
+    "unplugin-vue-router": "^0.15.0",
+    "vite": "^7.1.5",
+    "vite-plugin-vue-layouts-next": "^1.0.0",
+    "vite-plugin-vuetify": "^2.1.2",
+    "vue-tsc": "^3.2.0"
   }
 }
