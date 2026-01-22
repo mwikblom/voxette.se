@@ -1,17 +1,40 @@
-@use "sass:map";
 @use "variables";
 
-:root {
-  --bs-body-color: #{map.get(variables.$voxette-colors, "Coal")};
-  --bs-body-bg: #{map.get(variables.$voxette-colors, "Sand")};
+$primary: variables.$color-cerise;
+$secondary: variables.$color-orange;
 
-  --bs-primary: #{map.get(variables.$voxette-colors, "Cerise")};
-  --bs-primary-bg-subtle: #{map.get(variables.$voxette-colors, "Orange")};
-  --bs-primary-text-emphasis: #{map.get(variables.$voxette-colors, "Cerise")};
-  --bs-success: #{map.get(variables.$voxette-colors, "Success")};
-  --bs-warning: #{map.get(variables.$voxette-colors, "Warning")};
-  --bs-danger: #{map.get(variables.$voxette-colors, "Error")};
-  --bs-info: #{map.get(variables.$voxette-colors, "Info")};
-  --bs-light: #{map.get(variables.$voxette-colors, "Light")};
-  --bs-dark: #{map.get(variables.$voxette-colors, "Coal")};
-}
+$success: variables.$color-success;
+$warning: variables.$color-warning;
+$danger: variables.$color-red;
+$info: variables.$color-info;
+$light: variables.$color-light;
+$dark: variables.$color-coal;
+
+$body-color: variables.$color-coal;
+$body-bg: variables.$color-sand;
+
+$border-color: variables.$color-coal;
+$border-color-translucent: rgba(variables.$color-coal, 0.175);
+
+$font-family-sans-serif:
+  "Source sans 3",
+  system-ui,
+  -apple-system,
+  "Segoe UI",
+  Roboto,
+  "Helvetica Neue",
+  "Noto Sans",
+  "Liberation Sans",
+  Arial,
+  sans-serif;
+$headings-font-family: "Amandine", "Noto serif", serif;
+$headings-color: $primary;
+$headings-font-weight: 500;
+
+$navbar-padding-x: 1rem;
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+
+@import "bootstrap/scss/bootstrap";

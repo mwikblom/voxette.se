@@ -4,7 +4,18 @@ import HeaderComponent from "./components/HeaderComponent.vue";
 
 <template>
   <HeaderComponent />
-  <router-view />
+  <div class="content">
+    <router-view />
+  </div>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.content {
+  margin-top: 3.5rem;
+}
+</style>
+<style lang="scss">
+h1 {
+  padding-top: 1.5rem;
+}
+</style>

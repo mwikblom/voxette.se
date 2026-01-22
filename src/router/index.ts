@@ -44,7 +44,7 @@ const router = createRouter({
     {
       path: "/gdpr",
       name: RouteName.GDPR,
-      component: () => import("../views/GDPR.vue"),
+      component: () => import("../views/GDPRView.vue"),
     },
     {
       path: "/kalender",
