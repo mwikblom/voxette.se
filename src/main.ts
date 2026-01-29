@@ -4,7 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import "./fonts";
 
-import "./styles/bootstrap-settings.scss";
+import "./styles/bootstrap.scss";
 import "bootstrap";
 
 const app = createApp(App);

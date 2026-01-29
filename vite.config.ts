@@ -17,6 +17,10 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         quietDeps: true,
+        silenceDeprecations: ["import"], // Bootstrap requires import of sass. Remove when they release version without and we transition to @use in additionalData.
+        additionalData: `
+          @import "@/styles/bootstrap-variables";
+        `,
       },
     },
   },
