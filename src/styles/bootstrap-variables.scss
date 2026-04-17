@@ -1,7 +1,8 @@
 @use "variables";
 
 $primary: variables.$color-cerise;
-$secondary: variables.$color-orange;
+$secondary: variables.$color-sand;
+$tertiary: variables.$color-orange;
 
 $success: variables.$color-success;
 $warning: variables.$color-warning;
@@ -9,6 +10,18 @@ $danger: variables.$color-red;
 $info: variables.$color-info;
 $light: variables.$color-light;
 $dark: variables.$color-coal;
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "tertiary": $tertiary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+);
 
 $body-color: variables.$color-coal;
 $body-bg: variables.$color-sand;

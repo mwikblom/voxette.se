@@ -1,9 +1,9 @@
 export default class User {
   constructor(
     googleId: string | undefined,
-    displayNameOrUserData: DisplayNameOrUserData | string | undefined,
-    email: string | undefined,
-    picture: string | undefined = "",
+    displayNameOrUserData: string | DisplayNameOrUserData | undefined | null,
+    email: string | undefined | null,
+    picture: string | undefined | null = "",
   ) {
     this.googleId = googleId;
 
@@ -12,24 +12,25 @@ export default class User {
 
       this.firstName = index === -1 ? displayNameOrUserData : displayNameOrUserData.substring(0, index);
       this.lastName = index === -1 ? "" : displayNameOrUserData.substring(index + 1, displayNameOrUserData.length);
-      this.email = email;
-      this.picture = picture;
+      this.email = email ?? undefined;
+      this.picture = picture ?? undefined;
       this.part = "";
       this.tags = [];
-    } else if (displayNameOrUserData) {
+    } else if (displayNameOrUserData && "firstName" in displayNameOrUserData) {
       this.savedUserData = displayNameOrUserData;
       this.firstName = displayNameOrUserData.firstName;
       this.lastName = displayNameOrUserData.lastName;
       this.email = displayNameOrUserData.email;
-      this.picture = displayNameOrUserData.pictureUrl;
+      this.picture = picture ?? displayNameOrUserData.pictureUrl;
       this.part = displayNameOrUserData.part;
       this.tags = displayNameOrUserData.tags;
       this.memberId = displayNameOrUserData.memberId;
       this.address = displayNameOrUserData.address;
       this.phone = displayNameOrUserData.phone;
+      this.startDate = displayNameOrUserData.startDate;
     } else {
-      this.email = email;
-      this.picture = picture;
+      this.email = email ?? undefined;
+      this.picture = picture ?? undefined;
       this.firstName = "";
       this.lastName = "";
       this.part = "";
@@ -48,6 +49,7 @@ export default class User {
   public memberId: string | undefined;
   public address: string | undefined;
   public phone: string | undefined;
+  public startDate: string | undefined;
 
   get FirstName() {
     return this.firstName ?? "";
@@ -78,6 +80,9 @@ export default class User {
   }
   get Phone() {
     return this.phone ?? "";
+  }
+  get StartDate() {
+    return this.startDate;
   }
 
   get AllUserData() {
@@ -117,4 +122,8 @@ export interface DisplayNameOrUserData {
   memberId: string | undefined;
   address: string | undefined;
   phone: string | undefined;
+
+  googleId: string | undefined;
+  hasChanges: boolean | undefined;
+  startDate: string | undefined;
 }
