@@ -1,13 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CoverImageComponent from "@/components/CoverImageComponent.vue";
+</script>
 
 <template>
-  <div class="cover-image-container">
-    <img
-      class="cover-image"
-      src="/images/14-DSC_3937.webp"
-      alt="En kvinnokör i jordnära färger och blomkransar i håret som sjunger med inlevelse"
-    />
-  </div>
+  <CoverImageComponent
+    src="/images/14-DSC_3937.webp"
+    alt="En kvinnokör i jordnära färger och blomkransar i håret som sjunger med inlevelse"
+  />
   <div class="container">
     <div class="row justify-content-center">
       <div class="col col-12 col-lg-7">
@@ -32,25 +31,6 @@
 </template>
 
 <style lang="scss" scoped>
-@import "bootstrap/scss/mixins";
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables";
-
-.cover-image-container {
-  background: $black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cover-image {
-  width: 100%;
-  object-fit: cover;
-  object-position: 0 40%;
-  aspect-ratio: 3/1;
-  max-height: 20rem;
-}
-
 .logo {
   width: calc(100% - (2rem * 2));
   max-width: 380px;

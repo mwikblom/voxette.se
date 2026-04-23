@@ -2,15 +2,7 @@
 import { useUserStore } from "@/stores/user";
 import ModalComponent from "./ModalComponent.vue";
 import { ref } from "vue";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  type User as FirebaseUser,
-} from "firebase/auth";
-import FirebaseApi from "@/helpers/FirebaseApi";
-import User from "@/models/User";
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 
 const emit = defineEmits<{ login: [boolean, string] }>();
 
@@ -25,6 +17,10 @@ function handleStartLogin() {
   isLoginModalOpen.value = true;
 }
 
+function emitLogin(isSuccess: boolean, message: string) {
+  emit("login", isSuccess, message);
+}
+
 async function handleLoginWithPassword() {
   try {
     const auth = getAuth();
@@ -32,12 +28,12 @@ async function handleLoginWithPassword() {
 
     if (!!user) {
       // User is already logged in
-      setLoginSuccess(user);
+      userStore.setLoginSuccess(user, emitLogin);
       return;
     }
 
     const credentials = await signInWithEmailAndPassword(auth, email.value, password.value);
-    setLoginSuccess(credentials.user);
+    userStore.setLoginSuccess(credentials.user, emitLogin);
   } catch (e) {
     console.error(e);
     error.value =
@@ -57,14 +53,14 @@ async function handleLoginWithGmail() {
 
     if (!!user) {
       // User is already logged in
-      setLoginSuccess(user);
+      userStore.setLoginSuccess(user, emitLogin);
       return;
     }
 
     auth.useDeviceLanguage();
 
     const credentials = await signInWithPopup(auth, new GoogleAuthProvider());
-    setLoginSuccess(credentials.user);
+    userStore.setLoginSuccess(credentials.user, emitLogin);
   } catch (e) {
     console.error(e);
     userStore.setUser(undefined);
@@ -73,42 +69,11 @@ async function handleLoginWithGmail() {
 
   isLoginModalOpen.value = false;
 }
-
-async function setLoginSuccess(user: FirebaseUser) {
-  if (!user.email) {
-    throw new Error("User email is required.");
-  }
-
-  FirebaseApi.fetchUserData(user.email, (userData) => {
-    if (!userData) {
-      userStore.setUser(undefined);
-      emit("login", false, `Hoppsan! Användare ${user.email} saknas.`);
-      return;
-    }
-
-    if (userData.googleId) {
-      userStore.setUser(new User(user.uid, userData, user.email!, user.photoURL));
-      emit("login", true, "Du är nu inloggad!");
-      return;
-    }
-
-    // First login - generate the user data
-    const newUser = new User(user.uid, user.displayName, user.email, user.photoURL);
-    const initialUserData = newUser.InitialUserData;
-
-    FirebaseApi.saveUserData(userData.memberId!, initialUserData, () => {
-      userStore.setUser(newUser);
-      emit("login", true, `Skapade användare för ${newUser.FirstName}`);
-    });
-  });
-}
 </script>
 
 <template>
-  <button v-if="!userStore.isLoggedIn" class="btn btn-outline-light my-2 my-sm-0" @click="handleStartLogin">
-    Logga in
-  </button>
-  <ModalComponent v-model:is-open="isLoginModalOpen" id="login-modal" title="Logga in">
+  <button class="btn btn-outline-light my-2 my-sm-0" @click="handleStartLogin">Logga in</button>
+  <ModalComponent v-if="isLoginModalOpen" v-model:is-open="isLoginModalOpen" id="login-modal" title="Logga in">
     <h2 class="h4 mb-3 text-tertiary">Logga in med Gmail</h2>
     <button type="button" @click="handleLoginWithGmail" class="btn btn-tertiary">Logga in med Gmail</button>
 
@@ -116,7 +81,7 @@ async function setLoginSuccess(user: FirebaseUser) {
     <form @submit.prevent="handleLoginWithPassword">
       <div class="mb-2">
         <label for="email" class="form-label">Epost</label>
-        <input v-model="email" type="email" class="form-control" id="email" />
+        <input v-model="email" type="email" class="form-control" id="email" autocomplete="email" />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Lösenord</label>

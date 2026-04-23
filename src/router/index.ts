@@ -92,7 +92,7 @@ const router = createRouter({
           component: () => import("../views/MembersView.vue"),
         },
         {
-          path: "medlem",
+          path: "medlemmar/:id",
           name: RouteName.Member,
           component: () => import("../views/MemberView.vue"),
         },

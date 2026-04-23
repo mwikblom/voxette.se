@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { RouteName } from "@/router";
 import { useUserStore } from "@/stores/user";
-import { computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, reactive } from "vue";
+import { useRoute } from "vue-router";
 import LoginComponent from "./LoginComponent.vue";
-import ProfileIconComponent from "./ProfileIconComponent.vue";
+import ProfileMenuComponent from "./ProfileMenuComponent.vue";
+import AlertComponent, { AlertStatus } from "./AlertComponent.vue";
 
 const route = useRoute();
-const router = useRouter();
 const userStore = useUserStore();
 
 const menuItems = computed(() => [
@@ -16,13 +16,46 @@ const menuItems = computed(() => [
   { route: { name: RouteName.Conductor }, label: "Dirigent" },
 ]);
 
+const internalMenuItems = computed(() =>
+  userStore.isLoggedIn
+    ? [
+        { route: { name: RouteName.Members }, label: "Medlemmar" },
+        { route: { name: RouteName.InternalCalendar }, label: "Intern kalender" },
+        { route: { name: RouteName.Files }, label: "Filer" },
+      ]
+    : [],
+);
+
+const alert = reactive({
+  show: false,
+  status: AlertStatus.Success,
+  message: "",
+  autoHideMs: 0,
+});
+
 function isActive(name: string) {
   return route.name === name;
 }
 
+function handleLogin(isSuccess: boolean, message: string) {
+  alert.message = message;
+  alert.status = isSuccess ? AlertStatus.Success : AlertStatus.Error;
+  alert.show = true;
+  alert.autoHideMs = isSuccess ? 6000 : 0;
+}
+
 function handleLogout() {
-  userStore.setUser(undefined);
-  router.push({ name: RouteName.Home });
+  alert.message = "Du har loggat ut";
+  alert.status = AlertStatus.Success;
+  alert.show = true;
+  alert.autoHideMs = 6000;
+}
+
+function handleChangedPassword() {
+  alert.message = "Lösenord har ändrats";
+  alert.status = AlertStatus.Success;
+  alert.show = true;
+  alert.autoHideMs = 6000;
 }
 </script>
 
@@ -48,22 +81,25 @@ function handleLogout() {
               {{ item.label }}
             </RouterLink>
           </li>
+          <li v-if="internalMenuItems.length" class="nav-item">
+            <span class="nav-link divider"></span>
+          </li>
+          <li class="nav-item" v-for="item in internalMenuItems" :key="item.label">
+            <RouterLink :class="['nav-link', { active: isActive(item.route.name) }]" :to="item.route">
+              {{ item.label }}
+            </RouterLink>
+          </li>
         </ul>
         <div class="mt-2 mt-md-0 ms-auto">
-          <LoginComponent v-if="!userStore.isLoggedIn" />
-          <div v-else>
-            <ProfileIconComponent
-              v-if="userStore.user"
-              :image="userStore.user.picture"
-              :first-name="userStore.user.FirstName"
-              :last-name="userStore.user.LastName"
-            />
-            <button class="btn btn-outline-light my-2 my-sm-0" @click="handleLogout">Logga ut</button>
-          </div>
+          <LoginComponent v-if="!userStore.isLoggedIn" @login="handleLogin" />
+          <ProfileMenuComponent v-else @logout="handleLogout" @changed-password="handleChangedPassword" />
         </div>
       </div>
     </div>
   </nav>
+  <AlertComponent v-if="alert.show" :status="alert.status" @hide="alert.show = false" :auto-hide-ms="alert.autoHideMs">
+    {{ alert.message }}
+  </AlertComponent>
 </template>
 
 <style lang="scss" scoped>
@@ -84,5 +120,19 @@ function handleLogout() {
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 1px;
+}
+
+.divider {
+  border-left: 1px solid $light;
+  height: 90%;
+  width: 1px;
+  margin-left: 1rem;
+}
+.collapse.show .divider {
+  border-left: none;
+  border-bottom: 1px solid $light;
+  width: 100%;
+  margin-left: 0;
+  margin-bottom: 1rem;
 }
 </style>

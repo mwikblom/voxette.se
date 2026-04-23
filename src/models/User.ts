@@ -127,3 +127,7 @@ export interface DisplayNameOrUserData {
   hasChanges: boolean | undefined;
   startDate: string | undefined;
 }
+
+export interface UserData {
+  userData: DisplayNameOrUserData;
+}

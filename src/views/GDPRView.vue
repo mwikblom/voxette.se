@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <h1>GDPR</h1>
+    <h1 class="display-3">GDPR</h1>
     <p>
       Uppgifterna kommer endast användas som kontaktinformation för Voxette och dess medlemmar. Informationen kommer
       aldrig säljas eller skickas vidare till tredje part. Endast de uppgifter som behövs för att kontakta medlemmarna
