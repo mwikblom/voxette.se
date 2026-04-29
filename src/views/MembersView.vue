@@ -4,25 +4,34 @@ import FirebaseApi from "@/helpers/FirebaseApi";
 import type { DisplayNameOrUserData, UserData } from "@/models/User";
 import { onBeforeMount, ref } from "vue";
 import { RouteName } from "@/router";
+import SpinnerComponent from "@/components/SpinnerComponent.vue";
+import AddMemberComponent from "@/components/AddMemberComponent.vue";
 
 const members = ref<DisplayNameOrUserData[]>([]);
+const isLoading = ref(false);
 const name = ref("");
 const tag = ref("");
 const part = ref("");
 
 function handleSetMembers(data: unknown) {
   members.value = ((data as UserData[]) ?? []).map((x) => x.userData);
+  isLoading.value = false;
 }
 
 onBeforeMount(() => {
+  isLoading.value = true;
   FirebaseApi.fetchMembers(name.value, tag.value, part.value, handleSetMembers);
 });
 </script>
 
 <template>
   <div class="container-fluid">
-    <h1>Medlemmar</h1>
-    <div class="table-responsive">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1>Medlemmar</h1>
+      <AddMemberComponent />
+    </div>
+    <SpinnerComponent v-if="isLoading" />
+    <div v-else class="table-responsive">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -37,7 +46,7 @@ onBeforeMount(() => {
         </thead>
         <tbody>
           <tr v-for="member in members" :key="member.memberId">
-            <td>
+            <td class="btn-col">
               <RouterLink
                 class="btn btn-outline-tertiary"
                 :to="{ name: RouteName.Member, params: { id: member.memberId } }"
@@ -52,7 +61,7 @@ onBeforeMount(() => {
                   :first-name="member.firstName ?? ''"
                   :last-name="member.lastName ?? ''"
                 />
-                <span class="name">{{ member.firstName ?? "-" }} {{ member.lastName ?? "-" }}</span>
+                <span class="name">{{ member.firstName || "-" }} {{ member.lastName }}</span>
               </div>
             </td>
             <td>
@@ -72,3 +81,9 @@ onBeforeMount(() => {
     </div>
   </div>
 </template>
+
+<style lang="css" scoped>
+.btn-col {
+  width: 2.5rem;
+}
+</style>

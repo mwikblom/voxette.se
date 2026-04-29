@@ -85,7 +85,7 @@ onMounted(() => {
       />
       <span class="name">{{ userStore.user?.FirstName }} {{ userStore.user?.LastName }}</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu dropdown-menu-end">
       <li v-if="userStore.hasNewPicture">
         <button type="button" class="dropdown-item" @click="handleUpdatePicture">Uppdatera bild</button>
       </li>

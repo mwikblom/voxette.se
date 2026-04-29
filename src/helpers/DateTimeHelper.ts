@@ -34,4 +34,8 @@ export default class DateTimeHelper {
 
     return `${DateTimeHelper.format(hour)}:00`;
   }
+
+  public static isDateInstance(obj: object): obj is Date {
+    return obj instanceof Date || ("toISOString" in obj && typeof obj.toISOString === "function");
+  }
 }

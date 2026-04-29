@@ -18,6 +18,7 @@ defineProps<{ src: string; alt: string }>();
 
 .cover-image {
   width: 100%;
+  max-width: 3000px;
   object-fit: cover;
   object-position: 0 40%;
   aspect-ratio: 3/1;

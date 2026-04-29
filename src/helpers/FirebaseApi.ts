@@ -238,7 +238,7 @@ const FirebaseApi = {
     });
   },
 
-  addMember: (email: string, initialPassword: string, done: () => void) => {
+  addMember: (email: string, initialPassword: string, firstName?: string, lastName?: string, done?: () => void) => {
     if (!email) {
       throw new Error("No email available for user");
     }
@@ -248,15 +248,17 @@ const FirebaseApi = {
     FirebaseApi.saveUserData(
       memberId,
       {
-        email: email,
+        email,
+        firstName,
+        lastName,
       },
       () => {
         if (initialPassword) {
           createUserWithEmailAndPassword(getAuth(), email, initialPassword).then((userCredential) => {
-            done();
+            done?.();
           });
         } else {
-          done();
+          done?.();
         }
       },
     );
@@ -266,9 +268,7 @@ const FirebaseApi = {
     if (memberId && userData) {
       userData.memberId = memberId;
 
-      set(ref(getDatabase(), "members/" + memberId), {
-        userData: userData,
-      }).then(done);
+      set(ref(getDatabase(), "members/" + memberId), { userData }).then(done);
     } else {
       throw new Error(`No memberId: ${memberId} or userData: ${!!userData} available for user`);
     }

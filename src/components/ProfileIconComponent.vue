@@ -14,6 +14,7 @@ const props = defineProps<{
   image?: string;
   firstName: string;
   lastName: string;
+  size?: "md" | "lg";
 }>();
 
 const imageSrc = ref("");
@@ -74,18 +75,30 @@ watch(
 </script>
 
 <template>
-  <div>
-    <img v-if="imageSrc" class="circle" :src="imageSrc" :alt="`Profilbild, ${firstName} ${lastName}`" />
-    <div v-else :class="['circle initials', color]" aria-hidden="true">{{ initials }}</div>
-  </div>
+  <img
+    v-if="imageSrc"
+    :class="['circle', `circle--${size}`]"
+    :src="imageSrc"
+    :alt="`Profilbild, ${firstName} ${lastName}`"
+  />
+  <div v-else :class="['circle', `circle--${size}`, 'initials', color]" aria-hidden="true">{{ initials }}</div>
 </template>
 
 <style lang="scss" scoped>
 .circle {
   border-radius: 100%;
   aspect-ratio: 1;
-  height: 2rem;
+  height: 2.3rem;
   background: $body-bg;
+  border: 1px solid transparent;
+
+  &--lg {
+    height: 6rem;
+
+    &.initials {
+      font-size: 2.5rem;
+    }
+  }
 }
 
 .initials {
@@ -96,5 +109,6 @@ watch(
   font-family: $headings-font-family;
   font-weight: 800;
   font-size: 0.8rem;
+  border-color: $light;
 }
 </style>

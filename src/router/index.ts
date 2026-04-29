@@ -95,6 +95,7 @@ const router = createRouter({
           path: "medlemmar/:id",
           name: RouteName.Member,
           component: () => import("../views/MemberView.vue"),
+          props: true,
         },
       ],
     },

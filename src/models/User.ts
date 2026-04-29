@@ -103,29 +103,29 @@ export default class User {
 
   get InitialUserData() {
     return {
-      googleId: this.googleId,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      email: this.email,
-      pictureUrl: this.picture,
+      googleId: this.GoogleId,
+      firstName: this.FirstName,
+      lastName: this.LastName,
+      email: this.Email,
+      pictureUrl: this.Picture,
     };
   }
 }
 
 export interface DisplayNameOrUserData {
-  firstName: string | undefined;
-  lastName: string | undefined;
-  email: string | undefined;
-  pictureUrl: string | undefined;
-  part: string | undefined;
-  tags: string[] | undefined;
-  memberId: string | undefined;
-  address: string | undefined;
-  phone: string | undefined;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  pictureUrl?: string;
+  part?: string;
+  tags?: string[];
+  memberId?: string;
+  address?: string;
+  phone?: string;
 
-  googleId: string | undefined;
-  hasChanges: boolean | undefined;
-  startDate: string | undefined;
+  googleId?: string;
+  startDate?: string;
+  allergies?: string;
 }
 
 export interface UserData {
