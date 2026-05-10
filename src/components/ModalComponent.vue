@@ -7,6 +7,7 @@ defineProps<{
   id: string;
   title: string;
   noCancelButton?: boolean;
+  size?: "sm" | "lg" | "xl";
 }>();
 const emit = defineEmits<{ show: []; hide: [] }>();
 
@@ -57,7 +58,7 @@ onBeforeUnmount(() => {
 <template>
   <Teleport to="#modals">
     <div :id ref="modalRef" class="modal" tabindex="-1" :aria-labelledby="`${id}-title`">
-      <div class="modal-dialog">
+      <div :class="['modal-dialog', { [`modal-${size}`]: !!size }]">
         <div class="modal-content">
           <div class="modal-header">
             <h2 class="modal-title" :id="`${id}-title`">{{ title }}</h2>

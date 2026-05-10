@@ -2,10 +2,11 @@
 import ProfileIconComponent from "@/components/ProfileIconComponent.vue";
 import SpinnerComponent from "@/components/SpinnerComponent.vue";
 import FirebaseApi from "@/helpers/FirebaseApi";
-import { isDirty } from "@/helpers/ObjectHelper";
+import { clone, isDirty } from "@/helpers/ObjectHelper";
 import type { DisplayNameOrUserData } from "@/models/User";
 import { computed, onBeforeMount, ref } from "vue";
 import Constants from "@/constants";
+import { RouteName } from "@/router";
 
 const props = defineProps<{ id: string }>();
 
@@ -48,7 +49,7 @@ onBeforeMount(() => {
       userData.tags = [];
     }
 
-    member.value = userData;
+    member.value = clone(userData);
     initialMember.value = userData;
   });
 });
@@ -56,11 +57,15 @@ onBeforeMount(() => {
 
 <template>
   <div class="container">
+    <RouterLink :to="{ name: RouteName.Members }" class="d-block pt-3">
+      <i aria-hidden class="bi bi-chevron-left" />
+      Tillbaka
+    </RouterLink>
     <h1>Medlem</h1>
     <SpinnerComponent v-if="isLoading" />
     <p v-else-if="!member" class="text-danger">Medlem kunde inte hämtas.</p>
     <div v-else>
-      <div class="d-flex gap-3 align-items-center">
+      <div class="d-flex gap-3 align-items-center mb-3">
         <ProfileIconComponent
           :first-name="member.firstName ?? '-'"
           :last-name="member.lastName ?? ''"
@@ -107,8 +112,19 @@ onBeforeMount(() => {
               </select>
             </div>
           </div>
+          <div class="col col-12 col-sm-6 col-lg-4">
+            <div class="mb-3">
+              <label for="tags" class="form-label">Taggar</label>
+              <select v-model="member.tags" class="form-control" id="tags" multiple>
+                <option v-for="tag in Constants.MEMBER_TAGS" :value="tag" :key="tag">{{ tag }}</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary" :disabled="!hasChanges">Spara</button>
+        <div class="d-flex justify-content-end gap-3">
+          <RouterLink :to="{ name: RouteName.Members }" class="btn btn-secondary">Avbryt</RouterLink>
+          <button type="submit" class="btn btn-primary" :disabled="!hasChanges">Spara</button>
+        </div>
       </form>
     </div>
   </div>
