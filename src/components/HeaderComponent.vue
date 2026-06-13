@@ -135,4 +135,13 @@ function handleChangedPassword() {
   margin-left: 0;
   margin-bottom: 1rem;
 }
+
+.nav-link {
+  &:hover,
+  &:focus,
+  &.active {
+    text-underline-offset: 0.3rem;
+    text-decoration: underline;
+  }
+}
 </style>

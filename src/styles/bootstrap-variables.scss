@@ -47,8 +47,11 @@ $headings-font-weight: 500;
 $navbar-padding-x: 1rem;
 $navbar-padding-y: 0.35rem;
 $nav-link-font-size: 1.25rem;
+$navbar-dark-color: white;
+$navbar-light-color: white;
 
 $badge-font-weight: 400;
+$badge-font-size: 1rem;
 
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";

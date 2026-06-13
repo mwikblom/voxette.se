@@ -106,7 +106,7 @@ onBeforeMount(() => {
           <div class="col col-12 col-sm-6 col-lg-4">
             <div class="mb-3">
               <label for="part" class="form-label">Stämma</label>
-              <select v-model="member.part" class="form-control" id="part">
+              <select v-model="member.part" class="form-select" id="part">
                 <option value="">Ingen</option>
                 <option v-for="part in Constants.MEMBER_PARTS" :value="part" :key="part">{{ part }}</option>
               </select>
@@ -114,8 +114,26 @@ onBeforeMount(() => {
           </div>
           <div class="col col-12 col-sm-6 col-lg-4">
             <div class="mb-3">
+              <label for="startDate" class="form-label">Medlem sedan</label>
+              <input v-model="member.startDate" type="date" class="form-control" id="startDate" />
+            </div>
+          </div>
+          <div class="col col-12 col-sm-6 col-lg-4">
+            <div class="mb-3">
+              <label for="address" class="form-label">Adress</label>
+              <textarea v-model="member.address" class="form-control" id="address" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="col col-12 col-sm-6 col-lg-4">
+            <div class="mb-3">
+              <label for="allergies" class="form-label">Allergier</label>
+              <textarea v-model="member.allergies" class="form-control" id="allergies" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="col col-12 col-sm-6 col-lg-4">
+            <div class="mb-3">
               <label for="tags" class="form-label">Taggar</label>
-              <select v-model="member.tags" class="form-control" id="tags" multiple>
+              <select v-model="member.tags" class="form-select" id="tags" multiple>
                 <option v-for="tag in Constants.MEMBER_TAGS" :value="tag" :key="tag">{{ tag }}</option>
               </select>
             </div>

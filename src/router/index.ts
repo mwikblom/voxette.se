@@ -75,6 +75,7 @@ const router = createRouter({
           path: "ladda-ned",
           name: RouteName.DownloadFile,
           component: () => import("../views/DownloadFileView.vue"),
+          props: true,
         },
         {
           path: "filer",
@@ -85,6 +86,7 @@ const router = createRouter({
           path: "fil",
           name: RouteName.File,
           component: () => import("../views/FileView.vue"),
+          props: true,
         },
         {
           path: "medlemmar",

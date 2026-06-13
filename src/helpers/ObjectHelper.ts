@@ -39,6 +39,10 @@ export function toRawDeep<T>(obj: T): T {
 }
 
 export function isDirty<T extends object>(original: T, edited: T): boolean {
+  return isValueDirty(original, edited) || isValueDirty(edited, original);
+}
+
+function isValueDirty<T extends object>(original: T, edited: T): boolean {
   return Object.keys(original).some((x) => {
     const key = x as keyof T;
     const originalValue = original[key];

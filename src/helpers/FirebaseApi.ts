@@ -32,7 +32,7 @@ var firebaseConfig = {
 
 var firebaseApp = initializeApp(firebaseConfig);
 
-function createFilePointer(fullPath: string, file: Blob, done: (data: unknown) => void) {
+function createFilePointer(fullPath: string, file: Blob, done: (data: DocumentFile) => void) {
   const dbPath = FirebaseApi.getValidDatabasePathItem(fullPath);
   const fileType = file.type.endsWith("pdf")
     ? Constants.NOTES
@@ -144,7 +144,7 @@ const FirebaseApi = {
     update(ref(getDatabase()), updates).then(() => done?.());
   },
 
-  uploadFile: (fullPath: string, file: Blob, done: (data: unknown) => void) => {
+  uploadFile: (fullPath: string, file: Blob, done: (data: DocumentFile) => void) => {
     uploadBytes(storageRef(getStorage(), fullPath), file).then(() => {
       createFilePointer(fullPath, file, done);
     });

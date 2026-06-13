@@ -42,7 +42,7 @@ onBeforeMount(() => {
         :disabled="!members.length"
         @click="showAllergies = true"
       >
-        Visa allergier för framsökta
+        Lista allergier
       </button>
       <div class="table-responsive">
         <table class="table table-striped">
@@ -103,7 +103,7 @@ onBeforeMount(() => {
   >
     <table>
       <tr v-for="member in allergyMembers" :key="member.memberId">
-        <td class="h6">{{ member.firstName }} {{ member.lastName }}</td>
+        <td class="h6 pe-3">{{ member.firstName }} {{ member.lastName }}</td>
         <td>{{ member.allergies }}</td>
       </tr>
     </table>

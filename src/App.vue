@@ -61,4 +61,7 @@ onBeforeMount(() => {
 h1 {
   padding-top: 1.5rem;
 }
+.text-width {
+  max-width: 80ch;
+}
 </style>
