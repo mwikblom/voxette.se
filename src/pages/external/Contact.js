@@ -34,6 +34,12 @@ class Contact extends Component {
           <br/>
           <a href="https://www.youtube.com/@kfumvoxette" target="_blank">Voxette på youtube</a>
         </p>
+
+        <h2>Tidigare konserter</h2>
+        <h3>2026 - Som på ett strå</h3>
+        <p>
+          <a href="/program/Program-Som-pa-ett-stra.pdf" target="_blank">Programblad, Som på ett strå</a>
+        </p>
       </div>
     );
   }
