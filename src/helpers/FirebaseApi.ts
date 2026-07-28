@@ -107,7 +107,7 @@ const FirebaseApi = {
     });
   },
 
-  fetchFileData: (fullPath?: string, done?: (data?: unknown) => void) => {
+  fetchFileData: (fullPath?: string, done?: (data?: DocumentFile) => void) => {
     if (!fullPath) {
       throw new Error("No full path available for file");
     }

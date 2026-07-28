@@ -17,9 +17,9 @@ import CoverImageComponent from "@/components/CoverImageComponent.vue";
           privata tillställningar eller föreningsträffar. Hör med oss!
         </p>
         <p>
-          Vi har sjungit i alla möjliga sammanhang, t ex på stan mitt i vårruset, en timmes direktsänd konsert i
-          Sveriges Radio P4, i kyrkor på bröllop och vid andra högtider, vid Luciafirande på företag,
-          Valborgsmässofirande, på privata födelsedagskalas, köpcentrum, jag till och med på bal på slottet.
+          Vi har sjungit i alla möjliga sammanhang, t. ex. på stan mitt i vårruset, direktsänd konsert i Sveriges Radio
+          P4, i kyrkor på bröllop och vid andra högtider, vid Luciafirande på företag, Valborgsmässofirande, på privata
+          födelsedagskalas, köpcentrum, ja till och med på bal på slottet.
         </p>
 
         <p><a href="mailto:kfumvoxette@gmail.com">Mejla Voxette</a> för mer information.</p>

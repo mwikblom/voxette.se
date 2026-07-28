@@ -46,6 +46,8 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  modal.value?.hide();
+
   if (modalRef.value) {
     modalRef.value.removeEventListener("show.bs.modal", handleShow);
     modalRef.value.removeEventListener("hide.bs.modal", handleHide);

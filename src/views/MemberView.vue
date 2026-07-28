@@ -7,8 +7,11 @@ import type { DisplayNameOrUserData } from "@/models/User";
 import { computed, onBeforeMount, ref } from "vue";
 import Constants from "@/constants";
 import { RouteName } from "@/router";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{ id: string }>();
+
+const router = useRouter();
 
 const isLoading = ref(true);
 const initialMember = ref<DisplayNameOrUserData>();
@@ -51,13 +54,15 @@ onBeforeMount(() => {
 
     member.value = clone(userData);
     initialMember.value = userData;
+
+    document.title = `${initialMember.value.firstName} ${initialMember.value.lastName} - ${document.title}`;
   });
 });
 </script>
 
 <template>
   <div class="container">
-    <RouterLink :to="{ name: RouteName.Members }" class="d-block pt-3">
+    <RouterLink :to="{ name: RouteName.Members }" @click.prevent="router.go(-1)" class="d-block pt-3">
       <i aria-hidden class="bi bi-chevron-left" />
       Tillbaka
     </RouterLink>
@@ -140,7 +145,9 @@ onBeforeMount(() => {
           </div>
         </div>
         <div class="d-flex justify-content-end gap-3">
-          <RouterLink :to="{ name: RouteName.Members }" class="btn btn-secondary">Avbryt</RouterLink>
+          <RouterLink :to="{ name: RouteName.Members }" class="btn btn-secondary" @click.prevent="router.go(-1)">
+            Avbryt
+          </RouterLink>
           <button type="submit" class="btn btn-primary" :disabled="!hasChanges">Spara</button>
         </div>
       </form>

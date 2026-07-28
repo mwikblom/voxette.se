@@ -6,9 +6,11 @@ import SpinnerComponent from "@/components/SpinnerComponent.vue";
 import type DocumentFile from "@/models/DocumentFile";
 import AddFilesComponent from "@/components/AddFilesComponent.vue";
 import Constants from "@/constants";
+import { getHumanFileSize } from "@/helpers/FileHelper";
 
 const files = ref<DocumentFile[]>([]);
 const isLoading = ref(false);
+const hasSearched = ref(false);
 const filters = reactive({
   name: "",
   type: Constants.NOTES,
@@ -24,6 +26,7 @@ const searchIsDisabled = computed(
 function handleSetFiles(data: DocumentFile[]) {
   files.value = data ?? [];
   isLoading.value = false;
+  hasSearched.value = true;
 }
 
 function handleSearchFiles() {
@@ -37,13 +40,6 @@ function handleSearchFiles() {
 
 function handleFilesAdded(added: DocumentFile) {
   files.value.unshift(added);
-}
-
-function getHumanFileSize(size: number) {
-  const i = Math.floor(Math.log(size) / Math.log(1024));
-  const fileSize = ((size / Math.pow(1024, i)) * 1).toFixed(2);
-  const suffix = ["B", "kB", "MB", "GB", "TB"][i];
-  return `${fileSize} ${suffix}`;
 }
 </script>
 
@@ -117,7 +113,7 @@ function getHumanFileSize(size: number) {
     </form>
   </div>
   <SpinnerComponent v-if="isLoading" />
-  <div v-else class="container-fluid">
+  <div v-else-if="hasSearched" class="container-fluid">
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
