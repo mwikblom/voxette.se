@@ -94,13 +94,7 @@ onBeforeMount(() => {
       </div>
     </div>
   </div>
-  <ModalComponent
-    v-if="showAllergies"
-    id="allergies-modal"
-    title="Allergier för framsökta"
-    size="lg"
-    @hide="showAllergies = false"
-  >
+  <ModalComponent v-if="showAllergies" id="allergies-modal" title="Allergier" size="lg" @hide="showAllergies = false">
     <table>
       <tr v-for="member in allergyMembers" :key="member.memberId">
         <td class="h6 pe-3">{{ member.firstName }} {{ member.lastName }}</td>
