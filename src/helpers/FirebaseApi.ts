@@ -20,6 +20,7 @@ import Constants from "../constants";
 import DateTimeHelper from "./DateTimeHelper";
 import type DocumentFile from "../models/DocumentFile";
 import { type DisplayNameOrUserData } from "@/models/User";
+import type { CalendarEvent, Event, MemberAttendance } from "@/models/Event";
 
 var firebaseConfig = {
   apiKey: config.firebase.apiKey,
@@ -290,7 +291,7 @@ const FirebaseApi = {
     }
   },
 
-  fetchUpcomingEvents: (isInternal: boolean, fromDate: Date, toDate: Date, done: (events?: unknown[]) => void) => {
+  fetchUpcomingEvents: (isInternal: boolean, fromDate?: Date, toDate?: Date, done?: (events?: Event[]) => void) => {
     onValue(
       query(
         ref(getDatabase(), "events"),
@@ -308,12 +309,7 @@ const FirebaseApi = {
           }
         });
 
-        if (events) {
-          // prefere the data in our database
-          done(events);
-        } else {
-          done();
-        }
+        done?.(events);
       },
     );
   },
@@ -321,12 +317,7 @@ const FirebaseApi = {
   fetchAllEvents: (done: (events?: unknown[]) => void) => {
     onValue(ref(getDatabase(), "events"), (snapshot) => {
       const events = snapshot.val();
-      if (events) {
-        // prefere the data in our database
-        done(events);
-      } else {
-        done();
-      }
+      done(events);
     });
   },
 
@@ -340,7 +331,7 @@ const FirebaseApi = {
     }
   },
 
-  updateEventData: (eventId: string, eventData: any, done: (eventId: string) => void) => {
+  updateEventData: (eventId: string, eventData: CalendarEvent, done: (eventId: string) => void) => {
     if (eventId && eventData) {
       eventData.eventId = eventId;
 
@@ -360,7 +351,12 @@ const FirebaseApi = {
     }
   },
 
-  addEventAttendance: (eventId: string, memberId: string, attendance: any, done: (eventId: string) => void) => {
+  addEventAttendance: (
+    eventId: string,
+    memberId: string,
+    attendance: MemberAttendance,
+    done: (eventId: string) => void,
+  ) => {
     if (eventId && memberId && attendance) {
       update(ref(getDatabase(), "events/" + eventId + "/attendance/" + memberId), attendance).then(() => {
         done(eventId);

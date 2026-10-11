@@ -20,7 +20,10 @@ const filters = reactive({
 });
 
 const searchIsDisabled = computed(
-  () => isLoading.value || (!filters.name && !filters.type && !filters.isCurrent && !filters.category && !filters.tag),
+  () =>
+    isLoading.value ||
+    (!filters.name && !filters.type && !filters.isCurrent && !filters.category && !filters.tag) ||
+    (filters.type === Constants.NOTES && !filters.name && !filters.isCurrent && !filters.category && !filters.tag),
 );
 
 function handleSetFiles(data: DocumentFile[]) {
@@ -114,7 +117,7 @@ function handleFilesAdded(added: DocumentFile) {
   </div>
   <SpinnerComponent v-if="isLoading" />
   <div v-else-if="hasSearched" class="container-fluid">
-    <div class="table-responsive">
+    <div class="table-responsive mt-3">
       <table class="table table-striped">
         <thead>
           <tr>

@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import User from "@/models/User";
 import { type User as FirebaseUser } from "firebase/auth";
 import FirebaseApi from "@/helpers/FirebaseApi";
+import Constants from "@/constants";
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<User | undefined>();
@@ -10,6 +11,8 @@ export const useUserStore = defineStore("user", () => {
 
   const isLoggedIn = computed(() => !!user.value);
   const hasNewPicture = computed(() => isLoggedIn.value && user.value?.Picture !== newPicture.value);
+  const isAdmin = computed(() => (isLoggedIn.value && user.value?.Tags.includes(Constants.ADMIN)) ?? false);
+  const userName = computed(() => `${user.value?.savedUserData?.firstName} ${user.value?.savedUserData?.lastName}`);
 
   function setUser(value?: User) {
     user.value = value;
@@ -53,6 +56,8 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     isLoggedIn,
+    userName,
+    isAdmin,
     newPicture,
     hasNewPicture,
     setNewPicture,

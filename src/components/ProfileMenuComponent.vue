@@ -83,7 +83,7 @@ onMounted(() => {
         :first-name="userStore.user.FirstName"
         :last-name="userStore.user.LastName"
       />
-      <span class="name">{{ userStore.user?.FirstName }} {{ userStore.user?.LastName }}</span>
+      <span class="name">{{ userStore.userName }}</span>
     </a>
     <ul class="dropdown-menu dropdown-menu-end">
       <li v-if="userStore.hasNewPicture">

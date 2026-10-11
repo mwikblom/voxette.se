@@ -5,7 +5,7 @@ import { clone, isDirty } from "@/helpers/ObjectHelper";
 import { computed, onBeforeMount, ref } from "vue";
 import Constants from "@/constants";
 import { RouteName } from "@/router";
-import DocumentFile from "@/models/DocumentFile";
+import type DocumentFile from "@/models/DocumentFile";
 import { useRouter } from "vue-router";
 import { getHumanFileSize } from "@/helpers/FileHelper";
 import ModalComponent from "@/components/ModalComponent.vue";
@@ -75,7 +75,10 @@ onBeforeMount(() => {
       <i aria-hidden class="bi bi-chevron-left" />
       Tillbaka
     </RouterLink>
-    <h1>Fil</h1>
+    <div class="d-flex gap-3 justify-content-between align-items-center">
+      <h1>Fil</h1>
+      <button type="button" class="btn btn-danger" @click="showDeleteModal = true">Ta bort</button>
+    </div>
     <SpinnerComponent v-if="isLoading" />
     <p v-else-if="!file" class="text-danger">Fil kunde inte hämtas.</p>
     <div v-else>
@@ -111,7 +114,7 @@ onBeforeMount(() => {
             <div class="mb-3">
               <label for="tags" class="form-label">Taggar</label>
               <select v-model="file.tags" class="form-select" id="tags" multiple>
-                <optgroup v-for="tagGroup in Constants.FILE_TAGS" :key="tagGroup.name">
+                <optgroup v-for="tagGroup in Constants.FILE_TAGS" :key="tagGroup.name" :label="tagGroup.name">
                   <option v-for="tag in tagGroup.tags" :value="tag" :key="tag">
                     {{ tag }}
                   </option>
@@ -143,7 +146,6 @@ onBeforeMount(() => {
             Avbryt
           </RouterLink>
           <button type="submit" class="btn btn-primary" :disabled="!hasChanges">Spara</button>
-          <button type="button" class="btn btn-danger" @click="showDeleteModal = true">Ta bort</button>
         </div>
       </form>
     </div>
